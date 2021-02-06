@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DigitalClipboard", "DigitalClipboard.pyproj", "{C23E7B99-7E20-4399-9F61-51AF7E99B1C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalClipboardAdmin", "..\DigitalClipboardAdmin\DigitalClipboardAdmin.csproj", "{03B34E71-10FE-429D-9C2E-432A54C17A10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalClipboardAdminTests", "..\DigitalClipboardAdminTests\DigitalClipboardAdminTests.csproj", "{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C23E7B99-7E20-4399-9F61-51AF7E99B1C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C23E7B99-7E20-4399-9F61-51AF7E99B1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B34E71-10FE-429D-9C2E-432A54C17A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03B34E71-10FE-429D-9C2E-432A54C17A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03B34E71-10FE-429D-9C2E-432A54C17A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03B34E71-10FE-429D-9C2E-432A54C17A10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {686FD4F0-F643-4EED-A8D9-2968287C95C1}
+	EndGlobalSection
+EndGlobal
