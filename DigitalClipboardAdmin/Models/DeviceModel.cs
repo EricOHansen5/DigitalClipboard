@@ -29,7 +29,8 @@ namespace DigitalClipboardAdmin.Models
                     _Name = value;
                     ECN = ParseECN(_Name);
                 }
-                    OnPropertyChanged(); }
+                OnPropertyChanged(); 
+            }
         }
 
 
@@ -44,6 +45,12 @@ namespace DigitalClipboardAdmin.Models
         {
             // Parse Name for ECN
             return Regex.Match(name, @"\d+").Value;
+        }
+        public static bool ContainsECN(string ecn, string subjectName)
+        {
+            if (subjectName.ToLower().Contains(ecn.ToLower()))
+                return true;
+            return false;
         }
         
         private string _Division;

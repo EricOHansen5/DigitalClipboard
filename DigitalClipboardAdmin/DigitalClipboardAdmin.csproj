@@ -76,6 +76,8 @@
     <Compile Include="Models\EntryModel.cs" />
     <Compile Include="Models\HRHModel.cs" />
     <Compile Include="Models\MappedModel.cs" />
+    <Compile Include="Models\SoftwareLicenseModel.cs" />
+    <Compile Include="Models\SoftwareMappedModel.cs" />
     <Compile Include="Models\SoftwareModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

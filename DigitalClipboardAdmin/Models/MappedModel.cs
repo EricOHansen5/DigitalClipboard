@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Controllers;
+using System.Collections.Generic;
 
 namespace DigitalClipboardAdmin.Models
 {
@@ -11,6 +12,7 @@ namespace DigitalClipboardAdmin.Models
             get { return _DeviceModelID; }
             set { if (value != _DeviceModelID) _DeviceModelID = value; OnPropertyChanged(); }
         }
+
         private DeviceModel _DeviceModel;
         public DeviceModel DeviceModel
         {
@@ -18,18 +20,11 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _DeviceModel) _DeviceModel = value; OnPropertyChanged(); }
         }
 
-        // ECN
-        private string _EntryModelID;
-        public string EntryModelID
+        private List<EntryModel> _Entries = new List<EntryModel>();
+        public List<EntryModel> Entries
         {
-            get { return _EntryModelID; }
-            set { if (value != _EntryModelID) _EntryModelID = value; OnPropertyChanged(); }
-        }
-        private EntryModel _EntryModel;
-        public EntryModel EntryModel
-        {
-            get { return _EntryModel; }
-            set { if (value != _EntryModel) _EntryModel = value; OnPropertyChanged(); }
+            get { return _Entries; }
+            set { if (value != _Entries) _Entries = value; OnPropertyChanged(); }
         }
 
     }

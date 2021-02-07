@@ -57,7 +57,7 @@ namespace DigitalClipboardAdmin.Controllers
             }
         }    
 
-        public static List<string> ReadDCLogs()
+        public static List<string> GetDCLogs()
         {
             try
             {
@@ -85,8 +85,11 @@ namespace DigitalClipboardAdmin.Controllers
             }
         }
 
-        public static List<EntryModel> ConvertDCLogs(List<string> lines)
+        public static List<EntryModel> ConvertDCLogs(List<string> lines = null)
         {
+            if (lines == null)
+                lines = GetDCLogs();
+
             Log.Add("ConvertDCLogs");
             List<EntryModel> convEntries = new List<EntryModel>();
 
@@ -134,14 +137,18 @@ namespace DigitalClipboardAdmin.Controllers
             Device,
             User,
             HRH,
-            Software
+            Software,
+            SoftwareLicense,
+            SoftwareMap
         }
         private static string[] Queries = new string[]
         {
             "Select * from tblComputers;",
             "Select * from tblUsers;",
             "Select * from tblHRH;",
-            "Select * from tblSoftware;"
+            "Select * from tblSoftware;",
+            "Select * from tblSoftwareLicenses;",
+            "Select * from tblSoftwareInUse;"
         };
         public static IEnumerable<List<object>> GetDbQuery(QueryType qt)
         {
@@ -161,8 +168,11 @@ namespace DigitalClipboardAdmin.Controllers
             Log.Add("GetDbQuery Complete");
         }
    
-        public static List<DeviceModel> ConvertToDevice(IEnumerable<List<object>> lst)
+        public static List<DeviceModel> ConvertToDevice(IEnumerable<List<object>> lst = null)
         {
+            if (lst == null)
+                lst = GetDbQuery(QueryType.Device);
+
             List<DeviceModel> devices = new List<DeviceModel>();
 
             foreach (object item in lst)
@@ -189,6 +199,38 @@ namespace DigitalClipboardAdmin.Controllers
             }
 
             return devices;
+        }
+
+        public static List<MappedModel> CreateMapping(List<EntryModel> entries, List<DeviceModel> devices)
+        {
+            List<MappedModel> mappings = new List<MappedModel>();
+
+            if(devices == null || devices.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                // Devices not empty so iterate through and create mapping model
+                // and add entries to model
+                foreach (DeviceModel curItem in devices)
+                {
+                    MappedModel mm = new MappedModel();
+                    mm.DeviceModelID = curItem.Name;
+                    mm.DeviceModel = curItem;
+                    if(entries != null)
+                    {
+                        foreach (EntryModel curEntry in entries)
+                        {
+                            if (DeviceModel.ContainsECN(curEntry.ECN, mm.DeviceModelID))
+                                mm.Entries.Add(curEntry);
+                        }
+                    }
+
+                    mappings.Add(mm);
+                }
+            }
+            return mappings;
         }
     }
         

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DigitalClipboardAdmin.Controllers;
+using DigitalClipboardAdmin.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,18 @@ namespace DigitalClipboardAdmin
     {
         public MainWindow()
         {
+            // Get Data from Logs (insert null to read DC logs & convert)
+            List<EntryModel> Entries = DatastoreController.ConvertDCLogs();
+            
+            // Get Data from Access DB
+            List<DeviceModel> Devices = DatastoreController.ConvertToDevice();
+            
+            // Merge Data
+            List<MappedModel> Mappings = DatastoreController.CreateMapping(Entries, Devices);
+
+            // Start Background Worker
+             
+
             InitializeComponent();
             DataContext = this;
 
