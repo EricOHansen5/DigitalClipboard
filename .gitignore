@@ -25,11 +25,18 @@
 *.pyc
 *.xml
 *.sqlite
+*.pyc
+.vs/
 ipch/
 obj/
 [Bb]in
+bin/**
 [Dd]ebug*/
 [Rr]elease*/
+MSTest*
+packages/
+*Tests/
+.vs*/
 Ankh.NoLoad
 
 #Tooling
@@ -39,9 +46,6 @@ _ReSharper*/
 
 #Project files
 [Bb]uild/
-
-#Subversion files
-.svn
 
 # Office Temp Files
 ~$*

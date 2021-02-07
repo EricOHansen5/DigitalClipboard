@@ -106,11 +106,13 @@ class User_Input(object):
 
 
     def on_enter(self, e):
+        # Hover over button
         self.defaultbg = e.widget['background']
         e.widget['background'] = 'white'
 
 
     def on_leave(self, e):
+        # Leave Hover over button
         e.widget['background'] = self.defaultbg
 
 
@@ -132,7 +134,7 @@ class User_Input(object):
 
         # Setup GUI
         self.root = root
-        self.root.geometry('1000x700')
+        self.root.geometry('1200x700')
         self.root.configure(bg=bg_color)
 
         # Header display for Barcode Data

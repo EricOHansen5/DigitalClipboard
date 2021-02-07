@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DigitalClipboardAdmin.Models
@@ -22,7 +23,13 @@ namespace DigitalClipboardAdmin.Models
         public string Name
         {
             get { return _Name; }
-            set { if (value != _Name) _Name = value; OnPropertyChanged(); }
+            set {
+                if (value != _Name)
+                {
+                    _Name = value;
+                    ECN = ParseECN(_Name);
+                }
+                    OnPropertyChanged(); }
         }
 
 
@@ -33,10 +40,10 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _ECN) _ECN = value; OnPropertyChanged(); }
         }
 
-        private static string ParseECN(string name)
+        public static string ParseECN(string name)
         {
             // Parse Name for ECN
-            return "";
+            return Regex.Match(name, @"\d+").Value;
         }
         
         private string _Division;
