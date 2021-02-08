@@ -15,6 +15,14 @@ namespace DigitalClipboardAdmin.Models
         public static string CheckOutStr = "--OUT--";
         public static string EmptyTechStr = "no_tech";
 
+
+        private bool _IsMapped = false;
+        public bool IsMapped
+        {
+            get { return _IsMapped; }
+            set { if (value != _IsMapped) _IsMapped = value; OnPropertyChanged(); }
+        }
+
         private DateTime _dateTime;
         public DateTime dateTime
         {

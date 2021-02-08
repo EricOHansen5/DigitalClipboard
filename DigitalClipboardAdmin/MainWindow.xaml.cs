@@ -24,6 +24,9 @@ namespace DigitalClipboardAdmin
     {
         public MainWindow()
         {
+            // Check / Create Dependencies
+            DatastoreController.CheckDependecies();
+
             // Get Data from Logs (insert null to read DC logs & convert)
             List<EntryModel> Entries = DatastoreController.ConvertDCLogs();
             
@@ -31,10 +34,10 @@ namespace DigitalClipboardAdmin
             List<DeviceModel> Devices = DatastoreController.ConvertToDevice();
             
             // Merge Data
-            List<MappedModel> Mappings = DatastoreController.CreateMapping(Entries, Devices);
+            (List<MappedModel> Mappings, List<EntryModel> NonMapped) = DatastoreController.CreateMapping(Entries, Devices);
 
             // Start Background Worker
-             
+            
 
             InitializeComponent();
             DataContext = this;

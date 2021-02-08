@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,19 +19,21 @@ namespace DigitalClipboardAdmin.Controllers
         private const string jsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\Database.json";
         private const string dbPath = "\\\\riemfs01\\S\\Research Support\\S-6 Information Management\\Administrative Tools\\Software\\DATABASE\\IMB_Software_DB_BackEnd.accdb";
 
-        private bool dbPathExist = true;
         private static string conString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='S:\Research Support\S-6 Information Management\Administrative Tools\Software\DATABASE\IMB_Software_DB_BackEnd.accdb'";
-        public DatastoreController()
+
+        public static void CheckDependecies()
         {
             Log.Add("Init Data Sets");
             try
             {
+                // Log Files
                 if (!Directory.Exists(dcLogPath))
                 {
                     Log.Add("DC Log Dir Created");
                     Directory.CreateDirectory(dcLogPath);
                 }
 
+                // JSON DB File
                 if (!Directory.Exists(Path.GetDirectoryName(jsonPath)))
                 {
                     Log.Add("Json Dir Created");
@@ -42,20 +45,58 @@ namespace DigitalClipboardAdmin.Controllers
                     }
                 }
 
+                // Access DB File
                 if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
                 {
                     Log.Add("DB Path Doesn't Exist");
-                    dbPathExist = false;
                 }else if (!File.Exists(dbPath))
                 {
                     Log.Add("DB File Doesn't Exist");
-                    dbPathExist = false;
                 }
             }catch(Exception e)
             {
                 Log.Add("Error: " + e.Message, Log.Level.ERR);
             }
-        }    
+        }
+
+        public static List<MappedModel> GetJsonDB()
+        {
+            Log.Add("GetJsonDB");
+            try
+            {
+                string jsonStr = "";
+                using (StreamReader reader = new StreamReader(jsonPath))
+                {
+                    jsonStr = reader.ReadToEnd();
+                }
+
+                // Deserialize DB
+                return JsonConvert.DeserializeObject<List<MappedModel>>(jsonStr);
+            }catch(Exception e)
+            {
+                Log.Add("GetJsonDB Error: " + e.Message, Log.Level.ERR);
+                return null;
+            }
+        }
+
+        public static void SetJsonDB(List<MappedModel> mappedList)
+        {
+            Log.Add("SetJsonDB");
+            string mappedStr = JsonConvert.SerializeObject(mappedList);
+            try
+            {
+                using(StreamWriter writer = new StreamWriter(jsonPath))
+                {
+                    writer.Write(mappedStr);
+                    writer.Flush();
+                }
+                Log.Add("Write Complete");
+
+            }catch(Exception e)
+            {
+                Log.Add("SetJsonDB Error: " + e.Message, Log.Level.ERR);
+            }
+        }
 
         public static List<string> GetDCLogs()
         {
@@ -170,6 +211,7 @@ namespace DigitalClipboardAdmin.Controllers
    
         public static List<DeviceModel> ConvertToDevice(IEnumerable<List<object>> lst = null)
         {
+            Log.Add("ConvertToDevice");
             if (lst == null)
                 lst = GetDbQuery(QueryType.Device);
 
@@ -201,13 +243,15 @@ namespace DigitalClipboardAdmin.Controllers
             return devices;
         }
 
-        public static List<MappedModel> CreateMapping(List<EntryModel> entries, List<DeviceModel> devices)
+        public static (List<MappedModel>, List<EntryModel>) CreateMapping(List<EntryModel> entries, List<DeviceModel> devices)
         {
+            Log.Add("CreateMapping");
             List<MappedModel> mappings = new List<MappedModel>();
+            List<EntryModel> nonMapped = new List<EntryModel>();
 
             if(devices == null || devices.Count == 0)
             {
-                return null;
+                return (null, null);
             }
             else
             {
@@ -218,19 +262,29 @@ namespace DigitalClipboardAdmin.Controllers
                     MappedModel mm = new MappedModel();
                     mm.DeviceModelID = curItem.Name;
                     mm.DeviceModel = curItem;
-                    if(entries != null)
+                    if (entries != null)
                     {
                         foreach (EntryModel curEntry in entries)
                         {
                             if (DeviceModel.ContainsECN(curEntry.ECN, mm.DeviceModelID))
+                            {
+                                curEntry.IsMapped = true;
                                 mm.Entries.Add(curEntry);
+                            }
                         }
                     }
-
                     mappings.Add(mm);
                 }
+
+                foreach (EntryModel em in entries)
+                {
+                    if (!em.IsMapped)
+                        nonMapped.Add(em);
+                }
+
+                
             }
-            return mappings;
+            return (mappings, nonMapped);
         }
     }
         
