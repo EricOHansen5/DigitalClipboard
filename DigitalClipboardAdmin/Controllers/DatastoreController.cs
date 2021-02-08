@@ -92,6 +92,9 @@ namespace DigitalClipboardAdmin.Controllers
                 }
                 Log.Add("Write Complete");
 
+                // Set DC Logs to Processed
+                // TODO:
+
             }catch(Exception e)
             {
                 Log.Add("SetJsonDB Error: " + e.Message, Log.Level.ERR);
@@ -123,6 +126,33 @@ namespace DigitalClipboardAdmin.Controllers
             {
                 Log.Add("ReadDCLogs Error:" + e.Message, Log.Level.ERR);
                 return null;
+            }
+        }
+
+        public static void SetDCLogs()
+        {
+            try
+            {
+                Log.Add("SetDCLogs");
+                DirectoryInfo dir = new DirectoryInfo(dcLogPath);
+                FileInfo[] files = dir.GetFiles("*.log", SearchOption.TopDirectoryOnly);
+
+                foreach (FileInfo item in files)
+                {
+                    TimeSpan ts = DateTime.Now.Subtract(item.CreationTime);
+
+                    if (ts.TotalDays > 7)
+                    {
+                        string name = item.FullName.Replace(".log", ".plog");
+                        if (!item.FullName.Contains(".plog"))
+                            File.Move(item.FullName, name);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.Add("SetDCLogs Error:" + e.Message, Log.Level.ERR);
             }
         }
 
