@@ -261,7 +261,7 @@ namespace DigitalClipboardAdmin.Controllers
                     ServiceTag = (item as List<object>)[7].ToString(),
                     Network = (item as List<object>)[8].ToString(),
                     OS = (item as List<object>)[9].ToString(),
-                    Notes = new List<string>() { (item as List<object>)[10].ToString() },
+                    Notes = (item as List<object>)[10].ToString(),
                     Make = (item as List<object>)[11].ToString(),
                     Model = (item as List<object>)[12].ToString(),
                     ModelNumber = (item as List<object>)[13].ToString(),
@@ -299,6 +299,7 @@ namespace DigitalClipboardAdmin.Controllers
                             if (DeviceModel.ContainsECN(curEntry.ECN, mm.DeviceModelID))
                             {
                                 curEntry.IsMapped = true;
+                                curEntry.MappedDevice = curItem;
                                 mm.Entries.Add(curEntry);
                             }
                         }

@@ -23,6 +23,13 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _IsMapped) _IsMapped = value; OnPropertyChanged(); }
         }
 
+        private DeviceModel _MappedDevice;
+        public DeviceModel MappedDevice
+        {
+            get { return _MappedDevice; }
+            set { if (value != _MappedDevice) _MappedDevice = value; OnPropertyChanged(); }
+        }
+
         private DateTime _dateTime;
         public DateTime dateTime
         {
@@ -72,5 +79,9 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _techName) _techName = value; OnPropertyChanged(); }
         }
 
+        public string DisplayString
+        {
+            get { return string.Format("{0} - {1}", dateTime.ToString("g"), ECN); }
+        }
     }
 }

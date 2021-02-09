@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Controllers;
+using System;
 using System.Collections.Generic;
 
 namespace DigitalClipboardAdmin.Models
@@ -27,5 +28,20 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _Entries) _Entries = value; OnPropertyChanged(); }
         }
 
+
+        public DateTime MostRecent
+        {
+            get {
+                Entries.Sort((a, b) => a.dateTime.CompareTo(b.dateTime));
+                if(Entries.Count > 0)
+                    return Entries[0].dateTime;
+                return DateTime.Now;
+            }
+        }
+
+        public string DisplayName
+        {
+            get { return string.Format("{0}", DeviceModel.Name); }
+        }
     }
 }

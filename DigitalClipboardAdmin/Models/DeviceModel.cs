@@ -102,8 +102,8 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _BIOS) _BIOS = value; OnPropertyChanged(); }
         }
 
-        private List<string> _Notes;
-        public List<string> Notes
+        private string _Notes;
+        public string Notes
         {
             get { return _Notes; }
             set { if (value != _Notes) _Notes = value; OnPropertyChanged(); }
