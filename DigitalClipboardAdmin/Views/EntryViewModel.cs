@@ -26,6 +26,7 @@ namespace DigitalClipboardAdmin.Views
 
         public static List<EntryViewModel> InitList(Dictionary<string, List<EntryModel>> lst, Dictionary<string, DeviceModel> devices, Dictionary<string, UserModel> users, Dictionary<string, HRHModel> hrhs)
         {
+            Log.Add("InitList EntryViewModel");
             var l = new List<EntryViewModel>();
             foreach (var item in lst)
             {

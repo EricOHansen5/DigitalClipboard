@@ -50,7 +50,62 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Devices">
-                <Grid Background="White"/>
+                <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="0.1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <Label Content="Name:"/>
+                        <Label Content="ECN:"/>
+                        <Label Content="Division:"/>
+                        <Label Content="IP:"/>
+                        <Label Content="MAC:"/>
+                        <Label Content="MAC Wireless:"/>
+                        <Label Content="Service Tag:"/>
+                        <Label Content="Network:"/>
+                        <Label Content="OS:"/>
+                        <Label Content="BIOS:"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,10,0,10">
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Name, FallbackValue=[name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ECN, FallbackValue=[ecn]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Division, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.IP, FallbackValue=[ip]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.MAC, FallbackValue=[mac]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.MAC_Wireless, FallbackValue=[mac_wireless]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ServiceTag, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Network, FallbackValue=[network]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.OS, FallbackValue=[os]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.BIOS, FallbackValue=[bios]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                    </StackPanel>
+                    
+                    <GridSplitter Grid.Column="2" HorizontalAlignment="Center" Margin="5,10,5,10" Width="5"/>
+                    
+                    <StackPanel Grid.Column="3" Margin="10">
+                        <Label Content="User:"/>
+                        <Label Content="Make:"/>
+                        <Label Content="Model:"/>
+                        <Label Content="Model Number:"/>
+                        <Label Content="HRH:"/>
+                        <Label Content="Notes:"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="4" Margin="10">
+                        <DockPanel>
+                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.User.FirstName, FallbackValue=[first_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.User.LastName, FallbackValue=[last_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        </DockPanel>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Make, FallbackValue=[make]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Model, FallbackValue=[model]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ModelNumber, FallbackValue=[model_number]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.HRH.LastName, FallbackValue=[hrh]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <TextBox MinLines="6" Margin="0,10,10,10"
+                            Text="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Notes, FallbackValue=[notes]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="Users">
                 <Grid Background="White">
