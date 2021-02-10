@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Views\EntryViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,6 +79,7 @@
     <Compile Include="Models\DeviceModel.cs" />
     <Compile Include="Models\EntryModel.cs" />
     <Compile Include="Models\HRHModel.cs" />
+    <Compile Include="Models\JsonStorageModel.cs" />
     <Compile Include="Models\MappedModel.cs" />
     <Compile Include="Models\SoftwareLicenseModel.cs" />
     <Compile Include="Models\SoftwareMappedModel.cs" />
@@ -109,8 +111,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,22 +13,7 @@ namespace DigitalClipboardAdmin.Models
         public static int PropertyCount = 6;
         public static string CheckInStr = "--IN --";
         public static string CheckOutStr = "--OUT--";
-        public static string EmptyTechStr = "no_tech";
-
-
-        private bool _IsMapped = false;
-        public bool IsMapped
-        {
-            get { return _IsMapped; }
-            set { if (value != _IsMapped) _IsMapped = value; OnPropertyChanged(); }
-        }
-
-        private DeviceModel _MappedDevice;
-        public DeviceModel MappedDevice
-        {
-            get { return _MappedDevice; }
-            set { if (value != _MappedDevice) _MappedDevice = value; OnPropertyChanged(); }
-        }
+        public static string EmptyTechStr = "No Technician";
 
         private DateTime _dateTime;
         public DateTime dateTime
@@ -82,6 +67,39 @@ namespace DigitalClipboardAdmin.Models
         public string DisplayString
         {
             get { return string.Format("{0} - {1}", dateTime.ToString("g"), ECN); }
+        }
+
+        public static string GetBarcode(List<EntryModel> list)
+        {
+            if (list.Count > 0)
+                return list[0].barcode;
+            return null;
+        }
+
+        public static EntryModel GetMostRecent(List<EntryModel> list)
+        {
+            EntryModel tempEM = null;
+            if (list.Count == 0 || list == null)
+                return null;
+
+            foreach (var item in list)
+            {
+                if (tempEM == null)
+                    tempEM = item;
+
+                if (tempEM.dateTime < item.dateTime)
+                {
+                    tempEM = item;
+                }
+            }
+            return tempEM;
+        }
+
+        public static EntryModel GetInfo(List<EntryModel> list)
+        {
+            if (list != null && list.Count > 0)
+                return list[0];
+            return null;
         }
     }
 }

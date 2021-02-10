@@ -8,6 +8,7 @@ using System.Data.OleDb;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace DigitalClipboardAdmin.Controllers
 {
@@ -21,16 +22,34 @@ namespace DigitalClipboardAdmin.Controllers
 
         private static string conString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='S:\Research Support\S-6 Information Management\Administrative Tools\Software\DATABASE\IMB_Software_DB_BackEnd.accdb'";
 
-        public static void CheckDependecies()
+        /// <summary>
+        /// returns bools for each dependency object
+        /// </summary>
+        /// <returns>
+        /// <para>dcLogsExist - does digital clipboard exist</para>
+        /// <para>jsonExist - does does json db exist</para>
+        /// <para>dbExist - does access db exist</para>
+        /// </returns>
+        public static (bool, bool, bool) CheckDependecies()
         {
+
             Log.Add("Init Data Sets");
             try
             {
+                bool dcLogsExist;
+                bool jsonExist = false;
+                bool dbExist = false;
+
                 // Log Files
                 if (!Directory.Exists(dcLogPath))
                 {
                     Log.Add("DC Log Dir Created");
                     Directory.CreateDirectory(dcLogPath);
+                    dcLogsExist = true;
+                }
+                else
+                {
+                    dcLogsExist = true;
                 }
 
                 // JSON DB File
@@ -44,6 +63,17 @@ namespace DigitalClipboardAdmin.Controllers
                         File.Create(jsonPath);
                     }
                 }
+                else
+                {
+                    if (!File.Exists(jsonPath))
+                    {
+                        Log.Add("Json File Created");
+                        File.Create(jsonPath);
+                    }
+
+                    if (new FileInfo(jsonPath).Length > 0)
+                        jsonExist = true;
+                }
 
                 // Access DB File
                 if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
@@ -53,13 +83,20 @@ namespace DigitalClipboardAdmin.Controllers
                 {
                     Log.Add("DB File Doesn't Exist");
                 }
+                else
+                {
+                    dbExist = true;
+                }
+
+                return (dcLogsExist, jsonExist, dbExist);
             }catch(Exception e)
             {
                 Log.Add("Error: " + e.Message, Log.Level.ERR);
+                return (false, false, false);
             }
         }
 
-        public static List<MappedModel> GetJsonDB()
+        public static JsonStorageModel GetJsonDB()
         {
             Log.Add("GetJsonDB");
             try
@@ -71,7 +108,7 @@ namespace DigitalClipboardAdmin.Controllers
                 }
 
                 // Deserialize DB
-                return JsonConvert.DeserializeObject<List<MappedModel>>(jsonStr);
+                return JsonConvert.DeserializeObject<JsonStorageModel>(jsonStr);
             }catch(Exception e)
             {
                 Log.Add("GetJsonDB Error: " + e.Message, Log.Level.ERR);
@@ -79,25 +116,26 @@ namespace DigitalClipboardAdmin.Controllers
             }
         }
 
-        public static void SetJsonDB(List<MappedModel> mappedList)
+        public static bool SetJsonDB(JsonStorageModel jsm)
         {
             Log.Add("SetJsonDB");
-            string mappedStr = JsonConvert.SerializeObject(mappedList);
+            string jsmStr = JsonConvert.SerializeObject(jsm);
             try
             {
                 using(StreamWriter writer = new StreamWriter(jsonPath))
                 {
-                    writer.Write(mappedStr);
+                    writer.Write(jsmStr);
                     writer.Flush();
                 }
                 Log.Add("Write Complete");
-
+                return true;
                 // Set DC Logs to Processed
                 // TODO:
 
             }catch(Exception e)
             {
                 Log.Add("SetJsonDB Error: " + e.Message, Log.Level.ERR);
+                return false;
             }
         }
 
@@ -156,13 +194,13 @@ namespace DigitalClipboardAdmin.Controllers
             }
         }
 
-        public static List<EntryModel> ConvertDCLogs(List<string> lines = null)
+        public static Dictionary<string, List<EntryModel>> ConvertDCLogs(List<string> lines = null)
         {
             if (lines == null)
                 lines = GetDCLogs();
 
             Log.Add("ConvertDCLogs");
-            List<EntryModel> convEntries = new List<EntryModel>();
+            Dictionary<string, List<EntryModel>> convEntries = new Dictionary<string, List<EntryModel>>();
 
             foreach (string line in lines)
             {
@@ -183,7 +221,15 @@ namespace DigitalClipboardAdmin.Controllers
                         lastName = props[4].Split(' ').Length > 1 ? props[4].Split(' ')[1] : "",
                         techName = props[5].Trim('\r')
                     };
-                    convEntries.Add(em);
+
+                    if (convEntries.ContainsKey(em.ECN))
+                    {
+                        convEntries[em.ECN].Add(em);
+                    }
+                    else
+                    {
+                        convEntries.Add(em.ECN, new List<EntryModel>() { em });
+                    }
                 }
             }
             Log.Add("ConvertDCLogs Complete, converted " + convEntries.Count + ".");
@@ -239,13 +285,13 @@ namespace DigitalClipboardAdmin.Controllers
             Log.Add("GetDbQuery Complete");
         }
    
-        public static List<DeviceModel> ConvertToDevice(IEnumerable<List<object>> lst = null)
+        public static Dictionary<string, DeviceModel> ConvertToDevice(IEnumerable<List<object>> lst = null)
         {
             Log.Add("ConvertToDevice");
             if (lst == null)
                 lst = GetDbQuery(QueryType.Device);
 
-            List<DeviceModel> devices = new List<DeviceModel>();
+            Dictionary<string, DeviceModel> devices = new Dictionary<string, DeviceModel>();
 
             foreach (object item in lst)
             {
@@ -267,54 +313,118 @@ namespace DigitalClipboardAdmin.Controllers
                     ModelNumber = (item as List<object>)[13].ToString(),
                     HRH_ID = (item as List<object>)[14].ToString()
                 };
-                devices.Add(dm);
+                if (devices.ContainsKey(dm.Name))
+                {
+                    devices[dm.Name] = dm;
+                    MessageBox.Show("Duplicate " + dm.Name);
+                    Log.Add("Duplicate DeviceModel " + dm.Name);
+                }
+                else
+                {
+                    devices.Add(dm.Name, dm);
+                }
             }
 
             return devices;
         }
 
-        public static (List<MappedModel>, List<EntryModel>) CreateMapping(List<EntryModel> entries, List<DeviceModel> devices)
+        public static Dictionary<string, UserModel> ConvertToUser(IEnumerable<List<object>> lst = null)
+        {
+            Log.Add("ConvertToUser");
+            if (lst == null)
+                lst = GetDbQuery(QueryType.User);
+
+            Dictionary<string, UserModel> users = new Dictionary<string, UserModel>();
+
+            foreach (object item in lst)
+            {
+                UserModel um = new UserModel()
+                {
+                    UserID = (item as List<object>)[0].ToString(),
+                    FirstName = (item as List<object>)[1].ToString(),
+                    LastName = (item as List<object>)[2].ToString()
+                };
+                if (users.ContainsKey(um.UserID))
+                {
+                    users[um.UserID] = um;
+                    MessageBox.Show("Duplicate " + um.UserID);
+                    Log.Add("Duplicate UserModel " + um.UserID);
+                }
+                else
+                {
+                    users.Add(um.UserID, um);
+                }
+            }
+
+            return users;
+        }
+
+        public static Dictionary<string, HRHModel> ConvertToHRH(IEnumerable<List<object>> lst = null)
+        {
+            Log.Add("ConvertToUser");
+            if (lst == null)
+                lst = GetDbQuery(QueryType.HRH);
+
+            Dictionary<string, HRHModel> HRH = new Dictionary<string, HRHModel>();
+
+            foreach (object item in lst)
+            {
+                HRHModel um = new HRHModel()
+                {
+                    HolderID = (item as List<object>)[0].ToString(),
+                    FirstName = (item as List<object>)[1].ToString(),
+                    LastName = (item as List<object>)[2].ToString()
+                };
+                if (HRH.ContainsKey(um.HolderID))
+                {
+                    HRH[um.HolderID] = um;
+                    MessageBox.Show("Duplicate " + um.HolderID);
+                    Log.Add("Duplicate HRHModel " + um.HolderID);
+                }
+                else
+                {
+                    HRH.Add(um.HolderID, um);
+                }
+            }
+
+            return HRH;
+        }
+
+        public static (Dictionary<string, MappedModel>, Dictionary<string, List<EntryModel>>) CreateMapping
+            (Dictionary<string, List<EntryModel>> entries, Dictionary<string, DeviceModel> devices)
         {
             Log.Add("CreateMapping");
-            List<MappedModel> mappings = new List<MappedModel>();
-            List<EntryModel> nonMapped = new List<EntryModel>();
+            Dictionary<string, MappedModel> mappings = new Dictionary<string, MappedModel>();
+            Dictionary<string, List<EntryModel>> nonMapped = new Dictionary<string, List<EntryModel>>();
 
+            // Check Null
             if(devices == null || devices.Count == 0)
-            {
                 return (null, null);
-            }
-            else
+            
+            // Loop through all devices and map entries by ecn
+            foreach (KeyValuePair<string, DeviceModel> device in devices)
             {
-                // Devices not empty so iterate through and create mapping model
-                // and add entries to model
-                foreach (DeviceModel curItem in devices)
+                if (entries.ContainsKey(device.Value.ECN))
                 {
-                    MappedModel mm = new MappedModel();
-                    mm.DeviceModelID = curItem.Name;
-                    mm.DeviceModel = curItem;
-                    if (entries != null)
+                    MappedModel mm = new MappedModel()
                     {
-                        foreach (EntryModel curEntry in entries)
-                        {
-                            if (DeviceModel.ContainsECN(curEntry.ECN, mm.DeviceModelID))
-                            {
-                                curEntry.IsMapped = true;
-                                curEntry.MappedDevice = curItem;
-                                mm.Entries.Add(curEntry);
-                            }
-                        }
-                    }
-                    mappings.Add(mm);
+                        DeviceModelID = device.Key,
+                        Barcode = EntryModel.GetBarcode(entries[device.Value.ECN]),
+                        ECN = device.Value.ECN
+                    };
+                    mappings.Add(mm.ECN, mm);
                 }
-
-                foreach (EntryModel em in entries)
-                {
-                    if (!em.IsMapped)
-                        nonMapped.Add(em);
-                }
-
-                
             }
+
+            // Any ecn that doesn't get mapped
+            foreach (var entry in entries)
+            {
+                if (!mappings.ContainsKey(entry.Key))
+                {
+                    nonMapped.Add(entry.Key, entry.Value);
+                }
+            }
+
             return (mappings, nonMapped);
         }
     }

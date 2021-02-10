@@ -6,7 +6,7 @@ namespace DigitalClipboardAdmin.Models
 {
     public class MappedModel:BaseClass
     {
-        // ECN
+        // Name
         private string _DeviceModelID;
         public string DeviceModelID
         {
@@ -14,34 +14,18 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _DeviceModelID) _DeviceModelID = value; OnPropertyChanged(); }
         }
 
-        private DeviceModel _DeviceModel;
-        public DeviceModel DeviceModel
+        private string _Barcode;
+        public string Barcode
         {
-            get { return _DeviceModel; }
-            set { if (value != _DeviceModel) _DeviceModel = value; OnPropertyChanged(); }
+            get { return _Barcode; }
+            set { if (value != _Barcode) _Barcode = value; OnPropertyChanged(); }
         }
 
-        private List<EntryModel> _Entries = new List<EntryModel>();
-        public List<EntryModel> Entries
+        private string _ECN;
+        public string ECN
         {
-            get { return _Entries; }
-            set { if (value != _Entries) _Entries = value; OnPropertyChanged(); }
-        }
-
-
-        public DateTime MostRecent
-        {
-            get {
-                Entries.Sort((a, b) => a.dateTime.CompareTo(b.dateTime));
-                if(Entries.Count > 0)
-                    return Entries[0].dateTime;
-                return DateTime.Now;
-            }
-        }
-
-        public string DisplayName
-        {
-            get { return string.Format("{0}", DeviceModel.Name); }
+            get { return _ECN; }
+            set { if (value != _ECN) _ECN = value; OnPropertyChanged(); }
         }
     }
 }

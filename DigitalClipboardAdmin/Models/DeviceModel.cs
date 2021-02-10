@@ -59,42 +59,49 @@ namespace DigitalClipboardAdmin.Models
             get { return _Division; }
             set { if (value != _Division) _Division = value; OnPropertyChanged(); }
         }
+        
         private string _IP;
         public string IP
         {
             get { return _IP; }
             set { if (value != _IP) _IP = value; OnPropertyChanged(); }
         }
+        
         private string _MAC;
         public string MAC
         {
             get { return _MAC; }
             set { if (value != _MAC) _MAC = value; OnPropertyChanged(); }
         }
+        
         private string _MAC_Wireless;
         public string MAC_Wireless
         {
             get { return _MAC_Wireless; }
             set { if (value != _MAC_Wireless) _MAC_Wireless = value; OnPropertyChanged(); }
         }
+        
         private string _ServiceTag;
         public string ServiceTag
         {
             get { return _ServiceTag; }
             set { if (value != _ServiceTag) _ServiceTag = value; OnPropertyChanged(); }
         }
+        
         private string _Network;
         public string Network
         {
             get { return _Network; }
             set { if (value != _Network) _Network = value; OnPropertyChanged(); }
         }
+        
         private string _OS;
         public string OS
         {
             get { return _OS; }
             set { if (value != _OS) _OS = value; OnPropertyChanged(); }
         }
+        
         private string _BIOS;
         public string BIOS
         {
