@@ -390,6 +390,109 @@ namespace DigitalClipboardAdmin.Controllers
             return HRH;
         }
 
+        public static Dictionary<string, SoftwareModel> ConvertToSoftware(IEnumerable<List<object>> lst = null)
+        {
+            Log.Add("ConvertToSoftware");
+            if (lst == null)
+                lst = GetDbQuery(QueryType.Software);
+
+            Dictionary<string, SoftwareModel> sw = new Dictionary<string, SoftwareModel>();
+
+            foreach (object item in lst)
+            {
+                SoftwareModel sm = new SoftwareModel()
+                {
+                    ID = (item as List<object>)[0].ToString(),
+                    Name = (item as List<object>)[1].ToString(),
+                    Notes = (item as List<object>)[2].ToString(),
+                    Location = (item as List<object>)[3].ToString(),
+                    Source = (item as List<object>)[4].ToString()
+                };
+                if (sw.ContainsKey(sm.ID))
+                {
+                    sw[sm.ID] = sm;
+                    MessageBox.Show("Duplicate " + sm.ID);
+                    Log.Add("Duplicate SoftwareModel " + sm.ID);
+                }
+                else
+                {
+                    sw.Add(sm.ID, sm);
+                }
+            }
+
+            return sw;
+        }
+
+        public static Dictionary<string, SoftwareLicenseModel> ConvertToSoftwareLicense(IEnumerable<List<object>> lst = null)
+        {
+            Log.Add("ConvertToSoftwareLicense");
+            if (lst == null)
+                lst = GetDbQuery(QueryType.SoftwareLicense);
+
+            Dictionary<string, SoftwareLicenseModel> sw = new Dictionary<string, SoftwareLicenseModel>();
+
+            foreach (object item in lst)
+            {
+                int temp = 0, temp2 = 0, temp3 = 0;
+                bool isFull = (item as List<object>).Count > 5 ? true : false;
+                SoftwareLicenseModel sm = new SoftwareLicenseModel()
+                {
+                    LicenseID = (item as List<object>)[0].ToString(),
+                    SoftwareID = (item as List<object>)[1].ToString(),
+                    Version = (item as List<object>)[2].ToString(),
+                    SN = (item as List<object>)[3].ToString(),
+                    Owned = isFull ? (int.TryParse((item as List<object>)[4].ToString(),out temp) ? temp : 0):0,
+                    Upgrade = isFull ? (int.TryParse((item as List<object>)[5].ToString(), out temp2) ? temp2 : 0):0,
+                    Available = isFull ? (int.TryParse((item as List<object>)[6].ToString(), out temp3) ? temp3 : 0):0,
+                    Notes = isFull ? ((item as List<object>)[7].ToString()) : "",
+                    Division = isFull ? ((item as List<object>)[8].ToString()): ""
+                };
+                if (sw.ContainsKey(sm.LicenseID))
+                {
+                    sw[sm.LicenseID] = sm;
+                    MessageBox.Show("Duplicate " + sm.LicenseID);
+                    Log.Add("Duplicate SoftwareLicenseModel " + sm.LicenseID);
+                }
+                else
+                {
+                    sw.Add(sm.LicenseID, sm);
+                }
+            }
+
+            return sw;
+        }
+
+        public static Dictionary<string, SoftwareMappedModel> ConvertToSoftwareMapped(IEnumerable<List<object>> lst = null)
+        {
+            Log.Add("ConvertToSoftwareMapped");
+            if (lst == null)
+                lst = GetDbQuery(QueryType.SoftwareMap);
+
+            Dictionary<string, SoftwareMappedModel> smm = new Dictionary<string, SoftwareMappedModel>();
+
+            foreach (object item in lst)
+            {
+                SoftwareMappedModel um = new SoftwareMappedModel()
+                {
+                    UseID = (item as List<object>)[0].ToString(),
+                    DeviceName = (item as List<object>)[1].ToString(),
+                    LicenseID = (item as List<object>)[2].ToString()
+                };
+                if (smm.ContainsKey(um.UseID))
+                {
+                    smm[um.UseID] = um;
+                    MessageBox.Show("Duplicate " + um.UseID);
+                    Log.Add("Duplicate SoftwareMappedModel " + um.UseID);
+                }
+                else
+                {
+                    smm.Add(um.UseID, um);
+                }
+            }
+
+            return smm;
+        }
+
         public static (Dictionary<string, MappedModel>, Dictionary<string, List<EntryModel>>) CreateMapping
             (Dictionary<string, List<EntryModel>> entries, Dictionary<string, DeviceModel> devices)
         {

@@ -10,11 +10,11 @@ namespace DigitalClipboardAdmin.Models
     public class SoftwareMappedModel:BaseClass
     {
 
-        private string _UserID;
-        public string UserID
+        private string _UseID;
+        public string UseID
         {
-            get { return _UserID; }
-            set { if (value != _UserID) _UserID = value; OnPropertyChanged(); }
+            get { return _UseID; }
+            set { if (value != _UseID) _UseID = value; OnPropertyChanged(); }
         }
         private string _DeviceName;
         public string DeviceName
@@ -28,5 +28,6 @@ namespace DigitalClipboardAdmin.Models
             get { return _LicenseID; }
             set { if (value != _LicenseID) _LicenseID = value; OnPropertyChanged(); }
         }
+
     }
 }

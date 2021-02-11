@@ -24,20 +24,26 @@ namespace DigitalClipboardAdmin.Views
             this.Status = infoM.checkIn ? "Checked In" : "Checked Out";
         }
 
-        public static List<EntryViewModel> InitList(Dictionary<string, List<EntryModel>> lst, Dictionary<string, DeviceModel> devices, Dictionary<string, UserModel> users, Dictionary<string, HRHModel> hrhs)
+        public static List<EntryViewModel> InitList
+            (Dictionary<string, List<EntryModel>> lst, Dictionary<string, DeviceModel> devices, Dictionary<string, 
+                UserModel> users, Dictionary<string, HRHModel> hrhs, Dictionary<string, SoftwareModel> software, 
+            Dictionary<string, SoftwareLicenseModel> licenses, Dictionary<string, SoftwareMappedModel> softwareMappings)
         {
             Log.Add("InitList EntryViewModel");
             var l = new List<EntryViewModel>();
             foreach (var item in lst)
             {
                 EntryViewModel e = new EntryViewModel(item);
-                e.SetMappings(devices, users, hrhs);
+                e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
                 l.Add(e);
             }
             return l;
         }
 
-        public void SetMappings(Dictionary<string, DeviceModel> devices, Dictionary<string, UserModel> users, Dictionary<string, HRHModel> hrhs)
+        public void SetMappings
+            (Dictionary<string, DeviceModel> devices, Dictionary<string, UserModel> users, Dictionary<string, 
+                HRHModel> hrhs, Dictionary<string, SoftwareModel> software, Dictionary<string, SoftwareLicenseModel> licenses, 
+            Dictionary<string, SoftwareMappedModel> softwareMappings)
         {
             foreach (var item in devices.Values)
             {
@@ -53,7 +59,10 @@ namespace DigitalClipboardAdmin.Views
                         this.HRH = hrhs[this.Device.HRH_ID];
                     }
                 }
-            
+
+                SoftwareViewModel svm = new SoftwareViewModel() { ID = item.Name };
+                svm.GetSoftware(software, licenses, softwareMappings);
+                item.SoftwareViewModel = svm;            
             }
 
         }

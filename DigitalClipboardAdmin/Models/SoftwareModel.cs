@@ -9,7 +9,6 @@ namespace DigitalClipboardAdmin.Models
 {
     public class SoftwareModel:BaseClass
     {
-
         private string _ID;
         public string ID
         {
@@ -23,8 +22,8 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _Name) _Name = value; OnPropertyChanged(); }
         }
 
-        private List<string> _Notes;
-        public List<string> Notes
+        private string _Notes;
+        public string Notes
         {
             get { return _Notes; }
             set { if (value != _Notes) _Notes = value; OnPropertyChanged(); }

@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Controllers;
+using DigitalClipboardAdmin.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -142,6 +143,13 @@ namespace DigitalClipboardAdmin.Models
         {
             get { return _HRH_ID; }
             set { if (value != _HRH_ID) _HRH_ID = value; OnPropertyChanged(); }
+        }
+
+        private SoftwareViewModel _SoftwareViewModel;
+        public SoftwareViewModel SoftwareViewModel
+        {
+            get { return _SoftwareViewModel; }
+            set { if (value != _SoftwareViewModel) _SoftwareViewModel = value; OnPropertyChanged(); }
         }
     }
 }

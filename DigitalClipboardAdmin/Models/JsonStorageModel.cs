@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalClipboardAdmin.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace DigitalClipboardAdmin.Models
         public Dictionary<string, List<EntryModel>> NonMappings;
         public Dictionary<string, UserModel> Users;
         public Dictionary<string, HRHModel> HRHs;
-
+        public Dictionary<string, SoftwareModel> Software;
+        public Dictionary<string, SoftwareLicenseModel> Licenses;
+        public Dictionary<string, SoftwareMappedModel> SoftwareMappings;
     }
 }

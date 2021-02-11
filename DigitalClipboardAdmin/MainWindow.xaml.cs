@@ -33,7 +33,7 @@ namespace DigitalClipboardAdmin
         }
         #endregion
 
-
+        #region Properties
         private Dictionary<string, List<EntryModel>> _Entries;
         public Dictionary<string, List<EntryModel>> Entries
         {
@@ -83,6 +83,29 @@ namespace DigitalClipboardAdmin
             set { if (value != _NonMapped) _NonMapped = value; OnPropertyChanged(); }
         }
 
+        private Dictionary<string, SoftwareModel> _Software;
+        public Dictionary<string, SoftwareModel> Software
+        {
+            get { return _Software; }
+            set { if (value != _Software) _Software = value; OnPropertyChanged(); }
+        }
+        
+        private Dictionary<string, SoftwareLicenseModel> _Licenses;
+        public Dictionary<string, SoftwareLicenseModel> Licenses
+        {
+            get { return _Licenses; }
+            set { if (value != _Licenses) _Licenses = value; OnPropertyChanged(); }
+        }
+        
+        private Dictionary<string, SoftwareMappedModel> _SoftwareMappings;
+        public Dictionary<string, SoftwareMappedModel> SoftwareMappings
+        {
+            get { return _SoftwareMappings; }
+            set { if (value != _SoftwareMappings) _SoftwareMappings = value; OnPropertyChanged(); }
+        }
+
+        public JsonStorageModel jsm { get; set; }
+        #endregion
 
         public MainWindow()
         {
@@ -92,14 +115,16 @@ namespace DigitalClipboardAdmin
             if (jsonExist)
             {
                 // restore Mappings, nonMappings, Entries, Devices
-                JsonStorageModel jsm = DatastoreController.GetJsonDB();
+                this.jsm = DatastoreController.GetJsonDB();
                 Entries = jsm.Entries;
                 Devices = jsm.Devices;
                 Mappings = jsm.Mappings;
                 NonMapped = jsm.NonMappings;
                 Users = jsm.Users;
                 HRHs = jsm.HRHs;
-
+                Software = jsm.Software;
+                Licenses = jsm.Licenses;
+                SoftwareMappings = jsm.SoftwareMappings;
                 Log.Add("Jsm Restore Complete");
             }
             else
@@ -111,25 +136,31 @@ namespace DigitalClipboardAdmin
                 Devices = DatastoreController.ConvertToDevice();
                 Users = DatastoreController.ConvertToUser();
                 HRHs = DatastoreController.ConvertToHRH();
+                Software = DatastoreController.ConvertToSoftware();
+                Licenses = DatastoreController.ConvertToSoftwareLicense();
+                SoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
 
                 // Merge Data
                 (Mappings, NonMapped) = DatastoreController.CreateMapping(Entries, Devices);
 
                 // Save Json Data
-                JsonStorageModel jsm = new JsonStorageModel()
+                this.jsm = new JsonStorageModel()
                 {
                     Entries = this.Entries,
                     Devices = this.Devices,
                     Mappings = this.Mappings,
                     NonMappings = this.NonMapped,
                     Users = this.Users,
-                    HRHs = this.HRHs
+                    HRHs = this.HRHs,
+                    Software = this.Software,
+                    Licenses = this.Licenses,
+                    SoftwareMappings = this.SoftwareMappings
                 };
                 DatastoreController.SetJsonDB(jsm);
             }
 
             // Init view model
-            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs);
+            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
 
             // Start Background Worker
 
@@ -143,19 +174,18 @@ namespace DigitalClipboardAdmin
             tabControl.SelectedIndex = 1;
         }
 
-        private void User_Name_Click(object sender, RoutedEventArgs e)
-        {
-            tabControl.SelectedIndex = 2;
-        }
-
-        private void HRH_Click(object sender, RoutedEventArgs e)
-        {
-            tabControl.SelectedIndex = 2;
-        }
-
         private void Software_Click(object sender, RoutedEventArgs e)
         {
-            tabControl.SelectedIndex = 3;
+            tabControl.SelectedIndex = 2;
+        }
+
+        private void Update_Notes_Click(object sender, RoutedEventArgs e)
+        {
+            Log.Add("Update_Notes_Click");
+            EntryViewModel evm = dgEntries.SelectedItem as EntryViewModel;
+            string note = evm.Device.Notes;
+            Devices[evm.Device.Name].Notes = note;
+            DatastoreController.SetJsonDB(this.jsm);
         }
     }
 }
