@@ -4,10 +4,12 @@ using DigitalClipboardAdmin.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,6 +43,13 @@ namespace DigitalClipboardAdmin
             set { if (value != _Entries) _Entries = value; OnPropertyChanged(); }
         }
 
+        private Dictionary<string, List<EntryModel>> _NewEntries;
+        public Dictionary<string, List<EntryModel>> NewEntries
+        {
+            get { return _NewEntries; }
+            set { if (value != _NewEntries) _NewEntries = value; OnPropertyChanged(); }
+        }
+
         private List<EntryViewModel> _ViewEntries;
         public List<EntryViewModel> ViewEntries
         {
@@ -53,6 +62,13 @@ namespace DigitalClipboardAdmin
         {
             get { return _Devices; }
             set { if (value != _Devices) _Devices = value; OnPropertyChanged(); }
+        }
+
+        private Dictionary<string, DeviceModel> _NewDevices;
+        public Dictionary<string, DeviceModel> NewDevices
+        {
+            get { return _NewDevices; }
+            set { if (value != _NewDevices) _NewDevices = value; OnPropertyChanged(); }
         }
 
         private Dictionary<string, UserModel> _Users;
@@ -105,14 +121,19 @@ namespace DigitalClipboardAdmin
         }
 
         public JsonStorageModel jsm { get; set; }
+
+        private Timer timer;
+        private FileInfo jsonFileinfo;
+        private FileInfo accessFileinfo;
+        private FileInfo[] dcFileinfo;
         #endregion
 
         public MainWindow()
         {
             // Check / Create Dependencies
-            (bool dcExist, bool jsonExist, bool dbExist) = DatastoreController.CheckDependecies();
+            (dcFileinfo, jsonFileinfo, accessFileinfo) = DatastoreController.CheckDependecies();
 
-            if (jsonExist)
+            if (jsonFileinfo != null && jsonFileinfo.Length > 0)
             {
                 // restore Mappings, nonMappings, Entries, Devices
                 this.jsm = DatastoreController.GetJsonDB();
@@ -141,7 +162,7 @@ namespace DigitalClipboardAdmin
                 SoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
 
                 // Merge Data
-                (Mappings, NonMapped) = DatastoreController.CreateMapping(Entries, Devices);
+                (Mappings, NonMapped) = DatastoreController.CreateMapping(Entries, Devices, Users);
 
                 // Save Json Data
                 this.jsm = new JsonStorageModel()
@@ -161,12 +182,44 @@ namespace DigitalClipboardAdmin
 
             // Init view model
             ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
+            ViewEntries = ViewEntries.OrderByDescending(x => x.dateTime).ToList();
 
             // Start Background Worker
+            //timer = new Timer(5000);
+            //timer.Elapsed += new ElapsedEventHandler(async(s,e) => await OnTimedEvent());
+            //timer.Enabled = true;
 
             InitializeComponent();
             DataContext = this;
 
+
+        }
+
+        private async Task OnTimedEvent()
+        {
+            if (dcFileinfo == null || jsonFileinfo == null || accessFileinfo == null)
+            {
+                dcFileinfo = ((FileInfo[])DatastoreController.GetFileInfo(DatastoreController.filepath.DCLogs))
+                    .OrderBy(x => x.LastWriteTime).ToArray();
+                jsonFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.JSONFile);
+                accessFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.DBFile);
+            }
+            else
+            {
+                FileInfo[] curDCFileinfo = (FileInfo[])DatastoreController.GetFileInfo(DatastoreController.filepath.DCLogs);
+                FileInfo curAccessFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.DBFile);
+                curDCFileinfo = curDCFileinfo.OrderBy(x => x.LastWriteTime).ToArray();
+                if(curDCFileinfo.Last().LastWriteTime > dcFileinfo.Last().LastWriteTime)
+                {
+                    NewEntries = DatastoreController.ConvertDCLogs();
+
+                }
+
+                if(curAccessFileinfo.LastWriteTime > accessFileinfo.LastWriteTime)
+                {
+                    NewDevices = DatastoreController.ConvertToDevice();
+                }
+            }
         }
 
         private void Device_Name_Click(object sender, RoutedEventArgs e)

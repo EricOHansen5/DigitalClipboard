@@ -10,11 +10,10 @@ namespace DigitalClipboardAdmin.Views
 {
     public class EntryViewModel:BaseClass
     {
-
         public EntryViewModel(KeyValuePair<string, List<EntryModel>> em)
         {
             this.Key = em.Key;
-            this.Entries = em.Value;
+            this.Entries = em.Value.OrderByDescending(x => x.dateTime).ToList();
             EntryModel infoM = EntryModel.GetInfo(em.Value);
             this.ECN = infoM.ECN;
             this.First = infoM.firstName;
@@ -24,14 +23,19 @@ namespace DigitalClipboardAdmin.Views
             this.Status = infoM.checkIn ? "Checked In" : "Checked Out";
         }
 
-        public static List<EntryViewModel> InitList
-            (Dictionary<string, List<EntryModel>> lst, Dictionary<string, DeviceModel> devices, Dictionary<string, 
-                UserModel> users, Dictionary<string, HRHModel> hrhs, Dictionary<string, SoftwareModel> software, 
-            Dictionary<string, SoftwareLicenseModel> licenses, Dictionary<string, SoftwareMappedModel> softwareMappings)
+        public static List<EntryViewModel> InitList(
+            Dictionary<string, List<EntryModel>> entries, 
+            Dictionary<string, DeviceModel> devices, 
+            Dictionary<string, UserModel> users, 
+            Dictionary<string, HRHModel> hrhs, 
+            Dictionary<string, SoftwareModel> software, 
+            Dictionary<string, SoftwareLicenseModel> licenses, 
+            Dictionary<string, SoftwareMappedModel> softwareMappings)
         {
             Log.Add("InitList EntryViewModel");
             var l = new List<EntryViewModel>();
-            foreach (var item in lst)
+            
+            foreach (var item in entries)
             {
                 EntryViewModel e = new EntryViewModel(item);
                 e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
@@ -53,6 +57,8 @@ namespace DigitalClipboardAdmin.Views
                     if (users.ContainsKey(this.Device.UserID))
                     {
                         this.User = users[this.Device.UserID];
+                        this.First = users[this.Device.UserID].FirstName;
+                        this.Last = users[this.Device.UserID].LastName;
                     }
                     if (hrhs.ContainsKey(this.Device.HRH_ID))
                     {

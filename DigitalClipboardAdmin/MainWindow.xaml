@@ -11,9 +11,14 @@
             <TabItem Header="Entries">
                 <Grid Background="White">
 
-                    <DataGrid x:Name="dgEntries" ItemsSource="{Binding ViewEntries}" DataContext="{Binding DataContext, ElementName=window}" AutoGenerateColumns="False" SelectionMode="Single" Margin="10,38,0,10.2" HorizontalAlignment="Left" MaxWidth="519" Width="460">
+                    <DataGrid x:Name="dgEntries" ItemsSource="{Binding ViewEntries}" 
+                              DataContext="{Binding DataContext, ElementName=window}" 
+                              AutoGenerateColumns="False" SelectionMode="Single" 
+                              Margin="10,38,0,10.2" HorizontalAlignment="Left" 
+                              MaxWidth="519" Width="460" AlternationCount="2" 
+                              AlternatingRowBackground="#FFD3F4FF">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime}"/>
+                            <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" SortDirection="Descending"/>
                             <DataGridTextColumn Header="ECN" Binding="{Binding ECN}"/>
                             <DataGridTextColumn Header="First Name" Binding="{Binding First}"/>
                             <DataGridTextColumn Header="Last Name" Binding="{Binding Last}"/>
@@ -181,6 +186,28 @@
                     </StackPanel>
                 </Grid>
 
+            </TabItem>
+            <TabItem Header="All Entries">
+                <Grid Background="White">
+                    <DataGrid x:Name="dgAllEntries" ItemsSource="{Binding ViewEntries.Entries}" 
+                              DataContext="{Binding DataContext, ElementName=window}" 
+                              AutoGenerateColumns="False" SelectionMode="Single" 
+                              Margin="10,38,0,10.2" HorizontalAlignment="Left" 
+                              MaxWidth="519" Width="460" AlternationCount="2" 
+                              AlternatingRowBackground="#FFD3F4FF" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" SortDirection="Descending"/>
+                            <DataGridTextColumn Header="ECN" Binding="{Binding ECN}"/>
+                            <DataGridTextColumn Header="First Name" Binding="{Binding First}"/>
+                            <DataGridTextColumn Header="Last Name" Binding="{Binding Last}"/>
+                            <DataGridTextColumn Header="Tech Name" Binding="{Binding Tech}"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Notifications">
+                <Grid Background="White"/>
             </TabItem>
         </TabControl>
 

@@ -21,7 +21,12 @@ namespace DigitalClipboardAdmin.Controllers
         private const string dbPath = "\\\\riemfs01\\S\\Research Support\\S-6 Information Management\\Administrative Tools\\Software\\DATABASE\\IMB_Software_DB_BackEnd.accdb";
 
         private static string conString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='S:\Research Support\S-6 Information Management\Administrative Tools\Software\DATABASE\IMB_Software_DB_BackEnd.accdb'";
-
+        public enum filepath
+        {
+            DCLogs,
+            JSONFile,
+            DBFile
+        }
         /// <summary>
         /// returns bools for each dependency object
         /// </summary>
@@ -30,27 +35,26 @@ namespace DigitalClipboardAdmin.Controllers
         /// <para>jsonExist - does does json db exist</para>
         /// <para>dbExist - does access db exist</para>
         /// </returns>
-        public static (bool, bool, bool) CheckDependecies()
+        public static (FileInfo[], FileInfo, FileInfo) CheckDependecies()
         {
 
             Log.Add("Init Data Sets");
             try
             {
-                bool dcLogsExist;
-                bool jsonExist = false;
-                bool dbExist = false;
+                FileInfo[] dcLogsInfo;
+                FileInfo jsonFileInfo;
+                FileInfo dbFileInfo;
 
                 // Log Files
                 if (!Directory.Exists(dcLogPath))
                 {
                     Log.Add("DC Log Dir Created");
                     Directory.CreateDirectory(dcLogPath);
-                    dcLogsExist = true;
                 }
-                else
-                {
-                    dcLogsExist = true;
-                }
+                // get log files
+                DirectoryInfo di = new DirectoryInfo(dcLogPath);
+                dcLogsInfo = di.GetFiles(dcLogPath).OrderByDescending(x => x.LastWriteTime).ToArray();
+                
 
                 // JSON DB File
                 if (!Directory.Exists(Path.GetDirectoryName(jsonPath)))
@@ -70,10 +74,8 @@ namespace DigitalClipboardAdmin.Controllers
                         Log.Add("Json File Created");
                         File.Create(jsonPath);
                     }
-
-                    if (new FileInfo(jsonPath).Length > 0)
-                        jsonExist = true;
                 }
+                jsonFileInfo = new FileInfo(jsonPath);
 
                 // Access DB File
                 if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
@@ -83,16 +85,29 @@ namespace DigitalClipboardAdmin.Controllers
                 {
                     Log.Add("DB File Doesn't Exist");
                 }
-                else
-                {
-                    dbExist = true;
-                }
+                dbFileInfo = new FileInfo(dbPath);
 
-                return (dcLogsExist, jsonExist, dbExist);
+                return (dcLogsInfo, jsonFileInfo, dbFileInfo);
             }catch(Exception e)
             {
                 Log.Add("Error: " + e.Message, Log.Level.ERR);
-                return (false, false, false);
+                return (null, null, null);
+            }
+        }
+
+        public static object GetFileInfo(filepath fp)
+        {
+            switch (fp)
+            {
+                case filepath.DCLogs:
+                    DirectoryInfo di = new DirectoryInfo(dcLogPath);
+                    return di.GetFiles(dcLogPath).OrderByDescending(x => x.LastWriteTime).ToArray();
+                case filepath.JSONFile:
+                    return new FileInfo(jsonPath);
+                case filepath.DBFile:
+                    return new FileInfo(dbPath);
+                default:
+                    return null;
             }
         }
 
@@ -211,14 +226,41 @@ namespace DigitalClipboardAdmin.Controllers
                     int[] dti = new int[6];
                     for (int i = 0; i < dts.Length; i++){ dti[i] = int.Parse(dts[i]); };
                     DateTime dt = new DateTime(dti[0], dti[1], dti[2], dti[3], dti[4], dti[5]);
+
+                    string[] names = props[4].Split(' ');
+                    string first = "";
+                    string last = "";
+                    string rank = "";
+                    if (names.Length == 2)
+                    {
+                        first = names[0];
+                        last = names[1];
+                    }
+                    else
+                    {
+                        if (names[0].Length == 3)
+                        {
+                            first = names[1];
+                            last = names[2];
+                        }
+                        else if(names.Length == 1)
+                        {
+                            first = names[0];
+                        }
+                        else
+                        {
+                            first = names[0];
+                            last = names[2];
+                        }
+                    }
                     EntryModel em = new EntryModel()
                     {
                         dateTime = dt,
                         checkIn = props[1] == EntryModel.CheckInStr ? true : false,
                         barcode = props[2],
                         ECN = props[3],
-                        firstName = props[4].Split(' ').Length > 1 ? props[4].Split(' ')[0] : props[4],
-                        lastName = props[4].Split(' ').Length > 1 ? props[4].Split(' ')[1] : "",
+                        firstName = first,
+                        lastName = last,
                         techName = props[5].Trim('\r')
                     };
 
@@ -494,7 +536,11 @@ namespace DigitalClipboardAdmin.Controllers
         }
 
         public static (Dictionary<string, MappedModel>, Dictionary<string, List<EntryModel>>) CreateMapping
-            (Dictionary<string, List<EntryModel>> entries, Dictionary<string, DeviceModel> devices)
+            (
+            Dictionary<string, List<EntryModel>> entries, 
+            Dictionary<string, DeviceModel> devices,
+            Dictionary<string, UserModel> users
+            )
         {
             Log.Add("CreateMapping");
             Dictionary<string, MappedModel> mappings = new Dictionary<string, MappedModel>();
@@ -513,7 +559,8 @@ namespace DigitalClipboardAdmin.Controllers
                     {
                         DeviceModelID = device.Key,
                         Barcode = EntryModel.GetBarcode(entries[device.Value.ECN]),
-                        ECN = device.Value.ECN
+                        ECN = device.Value.ECN,
+                        Name = users[device.Value.UserID].FullName
                     };
                     mappings.Add(mm.ECN, mm);
                 }

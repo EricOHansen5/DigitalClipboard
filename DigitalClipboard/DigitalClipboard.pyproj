@@ -28,11 +28,17 @@
     <Compile Include="Datastore.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DeviceMaps.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DigitalClipboard.py" />
     <Compile Include="LogEvent.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Signature_Input.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="test_datastore.py">

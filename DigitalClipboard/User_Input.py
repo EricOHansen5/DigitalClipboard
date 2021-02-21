@@ -1,8 +1,12 @@
 import sys
 from tkinter import *
+import tkinter as tk
 import tkinter.font as tkFont
 from Datastore import Datastore
 from LogEvent import LogEvent
+from Signature_Input import Signature_Input
+from DeviceMaps import DeviceMaps
+import datetime
 
 class User_Input(object):
     """This will be the python user interface to gather check in/out info"""
@@ -23,6 +27,10 @@ class User_Input(object):
         logevent.Add_Status("--IN --")
 
         missing_entry = False
+
+        # Get Current date and time
+        date_time = datetime.datetime.now()
+        logevent.Add_DateTime(date_time)
 
         # Get Name from text field
         txt = self.txtname.get()
@@ -68,6 +76,10 @@ class User_Input(object):
         logevent.Add_Status("--OUT--")
 
         missing_entry = False
+        
+        # Get Current date and time
+        date_time = datetime.datetime.now()
+        logevent.Add_DateTime(date_time)
 
         # Get Name from text field
         txt = self.txtname.get()
@@ -93,13 +105,26 @@ class User_Input(object):
         # Missing entry highlight entry fields
         if missing_entry:
             return
+        
+        sig_input = Signature_Input(date_time, txtecn)
+        logevent.Add_Signature(sig_input.GetFileName())
 
         # Log the LogEvent to file
         Datastore().Add(logevent.Get_Log())
 
-        self.root.destroy()
-        return
+        # Get Signature if all data is present
+        self.Get_Signature(sig_input)
+        try:
+            self.root.destroy()
+            return
+        except:
+            print("finished")
+            return
+    
 
+    def Get_Signature(self, sig_input):
+        sig_input.Run(self.root)
+        return
     
     def Exit_Click(self):
         sys.exit()
@@ -125,6 +150,17 @@ class User_Input(object):
 
     def __init__(self, barcode, root):
         print("UI Start Called")
+
+        jsonDB = DeviceMaps().jsonMap
+        
+        for k in jsonDB['Mappings']:
+            if jsonDB['Mappings'][k]['Barcode'] == barcode:
+                self.foundMap = jsonDB['Mappings'][k]
+                name = tk.StringVar()
+                name.set(self.foundMap['Name'])
+                ecn = tk.StringVar()
+                ecn.set(self.foundMap['ECN'])
+
         bg_color = 'white smoke'
         font_s = tkFont.Font(family="Courier", size=15)
         width_s = 50
@@ -147,15 +183,15 @@ class User_Input(object):
         self.lbluser.pack(side='top')
         self.lbluser.configure(bg=bg_color)
 
-        self.txtname = Entry(root, width=width_s, font=font_s)
+        self.txtname = Entry(root, width=width_s, font=font_s, textvariable=name)
         self.txtname.pack(fill=NONE, side='top', pady=(5,25))
-
+        
         # ECN Section
         self.lblecn = Label(root, text="ECN:", font=font_s)
         self.lblecn.pack(side='top')
         self.lblecn.configure(bg=bg_color)
 
-        self.txtecn = Entry(root, width=width_s, font=font_s)
+        self.txtecn = Entry(root, width=width_s, font=font_s, textvariable=ecn)
         self.txtecn.pack(fill=NONE, side='top', pady=(5,25))
 
         # Technician Section
@@ -195,3 +231,4 @@ class User_Input(object):
         self.exit.bind("<Leave>", self.on_leave)
 
         self.root.mainloop()
+

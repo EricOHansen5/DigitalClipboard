@@ -10,6 +10,7 @@ class Datastore(object):
 
     # Share Drive
     dirpath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\"
+    sigpath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\Signatures\\"
     checkpath = "\\\\riemfs01\\X\\"
     filename = os.path.join(dirpath, date_format)
     

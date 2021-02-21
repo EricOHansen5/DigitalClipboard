@@ -1,0 +1,63 @@
+
+
+---- Digital Clipboard ----
+wait_for_barcodes called
+UI Start Called
+DeviceMaps Created
+Checking_Out Called
+LogEvent Created Empty
+Barcode Added
+Status Added
+DateTime Added
+Username Added
+ECN Added
+Tech Added
+Unexpected Exception:  <class 'SystemExit'>
+
+
+---- Digital Clipboard ----
+wait_for_barcodes called
+UI Start Called
+DeviceMaps Created
+Unexpected Exception:  <class 'SystemExit'>
+
+
+---- Digital Clipboard ----
+wait_for_barcodes called
+UI Start Called
+DeviceMaps Created
+Checking_In Called
+LogEvent Created Empty
+Barcode Added
+Status Added
+DateTime Added
+Username Added
+ECN Added
+Tech Added
+Datastore Created
+Check_File
+Get_Log Called
+Datastore Add Called
+Check_File
+Add_Log_Entry
+Set_Writable
+Set_Readonly
+Datastore Add Complete
+UI Start Called
+DeviceMaps Created
+Checking_Out Called
+LogEvent Created Empty
+Barcode Added
+Status Added
+DateTime Added
+Username Added
+ECN Added
+Tech Added
+Unexpected Exception:  <class 'SystemExit'>
+
+
+---- Digital Clipboard ----
+wait_for_barcodes called
+UI Start Called
+DeviceMaps Created
+Unexpected Exception:  <class 'SystemExit'>

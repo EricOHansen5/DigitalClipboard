@@ -27,5 +27,12 @@ namespace DigitalClipboardAdmin.Models
             get { return _ECN; }
             set { if (value != _ECN) _ECN = value; OnPropertyChanged(); }
         }
+
+        private string _Name;
+        public string Name
+        {
+            get { return _Name; }
+            set { if (value != _Name) _Name = value; OnPropertyChanged(); }
+        }
     }
 }
