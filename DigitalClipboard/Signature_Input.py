@@ -46,14 +46,17 @@ class Signature_Input:
     def Run(self, root):
         self.root = root
         bg_color = 'white smoke'
-        font_s = tkFont.Font(family="Courier", size=15)
+        font_s = tkFont.Font(family="Courier", size=20)
         width_s = 50
 
         self.tk = Tk()
-        self.cvs = Canvas(self.tk, width=500,height=500)
+        self.lblHeader = Label(self.tk, text="Sign Below", font=font_s, width=width_s)
+        self.lblHeader.pack()
+
+        self.cvs = Canvas(self.tk, width=650,height=480)
         self.cvs.pack()
 
-        self.img = Image.new('RGB',(500,500),(255,255,255))
+        self.img = Image.new('RGB',(650,480),(255,255,255))
         self.draw = ImageDraw.Draw(self.img)
 
         self.mousePressed = False
