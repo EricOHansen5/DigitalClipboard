@@ -7,13 +7,15 @@ from LogEvent import LogEvent
 from Signature_Input import Signature_Input
 from DeviceMaps import DeviceMaps
 import datetime
+import os
+import subprocess
 
 class User_Input(object):
     """This will be the python user interface to gather check in/out info"""
 
     barcode = "-2"
     defaultbg = ""
-    
+
     def Checking_In(self):
         print("Checking_In Called")
         # Check for null barcode
@@ -130,6 +132,11 @@ class User_Input(object):
         sys.exit()
 
 
+    def on_focus_in(self, e):
+            print('on_focus_in')
+            subprocess.Popen("osk", shell=True)
+
+
     def on_enter(self, e):
         # Hover over button
         self.defaultbg = e.widget['background']
@@ -152,13 +159,13 @@ class User_Input(object):
         print("UI Start Called")
 
         jsonDB = DeviceMaps().jsonMap
-        
+        name = tk.StringVar()
+        ecn = tk.StringVar()
+
         for k in jsonDB['Mappings']:
             if jsonDB['Mappings'][k]['Barcode'] == barcode:
                 self.foundMap = jsonDB['Mappings'][k]
-                name = tk.StringVar()
                 name.set(self.foundMap['Name'])
-                ecn = tk.StringVar()
                 ecn.set(self.foundMap['ECN'])
 
         bg_color = 'white smoke'
@@ -185,7 +192,8 @@ class User_Input(object):
 
         self.txtname = Entry(root, width=width_s, font=font_s, textvariable=name)
         self.txtname.pack(fill=NONE, side='top', pady=(5,25))
-        
+        self.txtname.bind("<1>", self.on_focus_in)
+
         # ECN Section
         self.lblecn = Label(root, text="ECN:", font=font_s)
         self.lblecn.pack(side='top')
@@ -193,6 +201,7 @@ class User_Input(object):
 
         self.txtecn = Entry(root, width=width_s, font=font_s, textvariable=ecn)
         self.txtecn.pack(fill=NONE, side='top', pady=(5,25))
+        self.txtecn.bind("<1>", self.on_focus_in)
 
         # Technician Section
         self.lbltech = Label(root, text="Technician: ", font=font_s)

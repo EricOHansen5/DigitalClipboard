@@ -230,7 +230,6 @@ namespace DigitalClipboardAdmin.Controllers
                     string[] names = props[4].Split(' ');
                     string first = "";
                     string last = "";
-                    string rank = "";
                     if (names.Length == 2)
                     {
                         first = names[0];

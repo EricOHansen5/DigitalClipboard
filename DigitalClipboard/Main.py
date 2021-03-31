@@ -74,7 +74,7 @@ class Main(object):
         return result
 
     def Run(self):
-        filename = './logs/logs.txt'
+        filename = '\\\\riemfs01\\X\\AutomationTools\\pypi\\DigitalClipboard\\logs\\logs.txt'
         if path.exists(filename) == False:
             print("log file doesn't exist")
         sys.stdout = open(filename, 'a')

@@ -50,8 +50,8 @@ namespace DigitalClipboardAdmin
             set { if (value != _NewEntries) _NewEntries = value; OnPropertyChanged(); }
         }
 
-        private List<EntryViewModel> _ViewEntries;
-        public List<EntryViewModel> ViewEntries
+        private ICollectionView _ViewEntries;
+        public ICollectionView ViewEntries
         {
             get { return _ViewEntries; }
             set { if (value != _ViewEntries) _ViewEntries = value; OnPropertyChanged(); }
@@ -126,6 +126,14 @@ namespace DigitalClipboardAdmin
         private FileInfo jsonFileinfo;
         private FileInfo accessFileinfo;
         private FileInfo[] dcFileinfo;
+
+
+        private ICollectionView _DataGridCollection;
+        public ICollectionView DataGridCollection
+        {
+            get { return _DataGridCollection; }
+            set { if (value != _DataGridCollection) _DataGridCollection = value; OnPropertyChanged(); }
+        }
         #endregion
 
         public MainWindow()
@@ -181,9 +189,9 @@ namespace DigitalClipboardAdmin
             }
 
             // Init view model
-            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
-            ViewEntries = ViewEntries.OrderByDescending(x => x.dateTime).ToList();
-
+            ViewEntries = (ICollectionView)EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
+            ViewEntries = (ICollectionView)ViewEntries.OrderByDescending(x => x.dateTime).ToList();
+            DataGridCollection = ViewEntries;
             // Start Background Worker
             //timer = new Timer(5000);
             //timer.Elapsed += new ElapsedEventHandler(async(s,e) => await OnTimedEvent());
@@ -191,7 +199,8 @@ namespace DigitalClipboardAdmin
 
             InitializeComponent();
             DataContext = this;
-
+            DataGridCollection = CollectionViewSource.GetDefaultView(dgEntries.ItemsSource);
+            DataGridCollection.Filter = new Predicate<object>(Filter);
 
         }
 
@@ -240,5 +249,45 @@ namespace DigitalClipboardAdmin
             Devices[evm.Device.Name].Notes = note;
             DatastoreController.SetJsonDB(this.jsm);
         }
+
+
+        #region Search
+        private void Search_Enter_Click(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+
+            }
+        }
+
+        private string _FilterString;
+        public string FilterString
+        {
+            get { return _FilterString; }
+            set { if (value != _FilterString) _FilterString = value; OnPropertyChanged(); FilterCollection(); }
+        }
+        private void FilterCollection()
+        {
+            if(_DataGridCollection != null)
+            {
+                _DataGridCollection.Refresh();
+            }
+        }
+
+        public bool Filter(object obj)
+        {
+            var data = obj as EntryViewModel;
+            if(data != null)
+            {
+                if (!string.IsNullOrEmpty(_FilterString))
+                {
+                    return data.First.Contains(_FilterString) || data.Last.Contains(_FilterString) || data.ECN.Contains(_FilterString);
+                }
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
     }
 }

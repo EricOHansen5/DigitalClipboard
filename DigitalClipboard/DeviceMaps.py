@@ -19,5 +19,7 @@ class DeviceMaps(object):
 
         # deserialize data
         self.jsonMap = json.load(data)
+        
+        print("DeviceMaps Complete")
 
         
