@@ -60,7 +60,7 @@ namespace DigitalClipboardAdmin.Views
             Software = new List<SoftwareModel>();
             CombinedSoftware = new List<CombinedSoftware>();
 
-            foreach (var map in mappings.Values)
+            foreach (SoftwareMappedModel map in mappings.Values)
             {
                 // If map matches this ID
                 // Get all licenses associated with this name

@@ -127,16 +127,9 @@ namespace DigitalClipboardAdmin
         private FileInfo accessFileinfo;
         private FileInfo[] dcFileinfo;
 
-
-        private ICollectionView _DataGridCollection;
-        public ICollectionView DataGridCollection
-        {
-            get { return _DataGridCollection; }
-            set { if (value != _DataGridCollection) _DataGridCollection = value; OnPropertyChanged(); }
-        }
         #endregion
 
-        public MainWindow()
+        public MainWindow(bool isUpdateDB = false)
         {
             // Check / Create Dependencies
             (dcFileinfo, jsonFileinfo, accessFileinfo) = DatastoreController.CheckDependecies();
@@ -145,7 +138,13 @@ namespace DigitalClipboardAdmin
             {
                 // restore Mappings, nonMappings, Entries, Devices
                 this.jsm = DatastoreController.GetJsonDB();
+                // Populate
                 Entries = jsm.Entries;
+                NewEntries = DatastoreController.ConvertDCLogs();
+                Merge_DC_Entries(NewEntries);
+
+
+
                 Devices = jsm.Devices;
                 Mappings = jsm.Mappings;
                 NonMapped = jsm.NonMappings;
@@ -187,11 +186,14 @@ namespace DigitalClipboardAdmin
                 };
                 DatastoreController.SetJsonDB(jsm);
             }
+            Predicate<object> EntryFilter = new Predicate<object>(this.EntryFilter);
 
             // Init view model
-            ViewEntries = (ICollectionView)EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
-            ViewEntries = (ICollectionView)ViewEntries.OrderByDescending(x => x.dateTime).ToList();
-            DataGridCollection = ViewEntries;
+            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings, EntryFilter);
+            ViewEntries.SortDescriptions.Add(new SortDescription("dateTime", ListSortDirection.Descending));
+            //ViewEntries = (ICollectionView)ViewEntries.OrderByDescending(x => x.dateTime).ToList();
+            ViewEntries.Filter = new Predicate<object>(this.Filter);
+
             // Start Background Worker
             //timer = new Timer(5000);
             //timer.Elapsed += new ElapsedEventHandler(async(s,e) => await OnTimedEvent());
@@ -199,9 +201,41 @@ namespace DigitalClipboardAdmin
 
             InitializeComponent();
             DataContext = this;
-            DataGridCollection = CollectionViewSource.GetDefaultView(dgEntries.ItemsSource);
-            DataGridCollection.Filter = new Predicate<object>(Filter);
 
+        }
+
+        private void Merge_DC_Entries(Dictionary<string, List<EntryModel>> newEntries)
+        {
+            // Check if dictionarys exist
+            if(this.Entries != null && newEntries != null)
+            {                
+                // Iterates through all processed entries
+                foreach (KeyValuePair<string, List<EntryModel>> entry in newEntries)
+                {
+                    // Check if new entries have more entries than processed ones
+                    if (this.Entries.ContainsKey(entry.Key))// && this.Entries[entry.Key].Count != entry.Value.Count)
+                    {
+
+                        Merge_Lists(this.Entries[entry.Key], entry.Value);
+                    }
+                }
+
+            }
+        }
+
+        private void Merge_Lists(List<EntryModel> procList, List<EntryModel> newList)
+        {
+            foreach (EntryModel nItem in newList)
+            {
+                EntryModel em = procList.FirstOrDefault(x => x.dateTime == nItem.dateTime);
+                if (em != null)
+                {
+                    //procList.Add(new EntryModel(nItem));
+                    int ix = procList.IndexOf(em);
+                    procList[ix] = new EntryModel(nItem);
+
+                }
+            }
         }
 
         private async Task OnTimedEvent()
@@ -235,10 +269,13 @@ namespace DigitalClipboardAdmin
         {
             tabControl.SelectedIndex = 1;
         }
-
         private void Software_Click(object sender, RoutedEventArgs e)
         {
             tabControl.SelectedIndex = 2;
+        }
+        private void All_Entries_Click(object sender, RoutedEventArgs e)
+        {
+            tabControl.SelectedIndex = 3;
         }
 
         private void Update_Notes_Click(object sender, RoutedEventArgs e)
@@ -254,9 +291,17 @@ namespace DigitalClipboardAdmin
         #region Search
         private void Search_Enter_Click(object sender, KeyEventArgs e)
         {
+            
             if(e.Key == Key.Enter)
             {
-
+                if ((sender as TextBox).Name == "txtSearch")
+                {
+                    FilterString = (sender as TextBox).Text;
+                }
+                else if ((sender as TextBox).Name == "txtSearch_All")
+                {
+                    FilterStringAllEntries = (sender as TextBox).Text;
+                }
             }
         }
 
@@ -264,13 +309,34 @@ namespace DigitalClipboardAdmin
         public string FilterString
         {
             get { return _FilterString; }
-            set { if (value != _FilterString) _FilterString = value; OnPropertyChanged(); FilterCollection(); }
+            set { 
+                if (value != _FilterString) 
+                    _FilterString = value; 
+                OnPropertyChanged(); 
+                FilterCollection(); 
+            }
         }
+        private string _FilterStringAllEntries;
+        public string FilterStringAllEntries
+        {
+            get { return _FilterStringAllEntries; }
+            set { 
+                if (value != _FilterStringAllEntries) 
+                    _FilterStringAllEntries = value; 
+                OnPropertyChanged();
+                FilterCollection();
+            }
+        }
+
         private void FilterCollection()
         {
-            if(_DataGridCollection != null)
+            if(_ViewEntries != null)
             {
-                _DataGridCollection.Refresh();
+                _ViewEntries.Refresh();
+            }
+            if(dgEntries != null && dgEntries.SelectedItem != null)
+            {
+                (dgEntries.SelectedItem as EntryViewModel).EntryList.Refresh();
             }
         }
 
@@ -281,7 +347,24 @@ namespace DigitalClipboardAdmin
             {
                 if (!string.IsNullOrEmpty(_FilterString))
                 {
-                    return data.First.Contains(_FilterString) || data.Last.Contains(_FilterString) || data.ECN.Contains(_FilterString);
+                    string cleanString = _FilterString.ToLower();
+
+                    return data.First.ToLower().Contains(cleanString) || data.Last.ToLower().Contains(cleanString) || data.ECN.ToLower().Contains(cleanString) || data.FullName.ToLower().Contains(cleanString);
+                }
+                return true;
+            }
+            return false;
+        }
+        public bool EntryFilter(object obj)
+        {
+            EntryModel data = obj as EntryModel;
+            if (data != null)
+            {
+                if (!string.IsNullOrEmpty(_FilterStringAllEntries))
+                {
+                    string cleanString = _FilterStringAllEntries.ToLower();
+
+                    return data.firstName.ToLower().Contains(cleanString) || data.lastName.ToLower().Contains(cleanString) || data.ECN.ToLower().Contains(cleanString) || data.fullName.ToLower().Contains(cleanString);
                 }
                 return true;
             }

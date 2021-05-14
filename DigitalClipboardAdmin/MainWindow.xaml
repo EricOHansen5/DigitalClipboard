@@ -5,20 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DigitalClipboardAdmin"
         mc:Ignorable="d"
-        Title="Digital Clipboard (Admin Portal)" Height="450" Width="800">
+        Title="Digital Clipboard (Admin Portal)" Height="450" Width="1000">
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="383" Margin="10,27,0,0" VerticalAlignment="Top" Width="774">
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="383" Margin="10,27,0,0" VerticalAlignment="Top" Width="972">
             <TabItem Header="Entries">
                 <Grid Background="White">
+
+                    <Label Content="Most Recent Entries" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
+                    <WrapPanel Margin="10,10,299,319" Orientation="Horizontal" HorizontalAlignment="Right">
+
+                        <Label Content="Search:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding FilterString, FallbackValue='', Mode=OneWayToSource, UpdateSourceTrigger=LostFocus}" VerticalAlignment="Center" Width="160" KeyDown="Search_Enter_Click" VerticalContentAlignment="Center" Margin="10,0"/>
+                        <Button x:Name="btnDeviceName_Copy" VerticalAlignment="Center" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="All_Entries_Click" Height="23" RenderTransformOrigin="0.892,1.174" Content="All Entries for Selected" Width="146" Margin="0"/>
+
+                    </WrapPanel>
 
                     <DataGrid x:Name="dgEntries" ItemsSource="{Binding ViewEntries}" 
                               DataContext="{Binding DataContext, ElementName=window}" 
                               AutoGenerateColumns="False" SelectionMode="Single" 
-                              Margin="10,38,0,10.2" HorizontalAlignment="Left" 
-                              MaxWidth="519" Width="460" AlternationCount="2" 
-                              AlternatingRowBackground="#FFD3F4FF">
+                              Margin="10,38,0,10" HorizontalAlignment="Left" 
+                              MaxWidth="519" Width="657" AlternationCount="2" 
+                              AlternatingRowBackground="#FFD3F4FF" Padding="5,0">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" SortDirection="Descending"/>
+                            <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime, StringFormat=yyyy-MM-dd HH:mm:ss}" SortDirection="Descending"/>
                             <DataGridTextColumn Header="ECN" Binding="{Binding ECN}"/>
                             <DataGridTextColumn Header="First Name" Binding="{Binding First}"/>
                             <DataGridTextColumn Header="Last Name" Binding="{Binding Last}"/>
@@ -27,34 +36,34 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" Text="{Binding FilterString, Mode=TwoWay, FallbackValue='Search...', UpdateSourceTrigger=LostFocus}" VerticalAlignment="Top" Width="160" KeyDown="Search_Enter_Click" VerticalContentAlignment="Center"/>
+                    <GridSplitter HorizontalAlignment="Left" Height="335" Margin="672,0,0,0" VerticalAlignment="Top" Width="5"/>
 
-                    <GridSplitter HorizontalAlignment="Left" Height="335" Margin="475,0,0,0" VerticalAlignment="Top" Width="5"/>
-
-                    <GroupBox Header="Device Info." HorizontalAlignment="Left" Height="335" Margin="485,10,0,0" VerticalAlignment="Top" Width="274" Background="White">
+                    <GroupBox Header="Device Info." HorizontalAlignment="Right" Height="335" Margin="485,10,10,0" VerticalAlignment="Top" Width="274" Background="White">
                         <Grid Margin="10,10,6.2,2">
                             <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
-                            <Button x:Name="btnDeviceName" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Name, FallbackValue=[device_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,0,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Device_Name_Click" Height="26" RenderTransformOrigin="0.565,0.662"/>
+                            <Button x:Name="btnDeviceName" Content="{Binding SelectedItem.Device.Name, ElementName=dgEntries, FallbackValue=[device_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,0,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Device_Name_Click" Height="26" RenderTransformOrigin="0.565,0.662"/>
                             <Label Content="ECN:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,31,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceECN" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ECN, FallbackValue=[0000]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,31,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceECN" Content="{Binding SelectedItem.Device.ECN, ElementName=dgEntries, FallbackValue=[0000]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,31,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="OS:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,62,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceOS" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.OS, FallbackValue=[operating_system]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,62,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceOS" Content="{Binding SelectedItem.Device.OS, ElementName=dgEntries, FallbackValue=[operating_system]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,62,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="DIV:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,93,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceDivision" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Division, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,93,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceDivision" Content="{Binding SelectedItem.Device.Division, ElementName=dgEntries, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,93,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="Service Tag:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,124,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceServiceTag" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ServiceTag, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,124,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceServiceTag" Content="{Binding SelectedItem.Device.ServiceTag, ElementName=dgEntries, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,124,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="User:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,155,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceUserName" Content="{Binding ElementName=dgEntries, Path=SelectedItem.User.LastName, FallbackValue=[user]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,155,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceUserName" Content="{Binding SelectedItem.User.LastName, ElementName=dgEntries, FallbackValue=[user]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,155,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="HRH:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,186,0,0" Height="26"/>
-                            <Label x:Name="gbDeviceHRH" Content="{Binding ElementName=dgEntries, Path=SelectedItem.HRH.LastName, FallbackValue=[hrh]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,186,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label x:Name="gbDeviceHRH" Content="{Binding SelectedItem.HRH.LastName, ElementName=dgEntries, FallbackValue=[hrh]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,186,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="Software:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,217,0,0" Height="26"/>
-                            <Button x:Name="btnDeviceSoftware" Content="{Binding ElementName=dgEntries, Path=SelectedItem.Software, FallbackValue=Software}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,217,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Software_Click" Height="26"/>
+                            <Button x:Name="btnDeviceSoftware" Content="{Binding SelectedItem.Software, ElementName=dgEntries, FallbackValue=Software}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,217,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Software_Click" Height="26"/>
+                            <Label Content="Reason:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,248,0,0" Height="26"/>
+                            <Label x:Name="gbReason" Content="{Binding SelectedItem.Reason, ElementName=dgEntries, FallbackValue=[reason]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,248,-0.2,0" VerticalAlignment="Top"/>
 
                         </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Devices">
+            <TabItem Header="Device">
                 <Grid Background="White">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -63,7 +72,8 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="10">
+                    <Label Content="Device Information" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" Grid.ColumnSpan="2" BorderThickness="0,0,0,1" FontWeight="Bold" FontStyle="Italic"/>
+                    <StackPanel Grid.Column="0" Margin="10,38,10,10">
                         <Label Content="Name:"/>
                         <Label Content="ECN:"/>
                         <Label Content="Division:"/>
@@ -75,22 +85,22 @@
                         <Label Content="OS:"/>
                         <Label Content="BIOS:"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="0,10,0,10">
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Name, FallbackValue=[name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ECN, FallbackValue=[ecn]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Division, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.IP, FallbackValue=[ip]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.MAC, FallbackValue=[mac]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.MAC_Wireless, FallbackValue=[mac_wireless]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ServiceTag, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Network, FallbackValue=[network]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.OS, FallbackValue=[os]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.BIOS, FallbackValue=[bios]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                    <StackPanel Grid.Column="1" Margin="0,38,0,10">
+                        <Label Content="{Binding SelectedItem.Device.Name, ElementName=dgEntries, FallbackValue=[name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.ECN, ElementName=dgEntries, FallbackValue=[ecn]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.Division, ElementName=dgEntries, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.IP, ElementName=dgEntries, FallbackValue=[ip]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.MAC, ElementName=dgEntries, FallbackValue=[mac]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.MAC_Wireless, ElementName=dgEntries, FallbackValue=[mac_wireless]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.ServiceTag, ElementName=dgEntries, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.Network, ElementName=dgEntries, FallbackValue=[network]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.OS, ElementName=dgEntries, FallbackValue=[os]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.BIOS, ElementName=dgEntries, FallbackValue=[bios]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
                     </StackPanel>
 
-                    <GridSplitter Grid.Column="2" HorizontalAlignment="Center" Margin="5,10,5,10" Width="5"/>
+                    <GridSplitter Grid.Column="2" HorizontalAlignment="Center" Margin="5,38,5,10" Width="5"/>
 
-                    <StackPanel Grid.Column="3" Margin="10">
+                    <StackPanel Grid.Column="3" Margin="10,38,10,10">
                         <Label Content="User:"/>
                         <Label Content="Make:"/>
                         <Label Content="Model:"/>
@@ -98,23 +108,23 @@
                         <Label Content="HRH:"/>
                         <Label Content="Notes:"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="4" Margin="10">
+                    <StackPanel Grid.Column="4" Margin="10,38,10,10">
                         <DockPanel>
-                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.User.FirstName, FallbackValue=[first_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.User.LastName, FallbackValue=[last_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                            <Label Content="{Binding SelectedItem.User.FirstName, ElementName=dgEntries, FallbackValue=[first_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                            <Label Content="{Binding SelectedItem.User.LastName, ElementName=dgEntries, FallbackValue=[last_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
                         </DockPanel>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Make, FallbackValue=[make]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Model, FallbackValue=[model]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                        <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.Device.ModelNumber, FallbackValue=[model_number]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.Make, ElementName=dgEntries, FallbackValue=[make]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.Model, ElementName=dgEntries, FallbackValue=[model]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                        <Label Content="{Binding SelectedItem.Device.ModelNumber, ElementName=dgEntries, FallbackValue=[model_number]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
                         <DockPanel>
-                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.HRH.FirstName, FallbackValue=[first_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
-                            <Label Content="{Binding ElementName=dgEntries, Path=SelectedItem.HRH.LastName, FallbackValue=[last_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                            <Label Content="{Binding SelectedItem.HRH.FirstName, ElementName=dgEntries, FallbackValue=[first_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
+                            <Label Content="{Binding SelectedItem.HRH.LastName, ElementName=dgEntries, FallbackValue=[last_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}"/>
                         </DockPanel>
                         <TextBox MinLines="6" Margin="0,10,10,10" x:Name="txtNotes"
-                            Text="{Binding ElementName=dgEntries, Path=SelectedItem.Device.Notes, FallbackValue=[notes]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" TextWrapping="WrapWithOverflow"/>
+                            Text="{Binding SelectedItem.Device.Notes, ElementName=dgEntries, FallbackValue=[notes]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" TextWrapping="WrapWithOverflow"/>
                         <Button x:Name="btnUpdateNote" Content="Update Notes" BorderBrush="Blue" Background="White" Foreground="Blue" Padding="10,1" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Click="Update_Notes_Click">
                             <Button.Style>
-                                <Style TargetType="Button">
+                                <Style TargetType="{x:Type Button}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedItem.Count, ElementName=dgEntries}" Value="0">
                                             <Setter Property="IsEnabled" Value="False"/>
@@ -150,15 +160,12 @@
                         </Style>
                     </Grid.Resources>
 
-                    <Label Content="Installed Software" Margin="0,10,14.8,10.2" Grid.ColumnSpan="2"/>
+                    <Label Content="Installed Software" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
                     <ListBox Grid.Row="0" x:Name="lbSoftware" 
-                             ItemsSource="{Binding Path=SelectedItem.Device.SoftwareViewModel.CombinedSoftware, ElementName=dgEntries}" 
+                             ItemsSource="{Binding SelectedItem.Device.SoftwareViewModel.CombinedSoftware, ElementName=dgEntries}" 
                              DataContext="{Binding SelectedItem, ElementName=dgEntries}"
                              SelectedItem="{Binding Selected, Mode=TwoWay}"
-                             SelectionMode="Single" Margin="10,38,0,10.2" HorizontalAlignment="Left" 
-                             Width="250" AlternationCount="2" DisplayMemberPath="Name" SelectedIndex="0">
-
-                    </ListBox>
+                             SelectionMode="Single" Margin="10,38,10,10.2" AlternationCount="2" DisplayMemberPath="Name" SelectedIndex="0"/>
                     <GridSplitter Grid.Column="1" HorizontalAlignment="Center" Margin="25.6,10,15.8,10.2" Width="5"/>
                     <StackPanel Grid.Column="2" Margin="0.2,10,2.8,10.2">
                         <Label Content="Name:"/>
@@ -189,25 +196,60 @@
             </TabItem>
             <TabItem Header="All Entries">
                 <Grid Background="White">
-                    <DataGrid x:Name="dgAllEntries" ItemsSource="{Binding ViewEntries.Entries}" 
-                              DataContext="{Binding DataContext, ElementName=window}" 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="156*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="dgAllEntries" ItemsSource="{Binding EntryList}" 
+                              DataContext="{Binding SelectedItem, ElementName=dgEntries}" 
                               AutoGenerateColumns="False" SelectionMode="Single" 
-                              Margin="10,38,0,10.2" HorizontalAlignment="Left" 
-                              MaxWidth="519" Width="460" AlternationCount="2" 
-                              AlternatingRowBackground="#FFD3F4FF" IsReadOnly="True">
+                              Margin="10,38,0,10" 
+                              AlternationCount="2" Width="657"
+                              AlternatingRowBackground="#FFD3F4FF" IsReadOnly="True" HorizontalAlignment="Left" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" SortDirection="Descending"/>
                             <DataGridTextColumn Header="ECN" Binding="{Binding ECN}"/>
-                            <DataGridTextColumn Header="First Name" Binding="{Binding First}"/>
-                            <DataGridTextColumn Header="Last Name" Binding="{Binding Last}"/>
-                            <DataGridTextColumn Header="Tech Name" Binding="{Binding Tech}"/>
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+                            <DataGridTextColumn Header="First Name" Binding="{Binding firstName}"/>
+                            <DataGridTextColumn Header="Last Name" Binding="{Binding lastName}"/>
+                            <DataGridTextColumn Header="Tech Name" Binding="{Binding techName}"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding status}"/>
+                            <DataGridTextColumn Header="Reason" Binding="{Binding reason}"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <GroupBox Header="Device Info." HorizontalAlignment="Right" Height="335" Margin="0,10,10,0" VerticalAlignment="Top" Width="274" Background="White" Grid.Column="1">
+                        <Grid Margin="10,10,6.2,2">
+                            <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
+                            <Button x:Name="btnDeviceName1" Content="{Binding SelectedItem.Device.Name, ElementName=dgEntries, FallbackValue=[device_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,0,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Device_Name_Click" Height="26" RenderTransformOrigin="0.565,0.662"/>
+                            <Label Content="ECN:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,31,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceECN1" Content="{Binding SelectedItem.Device.ECN, ElementName=dgEntries, FallbackValue=[0000]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,31,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="OS:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,62,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceOS1" Content="{Binding SelectedItem.Device.OS, ElementName=dgEntries, FallbackValue=[operating_system]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,62,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="DIV:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,93,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceDivision1" Content="{Binding SelectedItem.Device.Division, ElementName=dgEntries, FallbackValue=[division]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,93,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="Service Tag:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,124,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceServiceTag1" Content="{Binding SelectedItem.Device.ServiceTag, ElementName=dgEntries, FallbackValue=[service_tag]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" HorizontalAlignment="Left" Margin="80,124,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="User:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,155,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceUserName1" Content="{Binding SelectedItem.User.LastName, ElementName=dgEntries, FallbackValue=[user]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,155,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="HRH:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,186,0,0" Height="26"/>
+                            <Label x:Name="gbDeviceHRH1" Content="{Binding SelectedItem.HRH.LastName, ElementName=dgEntries, FallbackValue=[hrh]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,186,0,0" VerticalAlignment="Top" Height="26"/>
+                            <Label Content="Software:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,217,0,0" Height="26"/>
+                            <Button x:Name="btnDeviceSoftware1" Content="{Binding SelectedItem.Software, ElementName=dgEntries, FallbackValue=Software}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,217,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Software_Click" Height="26"/>
+                            <Label Content="Reason:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,248,0,0" Height="26"/>
+                            <Label x:Name="gbReason1" Content="{Binding SelectedItem.Reason, ElementName=dgEntries, FallbackValue=[reason]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,248,-0.2,0" VerticalAlignment="Top"/>
+
+                        </Grid>
+                    </GroupBox>
+                    <Label Content="All Entries for Selected" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic" Grid.ColumnSpan="2"/>
+                    <WrapPanel Margin="10,10,299,319" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1">
+                        <Label Content="Search:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBox x:Name="txtSearch_All" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" Text="{Binding FilterString, FallbackValue='', Mode=OneWayToSource, UpdateSourceTrigger=LostFocus}" VerticalAlignment="Center" Width="160" KeyDown="Search_Enter_Click" VerticalContentAlignment="Center"/>
+                    </WrapPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="Notifications">
-                <Grid Background="White"/>
+                <Grid Background="White">
+                    <Label Content="Notifications" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
+                </Grid>
             </TabItem>
         </TabControl>
 

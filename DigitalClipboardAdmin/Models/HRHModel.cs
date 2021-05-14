@@ -23,5 +23,12 @@ namespace DigitalClipboardAdmin.Models
             get { return _LastName; }
             set { if (value != _LastName) _LastName = value; OnPropertyChanged(); }
         }
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }

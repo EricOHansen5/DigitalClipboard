@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Controllers;
+using DigitalClipboardAdmin.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,24 @@ namespace DigitalClipboardAdmin.Models
 {
     public class EntryModel : BaseClass
     {
+        public EntryModel()
+        {
+
+        }
+
+        public EntryModel(EntryModel entry)
+        {
+            this.dateTime = entry.dateTime;
+            this.checkIn = entry.checkIn;
+            this.barcode = entry.barcode;
+            this.ECN = entry.ECN;
+            this.firstName = entry.firstName;
+            this.lastName = entry.lastName;
+            this.techName = entry.techName;
+            this.reason = entry.reason;
+        }
 
         public static int PropertyCount = 6;
-        public static string CheckInStr = "--IN --";
-        public static string CheckOutStr = "--OUT--";
-        public static string EmptyTechStr = "No Technician";
 
         private DateTime _dateTime;
         public DateTime dateTime
@@ -27,6 +41,14 @@ namespace DigitalClipboardAdmin.Models
         {
             get { return _checkIn; }
             set { if (value != _checkIn) _checkIn = value; OnPropertyChanged(); }
+        }
+
+        public string status
+        {
+            get
+            {
+                return checkIn ? Constants.CheckIn : Constants.CheckOut;
+            }
         }
 
         private string _barcode;
@@ -57,11 +79,23 @@ namespace DigitalClipboardAdmin.Models
             set { if (value != _lastName) _lastName = value; OnPropertyChanged(); }
         }
 
+        public string fullName
+        {
+            get { return string.Format("{0} {1}", firstName, lastName); }
+        }
+
         private string _techName;
         public string techName
         {
             get { return _techName; }
             set { if (value != _techName) _techName = value; OnPropertyChanged(); }
+        }
+
+        private string _reason;
+        public string reason
+        {
+            get { return _reason; }
+            set { if (value != _reason) _reason = value; OnPropertyChanged(); }
         }
 
         public string DisplayString

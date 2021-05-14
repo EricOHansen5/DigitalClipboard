@@ -4,7 +4,7 @@ class LogEvent(object):
     date_time = datetime.datetime.now()
     username = "[[no_user]]"
     tech = "[[no_tech]]"
-    comment = ["[[init comment]]",]
+    comment = "[[init comment]]"
     ecn = -1
     barcode = -1
     status = "[[no_status]]"
@@ -15,7 +15,7 @@ class LogEvent(object):
         self.date_time = date_time
         self.username = username
         self.tech = tech
-        self.comment = comment.append(comment)
+        self.comment = comment
         self.ecn = ecn
         self.barcode = barcode
         self.sig_path = "no_path"
@@ -42,7 +42,7 @@ class LogEvent(object):
 
     def Add_Comment(self, comment):
         print("Comment Added")
-        self.comment.append(comment)
+        self.comment = comment
 
 
     def Add_ECN(self, ecn):
@@ -71,5 +71,5 @@ class LogEvent(object):
         if(self.barcode == "-1"):
             return ""
 
-        return "{0}\t{1}\t{2}\t[[{3}]]\t[[{4}]]\t[[{5}]][[{6}]]\n".format(f'{self.date_time:%Y-%m-%d_%H:%M.%S}', self.status, self.barcode, self.ecn, self.username, self.tech, self.sig_path)
+        return "{0}\t{1}\t{2}\t[[{3}]]\t[[{4}]]\t[[{5}]]\t[[{6}]]\t[[{7}]]\n".format(f'{self.date_time:%Y-%m-%d_%H:%M.%S}', self.status, self.barcode, self.ecn, self.username, self.tech, self.comment, self.sig_path)
 

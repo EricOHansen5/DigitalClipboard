@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalClipboardAdmin", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalClipboardAdminTests", "..\DigitalClipboardAdminTests\DigitalClipboardAdminTests.csproj", "{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalClipboardSync", "..\DigitalClipboardSync\DigitalClipboardSync.csproj", "{1C49E127-B9B3-41D2-90CA-BE7D860AB82C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCC33D2B-8E08-4CCD-A8F8-29DA69A4AFC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C49E127-B9B3-41D2-90CA-BE7D860AB82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C49E127-B9B3-41D2-90CA-BE7D860AB82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C49E127-B9B3-41D2-90CA-BE7D860AB82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C49E127-B9B3-41D2-90CA-BE7D860AB82C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

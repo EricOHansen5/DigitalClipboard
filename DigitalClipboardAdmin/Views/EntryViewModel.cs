@@ -1,10 +1,13 @@
 ﻿using DigitalClipboardAdmin.Controllers;
 using DigitalClipboardAdmin.Models;
+using DigitalClipboardAdmin.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace DigitalClipboardAdmin.Views
 {
@@ -18,19 +21,22 @@ namespace DigitalClipboardAdmin.Views
             this.ECN = infoM.ECN;
             this.First = infoM.firstName;
             this.Last = infoM.lastName;
-            this.dateTime = EntryModel.GetMostRecent(em.Value).dateTime;
             this.Tech = infoM.techName;
-            this.Status = infoM.checkIn ? "Checked In" : "Checked Out";
+            this.Status = infoM.checkIn ? Constants.CheckedIn : Constants.CheckedOut;
+            EntryModel mostRecent = EntryModel.GetMostRecent(em.Value);
+            this.dateTime = mostRecent.dateTime;
+            this.Reason = string.IsNullOrWhiteSpace(mostRecent.reason) ? "" : mostRecent.reason;
         }
 
-        public static List<EntryViewModel> InitList(
+        public static ICollectionView InitList(
             Dictionary<string, List<EntryModel>> entries, 
             Dictionary<string, DeviceModel> devices, 
             Dictionary<string, UserModel> users, 
             Dictionary<string, HRHModel> hrhs, 
             Dictionary<string, SoftwareModel> software, 
             Dictionary<string, SoftwareLicenseModel> licenses, 
-            Dictionary<string, SoftwareMappedModel> softwareMappings)
+            Dictionary<string, SoftwareMappedModel> softwareMappings,
+            Predicate<object> EntryFilter)
         {
             Log.Add("InitList EntryViewModel");
             var l = new List<EntryViewModel>();
@@ -38,10 +44,11 @@ namespace DigitalClipboardAdmin.Views
             foreach (var item in entries)
             {
                 EntryViewModel e = new EntryViewModel(item);
+                e.EntryList.Filter = EntryFilter;
                 e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
                 l.Add(e);
             }
-            return l;
+            return CollectionViewSource.GetDefaultView(l);
         }
 
         public void SetMappings
@@ -86,7 +93,10 @@ namespace DigitalClipboardAdmin.Views
             get { return _Entries; }
             set { if (value != _Entries) _Entries = value; OnPropertyChanged(); }
         }
-
+        public ICollectionView EntryList
+        {
+            get { return CollectionViewSource.GetDefaultView(Entries); }
+        }
 
         private string _Status;
         public string Status
@@ -108,18 +118,26 @@ namespace DigitalClipboardAdmin.Views
             get { return _First; }
             set { if (value != _First) _First = value; OnPropertyChanged(); }
         }
+        
         private string _Last;
         public string Last
         {
             get { return _Last; }
             set { if (value != _Last) _Last = value; OnPropertyChanged(); }
         }
+        
+        public string FullName
+        {
+            get { return string.Format("{0} {1}", First, Last); }
+        }
+       
         private string _Tech;
         public string Tech
         {
             get { return _Tech; }
             set { if (value != _Tech) _Tech = value; OnPropertyChanged(); }
         }
+        
         private DateTime _dateTime;
         public DateTime dateTime
         {
@@ -127,6 +145,12 @@ namespace DigitalClipboardAdmin.Views
             set { if (value != _dateTime) _dateTime = value; OnPropertyChanged(); }
         }
 
+        private string _Reason;
+        public string Reason
+        {
+            get { return _Reason; }
+            set { if (value != _Reason) _Reason = value; OnPropertyChanged(); }
+        }
 
         private DeviceModel _Device;
         public DeviceModel Device

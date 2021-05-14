@@ -1,4 +1,5 @@
 ﻿using DigitalClipboardAdmin.Models;
+using DigitalClipboardAdmin.Shared;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -53,7 +54,7 @@ namespace DigitalClipboardAdmin.Controllers
                 }
                 // get log files
                 DirectoryInfo di = new DirectoryInfo(dcLogPath);
-                dcLogsInfo = di.GetFiles(dcLogPath).OrderByDescending(x => x.LastWriteTime).ToArray();
+                dcLogsInfo = di.GetFiles().OrderByDescending(x => x.LastWriteTime).ToArray();
                 
 
                 // JSON DB File
@@ -222,11 +223,13 @@ namespace DigitalClipboardAdmin.Controllers
                 string[] props = line.Replace("[", "").Replace("]","").Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 if(props.Length == EntryModel.PropertyCount)
                 {
+                    // Parse Date Time from entry
                     string[] dts = props[0].Split(new char[] {'_', '-', ':', '.' });
                     int[] dti = new int[6];
                     for (int i = 0; i < dts.Length; i++){ dti[i] = int.Parse(dts[i]); };
                     DateTime dt = new DateTime(dti[0], dti[1], dti[2], dti[3], dti[4], dti[5]);
 
+                    // Parse name from entry
                     string[] names = props[4].Split(' ');
                     string first = "";
                     string last = "";
@@ -252,15 +255,24 @@ namespace DigitalClipboardAdmin.Controllers
                             last = names[2];
                         }
                     }
+
+                    // Parse reason / comment if the array is big enough
+                    string comment = "";
+                    if (props.Length < 7)
+                        comment = "";
+                    else
+                        comment = props[6];
+
                     EntryModel em = new EntryModel()
                     {
                         dateTime = dt,
-                        checkIn = props[1] == EntryModel.CheckInStr ? true : false,
+                        checkIn = props[1] == Constants.CheckInStr ? true : false,
                         barcode = props[2],
                         ECN = props[3],
                         firstName = first,
                         lastName = last,
-                        techName = props[5].Trim('\r')
+                        techName = props[5].Trim('\r'),
+                        reason = comment
                     };
 
                     if (convEntries.ContainsKey(em.ECN))

@@ -1,19 +1,19 @@
-import cv2
-import os.path
+import cv2, os.path, sys, tkinter, keyboard, winsound
 from os import path
-import sys
 from tkinter import *
+from tkinter import messagebox
 from pyzbar import pyzbar
 from pyzbar.pyzbar import decode, ZBarSymbol
 import datetime as date
 from User_Input import User_Input
-import keyboard
 
 class Main(object):
 
     def read_barcodes(self, frame):
+
+
         #print("Reading Frame")
-        barcodes = pyzbar.decode(frame)
+        barcodes = pyzbar.decode(frame, symbols=[ZBarSymbol.QRCODE, ZBarSymbol.CODE128])
         #print(barcodes)
         result = "-1"
 
@@ -39,45 +39,51 @@ class Main(object):
         return result
 
     def wait_for_barcodes(self):
-        print("wait_for_barcodes called")
-        # Initialize results to display
-        result = "-1"
 
-        # Gather video capture device
-    #    self.camera = cv2.VideoCapture(0)
+        try:
+            print("wait_for_barcodes called")
+            # Initialize results to display
+            result = "-1"
 
-        # Read frame from capture device
-        ret, frame = self.camera.read()
-    
-        # Loop until barcode found
-        while ret:
+            # Gather video capture device
+        #    self.camera = cv2.VideoCapture(0)
+
+            # Read frame from capture device
             ret, frame = self.camera.read()
+    
+            # Loop until barcode found
+            while ret:
+                ret, frame = self.camera.read()
 
-            # Parse frame for barcode/qr
-            result = self.read_barcodes(frame)
+                # Parse frame for barcode/qr
+                result = self.read_barcodes(frame)
         
-            # Show camera to screen
-            cv2.imshow('Barcode/QR code reader', frame)
+                # Show camera to screen
+                cv2.imshow('Barcode/QR code reader', frame)
 
-            # Wait for barcode/qr code to be parsed from frame
-            if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
-                root = Tk()
-                ui = User_Input(result, root)
-                result = "-1"
+                # Wait for barcode/qr code to be parsed from frame
+                if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
+                    winsound.PlaySound(r'C:\Windows\Media\tada.wav', winsound.SND_FILENAME)
+                    self.root = Tk()
+                    ui = User_Input(result, self.root)
+                    result = "-1"
 
     
-        # Release the camera and close gui window for camera
-        camera.release()
-        cv2.destroyAllWindows()
+            # Release the camera and close gui window for camera
+            camera.release()
+            cv2.destroyAllWindows()
 
-        # Return barcode results
-        return result
+            # Return barcode results
+            return result
+        except Exception as e:
+            messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
+            return None
 
     def Run(self):
-        filename = '\\\\riemfs01\\X\\AutomationTools\\pypi\\DigitalClipboard\\logs\\logs.txt'
-        if path.exists(filename) == False:
-            print("log file doesn't exist")
-        sys.stdout = open(filename, 'a')
+        #filename = '\\\\riemfs01\\X\\AutomationTools\\pypi\\DigitalClipboard\\logs\\logs.txt'
+        #if path.exists(filename) == False:
+        #    print("log file doesn't exist")
+        #sys.stdout = open(filename, 'a')
         print("\n\n---- Digital Clipboard ----")
 
         try:
@@ -98,13 +104,15 @@ class Main(object):
                     # Start the UI to handle barcode/qr scan
                  #   ui = User_Input(barcode, root)
 
-            sys.stdout.close()
-        except ValueError:
+            #sys.stdout.close()
+        except ValueError as ve:
             print("Exception: ", ValueError)
-            sys.stdout.close()
-        except:
+            messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(ve.args[0]))
+            #sys.stdout.close()
+        except Exception as e:
             print("Unexpected Exception: ", sys.exc_info()[0])
-            sys.stdout.close()
+            messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
+            #sys.stdout.close()
             raise
 
 
