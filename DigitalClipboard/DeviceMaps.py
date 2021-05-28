@@ -50,8 +50,10 @@ class DeviceMaps(object):
 
     def load_dc_only_maps(self):
         try:
+            # init data to be filled
+            data = ""
             with open(self.dcOnlyJsonPath, 'r') as jdata:
-                data = jdata.read()
+                data = jdata.read() # fill data with json data
 
             self.dcJsonMaps = json.loads(data)
             print("DC only loaded successfully")
@@ -71,6 +73,11 @@ class DeviceMaps(object):
             # Before
             filesize1 = os.path.getsize(self.dcOnlyJsonPath)
 
+            # write local copy
+            with open("DC_Only_Database.json", 'w+') as ofile:
+                ofile.write(jobj)
+
+            # write network location
             with open(self.dcOnlyJsonPath, 'w+') as ofile:
                 ofile.write(jobj)
 
@@ -98,7 +105,7 @@ class DeviceMaps(object):
 
         if not exist:
             print("{0} doesn't exists. Creating.")
-            if self.dcJsonMaps:
+            if len(self.dcJsonMaps) >= 0:
                 self.Create_map(ecn, barcode, name)
                 self.dcJsonMaps[ecn] = self.objmap
             self.write_dc_only_maps()
@@ -109,6 +116,7 @@ class DeviceMaps(object):
 
 
     def Create_map(self, ecn, barcode, name):
+        self.objmap = {}
         self.objmap["Barcode"] = barcode
         self.objmap["DeviceModelID"] = ''
         self.objmap["ECN"] = ecn

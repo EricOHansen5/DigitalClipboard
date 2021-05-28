@@ -217,9 +217,9 @@ class User_Input(object):
                 ecn.set(self.foundMap['ECN'])
 
         if len(ecn.get()) <= 1:
-            for e in self.dcOnlyDB:
-                if e["Barcode"] == barcode:
-                    self.foundMap = e
+            for key, v in self.dcOnlyDB.items():
+                if v["Barcode"] == barcode:
+                    self.foundMap = v
                     ecn.set(self.foundMap['ECN'])
                     if len(name.get()) <= 1:
                         name.set(self.foundMap['Name'])
