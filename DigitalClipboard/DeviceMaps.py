@@ -1,15 +1,9 @@
-import os.path, datetime, json, subprocess
+import os.path, datetime, json, subprocess, shutil
+from Configs import Configs
 from os import path
 from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWUSR
 
 class DeviceMaps(object):    
-
-    # Share Drive
-    jsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\Database.json";
-    BAKjsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\Database.jsonBAK";
-    jsonDir  = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\";
-    dcOnlyJsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\DC_Only_Database.json";
-
     successful_load = False
 
     def __init__(self):
@@ -22,10 +16,10 @@ class DeviceMaps(object):
         while True:
             try:
                 if self.successful_load:
-                    filename = self.jsonPath
+                    filename = Configs.jsonPath
                     print("Default json DB")
                 else:
-                    filename = self.BAKjsonPath
+                    filename = Configs.BAKjsonPath
                     print("Backup json DB")
 
                 # load data from file
@@ -52,7 +46,7 @@ class DeviceMaps(object):
         try:
             # init data to be filled
             data = ""
-            with open(self.dcOnlyJsonPath, 'r') as jdata:
+            with open(Configs.dcOnlyJsonPath, 'r') as jdata:
                 data = jdata.read() # fill data with json data
 
             self.dcJsonMaps = json.loads(data)
@@ -70,25 +64,25 @@ class DeviceMaps(object):
 
             jobj = json.dumps(self.dcJsonMaps)
 
-            # Before
-            filesize1 = os.path.getsize(self.dcOnlyJsonPath)
 
             # write local copy
             with open("DC_Only_Database.json", 'w+') as ofile:
                 ofile.write(jobj)
 
             # write network location
-            with open(self.dcOnlyJsonPath, 'w+') as ofile:
+            with open(Configs.dcOnlyJsonPath, 'w+') as ofile:
                 ofile.write(jobj)
 
-            # After
-            filesize2 = os.path.getsize(self.dcOnlyJsonPath)
+            filesize1 = os.path.getsize("DC_Only_Database.json")
+            filesize2 = os.path.getsize(Configs.dcOnlyJsonPath)
             if filesize2 < filesize1:
-                print("DC_Only - File size is smaller then before.")
+                print("--Network File Smaller--")
+                shutil.copy2("DC_Only_Database.json", Configs.dcOnlyJsonPath)
+                print("Copied local to network location.")
             elif filesize2 == filesize1:
-                print("DC_Only - File size is equal.")
+                print("--Files are equal size--")
             else:
-                print("DC_Only - File size is larger then before.")
+                print("--Network File Larger--")
 
 
             print("Created dc only maps json db successful")
@@ -109,7 +103,7 @@ class DeviceMaps(object):
                 self.Create_map(ecn, barcode, name)
                 self.dcJsonMaps[ecn] = self.objmap
             self.write_dc_only_maps()
-            subprocess.Popen('\\\\riemfs01\\x\\AutomationTools\\Digital_Clipboard_Admin\\Executable\\DigitalClipboardSync.exe')
+            #subprocess.Popen(Configs.dcSyncPath)
 
         else:
             print("{0} already exists. Updating.")

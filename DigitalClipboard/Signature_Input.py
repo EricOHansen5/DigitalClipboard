@@ -1,5 +1,6 @@
 import sys
 import os.path
+from Configs import Configs
 from os import path
 from tkinter import *
 import tkinter.font as tkFont
@@ -13,7 +14,7 @@ class Signature_Input:
     def __init__(self, date_time, ecn):
         self.date_time = date_time
         self.ecn = ecn
-        self.filepath = os.path.join(Datastore.sigpath, self.GetFileName())
+        self.filepath = os.path.join(Configs.sigpath, self.GetFileName())
 
 
     def on_closing(self):

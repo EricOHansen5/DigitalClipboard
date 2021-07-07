@@ -1,61 +1,48 @@
 import os.path
+from Configs import Configs
 from os import path
 from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWUSR
 import datetime
 
 class Datastore(object):
     """description of class"""
-    monday_date = datetime.datetime.today()  - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
-    date_format = f'{monday_date:%Y-%m-%d}.log'
-
-    # Share Drive
-    dirpath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\"
-    sigpath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\Signatures\\"
-    checkpath = "\\\\riemfs01\\X\\"
-    filename = os.path.join(dirpath, date_format)
-    
-    # Local Drive
-    desktoppath = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-    localpath = os.path.join(desktoppath, "DC_Logs")
-    localfilename = os.path.join(localpath, date_format)
-
     isuselocal = False
 
     def __get_date(self):
         # Get the date for this weeks monday (start of week)
-        self.monday_date = datetime.datetime.today()  - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+        Configs.monday_date = datetime.datetime.today()  - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
 
 
     def __set_readonly(self):
         print("Set_Readonly")
         if self.isuselocal:
-            os.chmod(self.localfilename, S_IREAD|S_IRGRP|S_IROTH)
+            os.chmod(Configs.localfilename, S_IREAD|S_IRGRP|S_IROTH)
         else:
             # Set readonly permissions
-            os.chmod(self.filename, S_IREAD|S_IRGRP|S_IROTH)
+            os.chmod(Configs.filename, S_IREAD|S_IRGRP|S_IROTH)
 
 
     def __set_writable(self):
         print("Set_Writable")
         if self.isuselocal:
-            os.chmod(self.localfilename, S_IWUSR|S_IREAD)
+            os.chmod(Configs.localfilename, S_IWUSR|S_IREAD)
         else:
             # Set readonly permissions
-            os.chmod(self.filename, S_IWUSR|S_IREAD)
+            os.chmod(Configs.filename, S_IWUSR|S_IREAD)
 
 
     def __check_file(self):
         print("Check_File")
         # Check to see if a log file exists already
-        log_exists = path.exists(self.filename)
-        local_exists = path.exists(self.localfilename)
-        local_dir_exists = path.exists(self.localpath)
+        log_exists = path.exists(Configs.filename)
+        local_exists = path.exists(Configs.localfilename)
+        local_dir_exists = path.exists(Configs.localpath)
 
-        if path.exists(self.checkpath):
+        if path.exists(Configs.checkpath):
             self.isuselocal = False
             # If file doesn't exist create it
             if log_exists is False:
-                log_file = open(self.filename, "w+")
+                log_file = open(Configs.filename, "w+")
                 log_file.close()
 
                 # Change permissions on file to read-only
@@ -64,8 +51,8 @@ class Datastore(object):
             self.isuselocal = True
             if local_exists is False:
                 if local_dir_exists is False:
-                    os.mkdir(self.localpath)
-                log_file = open(self.localfilename, "w+")
+                    os.mkdir(Configs.localpath)
+                log_file = open(Configs.localfilename, "w+")
                 log_file.close()
                 self.__set_readonly()
 
@@ -87,10 +74,10 @@ class Datastore(object):
         self.__set_writable()
 
         if self.isuselocal:
-            log_file = open(self.localfilename, "a+")
+            log_file = open(Configs.localfilename, "a+")
         else:
             # Append to log file
-            log_file = open(self.filename, "a+")
+            log_file = open(Configs.filename, "a+")
         
         # Write line to file
         log_file.write(log_entry)

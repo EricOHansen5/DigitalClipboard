@@ -1,6 +1,7 @@
 import sys, datetime, os, subprocess, ctypes
 from time import sleep
 from tkinter import *
+from tkinter import messagebox
 import tkinter as tk
 from tkinter.ttk import *
 import tkinter.ttk as ttk
@@ -17,6 +18,7 @@ class User_Input(object):
     defaultbg = ""
     otherselected = False
     othervisible = False
+    isintextbox = False
 
     def Checking_In(self):
         print("Checking_In Called")
@@ -69,6 +71,11 @@ class User_Input(object):
         # Missing entry highlight entry fields
         if missing_entry:
             return
+
+        if self.Check_Device_Status():
+            answer = messagebox.askyesno("Question","This device has already been checked in, continue?")
+            if not answer:
+                return
 
         # Log the LogEvent to file
         Datastore().Add(logevent.Get_Log())
@@ -127,6 +134,12 @@ class User_Input(object):
         # Missing entry highlight entry fields
         if missing_entry:
             return
+
+        if not self.Check_Device_Status():
+            answer = messagebox.askyesno("Question","This device has already been checked out, continue?")
+            if not answer:
+                return
+
         if not hasattr(self, 'sig_input'):
             self.sig_input = Signature_Input(date_time, txtecn)
             logevent.Add_Signature(self.sig_input.GetFileName())
@@ -140,6 +153,14 @@ class User_Input(object):
         # Save ecn, name, and barcode
         self.Save_JSON(txtecn, txt)
 
+
+    def Check_Device_Status(self):
+        ecn = self.txtecn.get()
+        if self.jsonDB['Entries'][ecn]:
+            last_ix = len(self.jsonDB['Entries'][ecn]) - 1
+            status = self.jsonDB['Entries'][ecn][last_ix]['checkIn']
+            return status
+            
 
     def Save_JSON(self, ecn, name):
         barcode = self.barcode
@@ -159,6 +180,11 @@ class User_Input(object):
             subprocess.Popen("osk", shell=True)
 
 
+    def on_focus_out(self, e):
+            if not self.isintextbox:
+                print('on_focus_out')
+                subprocess.call('wmic process where name="osk.exe" delete', shell=True)
+
     # HOVER EVENTS
     def on_enter(self, e):
         # Hover over button
@@ -171,17 +197,23 @@ class User_Input(object):
             e.widget['style'] = "BWR.TButton"
         else:
             e.widget['style'] = "BW.TButton"
+
+    def t_on_enter(self, e):
+        self.isintextbox = True
+
+    def t_on_leave(self, e):
+        self.isintextbox = False
     # END HOVER EVENTS
 
 
     # DROPDOWN CHANGES
     def Option_change(self, *args):
-        subprocess.call('wmic process where name="osk.exe" delete', shell=True)
+        #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
         print("tech: {0}: ".format(self.optionvar.get()))
     #        
     #
     def Reason_change(self, *args):
-        subprocess.call('wmic process where name="osk.exe" delete', shell=True)
+        #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
         print("reason: {0}: ".format(self.reasonoptionvar.get()))
         reasonName = self.reasonoptionvar.get()
         tempReason = "Reason for visit:"
@@ -252,6 +284,8 @@ class User_Input(object):
         posRight = int(scrnWidth/2 - winWidth/2)
         posDown = 10
         self.root.geometry("+{}+{}".format(posRight, posDown))
+        self.root.bind("<1>", self.on_focus_out)
+
         #self.root.eval('tk::PlaceWindow . center')
 
         # Header display for Barcode Data
@@ -268,6 +302,8 @@ class User_Input(object):
         self.txtname = tk.Entry(root, textvariable=name)
         self.txtname.configure(font=style_font, width=txt_width)
         self.txtname.bind("<1>", self.on_focus_in)
+        self.txtname.bind("<Enter>", self.t_on_enter)
+        self.txtname.bind("<Leave>", self.t_on_leave)
         self.txtname.grid(row=1, column=1, pady=(10,25), padx=(0,20))
 
         # ECN Section
@@ -276,14 +312,16 @@ class User_Input(object):
         
         self.txtecn = tk.Entry(root, textvariable=ecn)
         self.txtecn.configure(font=style_font, width=txt_width)
-        self.txtecn.bind("<1>", self.on_focus_in)      
+        self.txtecn.bind("<1>", self.on_focus_in)
+        self.txtecn.bind("<Enter>", self.t_on_enter)
+        self.txtecn.bind("<Leave>", self.t_on_leave)
         self.txtecn.grid(row=2, column=1, pady=(10,25), padx=(0,20))
 
         # Technician Section
-        self.lbltech = ttk.Label(root, text="Technician: ", style="BW.TLabel")
+        self.lbltech = ttk.Label(root, text="Technician:", style="BW.TLabel")
         self.lbltech.grid(row=3, column=0, pady=(10,25), padx=(20,20))
        
-        OPTIONS = ["No Technician", "Mike Delsanto", "Max Young", "Kim Tartarini", "Bill Finizia", "Dan Kemp", "Sal Rafique", "Eric Hansen"]
+        OPTIONS = ["No Technician", "Mike Delsanto", "Max Young", "Kim Tartarini", "Bill Finizia", "Dan Kemp", "Sal Rafique", "Eric Hansen", "Michael Weigel"]
         self.optionvar = StringVar(root)
         self.optionvar.set(OPTIONS[0])
         
@@ -293,7 +331,7 @@ class User_Input(object):
         self.txttech['menu'].config(font=font_s)
 
         # Reason Section
-        self.lblreason = ttk.Label(root, text="Reason for visit: ", style="BW.TLabel")
+        self.lblreason = ttk.Label(root, text="Reason for visit:", style="BW.TLabel")
         self.lblreason.grid(row=4, column=0, pady=(10,25), padx=(20,20))
         
         REASON_OPTIONS = ["New Device", "Replace Device", "Turn-In Device", "Hardware Issue/Install", "Software Issue/Install", "Checkout/Checkin Loaner", "Other"]
@@ -310,6 +348,8 @@ class User_Input(object):
         self.txtother = tk.Entry(root,)
         self.txtother.configure(font=style_font, width=txt_width)
         self.txtother.bind("<1>", self.on_focus_in)
+        self.txtother.bind("<Enter>", self.t_on_enter)
+        self.txtother.bind("<Leave>", self.t_on_leave)
 
         # Checkin Section
         self.checkin = ttk.Button(root, text="Checking In", command=self.Checking_In, style="BW.TButton")

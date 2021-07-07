@@ -138,11 +138,32 @@ namespace DigitalClipboardAdmin.Controllers
             string jsmStr = JsonConvert.SerializeObject(jsm);
             try
             {
+                using(StreamWriter writer = new StreamWriter("Database.json"))
+                {
+                    writer.Write(jsmStr);
+                    writer.Flush();
+                }
+                long fs1 = new FileInfo("Database.json").Length;
+
                 using(StreamWriter writer = new StreamWriter(jsonPath))
                 {
                     writer.Write(jsmStr);
                     writer.Flush();
                 }
+                long fs2 = new FileInfo(jsonPath).Length;
+
+                if(fs1 > fs2)
+                {
+                    Log.Add("Local File Larger than Network File.");
+                }else if(fs1 < fs2)
+                {
+                    Log.Add("Local File Smaller than Network File.");
+                }
+                else
+                {
+                    Log.Add("Local File Equal to Network File.");
+                }
+
                 Log.Add("Write Complete");
                 return true;
                 // Set DC Logs to Processed

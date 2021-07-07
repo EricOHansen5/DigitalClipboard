@@ -24,9 +24,11 @@ namespace DigitalClipboardSync
             var vSoftware = DatastoreController.ConvertToSoftware();
             var vLicenses = DatastoreController.ConvertToSoftwareLicense();
             var vSoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
+            Console.WriteLine("Conversions Complete.");
 
             // Merge Data
             (var vMappings, var vNonMapped) = DatastoreController.CreateMapping(vEntries, vDevices, vUsers);
+            Console.WriteLine("Merge Complete");
 
             // Save Json Data
             var jsm = new JsonStorageModel()
