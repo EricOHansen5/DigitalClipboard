@@ -31,19 +31,19 @@ namespace DigitalClipboardAdmin
         private void _applicationInitialize(Splash splashWindow)
         {
             // fake workload, but with progress updates.
-            Thread.Sleep(4500);
+            Thread.Sleep(500);
             splashWindow.SetProgress(0.2);
 
-            Thread.Sleep(4500);
+            Thread.Sleep(500);
             splashWindow.SetProgress(0.4);
 
-            Thread.Sleep(3500);
+            Thread.Sleep(500);
             splashWindow.SetProgress(0.6);
 
-            Thread.Sleep(3500);
+            Thread.Sleep(500);
             splashWindow.SetProgress(0.8);
 
-            Thread.Sleep(2500);
+            Thread.Sleep(500);
             splashWindow.SetProgress(1);
 
             // Create the main window, but on the UI thread.

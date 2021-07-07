@@ -10,12 +10,17 @@
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="383" Margin="10,27,0,0" VerticalAlignment="Top" Width="972">
             <TabItem Header="Entries">
                 <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="181*"/>
+                        <ColumnDefinition Width="785*"/>
+                    </Grid.ColumnDefinitions>
 
                     <Label Content="Most Recent Entries" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
-                    <WrapPanel Margin="10,10,299,319" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <WrapPanel Margin="0,10,299.4,319.2" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
 
                         <Label Content="Search:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <TextBox x:Name="txtSearch" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding FilterString, FallbackValue='', Mode=OneWayToSource, UpdateSourceTrigger=LostFocus}" VerticalAlignment="Center" Width="160" KeyDown="Search_Enter_Click" VerticalContentAlignment="Center" Margin="10,0"/>
+                        <Button x:Name="txtClear" HorizontalAlignment="Left" Height="23" Content="Clear" VerticalAlignment="Center" BorderBrush="#FF393CFF" Background="White" Foreground="#ff393cff" Click="Clear_Search_Click" Margin="0,0,10,0" Padding="10,0"/>
                         <Button x:Name="btnDeviceName_Copy" VerticalAlignment="Center" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="All_Entries_Click" Height="23" RenderTransformOrigin="0.892,1.174" Content="All Entries for Selected" Width="146" Margin="0"/>
 
                     </WrapPanel>
@@ -23,9 +28,9 @@
                     <DataGrid x:Name="dgEntries" ItemsSource="{Binding ViewEntries}" 
                               DataContext="{Binding DataContext, ElementName=window}" 
                               AutoGenerateColumns="False" SelectionMode="Single" 
-                              Margin="10,38,0,10" HorizontalAlignment="Left" 
-                              MaxWidth="519" Width="657" AlternationCount="2" 
-                              AlternatingRowBackground="#FFD3F4FF" Padding="5,0">
+                              Margin="10,38,10,10.2" 
+                              MaxWidth="519" AlternationCount="2" 
+                              AlternatingRowBackground="#FFD3F4FF" Padding="5,0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="656">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="DateTime" Binding="{Binding dateTime, StringFormat=yyyy-MM-dd HH:mm:ss}" SortDirection="Descending"/>
                             <DataGridTextColumn Header="ECN" Binding="{Binding ECN}"/>
@@ -36,9 +41,9 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <GridSplitter HorizontalAlignment="Left" Height="335" Margin="672,0,0,0" VerticalAlignment="Top" Width="5"/>
+                    <GridSplitter HorizontalAlignment="Left" Height="335" Margin="490.6,0,0,0" VerticalAlignment="Top" Width="5" Grid.Column="1"/>
 
-                    <GroupBox Header="Device Info." HorizontalAlignment="Right" Height="335" Margin="485,10,10,0" VerticalAlignment="Top" Width="274" Background="White">
+                    <GroupBox Header="Device Info." HorizontalAlignment="Right" Height="335" Margin="0,10,10.4,0" VerticalAlignment="Top" Width="274" Background="White" Grid.Column="1">
                         <Grid Margin="10,10,6.2,2">
                             <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26"/>
                             <Button x:Name="btnDeviceName" Content="{Binding SelectedItem.Device.Name, ElementName=dgEntries, FallbackValue=[device_name]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,0,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Device_Name_Click" Height="26" RenderTransformOrigin="0.565,0.662"/>
@@ -240,13 +245,12 @@
                         </Grid>
                     </GroupBox>
                     <Label Content="All Entries for Selected" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic" Grid.ColumnSpan="2"/>
-                    <WrapPanel Margin="10,10,299,319" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1">
-                        <Label Content="Search:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <TextBox x:Name="txtSearch_All" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" Text="{Binding FilterString, FallbackValue='', Mode=OneWayToSource, UpdateSourceTrigger=LostFocus}" VerticalAlignment="Center" Width="160" KeyDown="Search_Enter_Click" VerticalContentAlignment="Center"/>
+                    <WrapPanel Margin="0,10,299.4,319.2" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                        <Button VerticalAlignment="Center" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Height="23" Content="Back" Margin="0" Padding="10,0" Click="Back_Click"/>
                     </WrapPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Notifications">
+            <TabItem Header="Notifications" Visibility="Hidden">
                 <Grid Background="White">
                     <Label Content="Notifications" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" FontStyle="Italic"/>
                 </Grid>

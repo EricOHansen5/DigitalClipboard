@@ -161,35 +161,34 @@ namespace DigitalClipboardAdmin
                 Entries = DatastoreController.ConvertDCLogs();
                 
                 // Get Data from Access DB
-                Devices = DatastoreController.ConvertToDevice();
-                Users = DatastoreController.ConvertToUser();
-                HRHs = DatastoreController.ConvertToHRH();
-                Software = DatastoreController.ConvertToSoftware();
-                Licenses = DatastoreController.ConvertToSoftwareLicense();
-                SoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
+                //Devices = DatastoreController.ConvertToDevice();
+                //Users = DatastoreController.ConvertToUser();
+                //HRHs = DatastoreController.ConvertToHRH();
+                //Software = DatastoreController.ConvertToSoftware();
+                //Licenses = DatastoreController.ConvertToSoftwareLicense();
+                //SoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
 
                 // Merge Data
-                (Mappings, NonMapped) = DatastoreController.CreateMapping(Entries, Devices, Users);
+                //(Mappings, NonMapped) = DatastoreController.CreateMapping(Entries, Devices, Users);
 
                 // Save Json Data
                 this.jsm = new JsonStorageModel()
                 {
                     Entries = this.Entries,
-                    Devices = this.Devices,
+                    //Devices = this.Devices,
                     Mappings = this.Mappings,
                     NonMappings = this.NonMapped,
-                    Users = this.Users,
-                    HRHs = this.HRHs,
-                    Software = this.Software,
-                    Licenses = this.Licenses,
-                    SoftwareMappings = this.SoftwareMappings
+                    //Users = this.Users,
+                    //HRHs = this.HRHs,
+                    //Software = this.Software,
+                    //Licenses = this.Licenses,
+                    //SoftwareMappings = this.SoftwareMappings
                 };
                 DatastoreController.SetJsonDB(jsm);
             }
-            Predicate<object> EntryFilter = new Predicate<object>(this.EntryFilter);
 
             // Init view model
-            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings, EntryFilter);
+            ViewEntries = EntryViewModel.InitList(Entries, Devices, Users, HRHs, Software, Licenses, SoftwareMappings);
             ViewEntries.SortDescriptions.Add(new SortDescription("dateTime", ListSortDirection.Descending));
             //ViewEntries = (ICollectionView)ViewEntries.OrderByDescending(x => x.dateTime).ToList();
             ViewEntries.Filter = new Predicate<object>(this.Filter);
@@ -260,11 +259,15 @@ namespace DigitalClipboardAdmin
 
                 if(curAccessFileinfo.LastWriteTime > accessFileinfo.LastWriteTime)
                 {
-                    NewDevices = DatastoreController.ConvertToDevice();
+                    //NewDevices = DatastoreController.ConvertToDevice();
                 }
             }
         }
 
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            tabControl.SelectedIndex = 0;
+        }
         private void Device_Name_Click(object sender, RoutedEventArgs e)
         {
             tabControl.SelectedIndex = 1;
@@ -298,10 +301,6 @@ namespace DigitalClipboardAdmin
                 {
                     FilterString = (sender as TextBox).Text;
                 }
-                else if ((sender as TextBox).Name == "txtSearch_All")
-                {
-                    FilterStringAllEntries = (sender as TextBox).Text;
-                }
             }
         }
 
@@ -314,17 +313,6 @@ namespace DigitalClipboardAdmin
                     _FilterString = value; 
                 OnPropertyChanged(); 
                 FilterCollection(); 
-            }
-        }
-        private string _FilterStringAllEntries;
-        public string FilterStringAllEntries
-        {
-            get { return _FilterStringAllEntries; }
-            set { 
-                if (value != _FilterStringAllEntries) 
-                    _FilterStringAllEntries = value; 
-                OnPropertyChanged();
-                FilterCollection();
             }
         }
 
@@ -355,20 +343,10 @@ namespace DigitalClipboardAdmin
             }
             return false;
         }
-        public bool EntryFilter(object obj)
+        private void Clear_Search_Click(object sender, RoutedEventArgs e)
         {
-            EntryModel data = obj as EntryModel;
-            if (data != null)
-            {
-                if (!string.IsNullOrEmpty(_FilterStringAllEntries))
-                {
-                    string cleanString = _FilterStringAllEntries.ToLower();
-
-                    return data.firstName.ToLower().Contains(cleanString) || data.lastName.ToLower().Contains(cleanString) || data.ECN.ToLower().Contains(cleanString) || data.fullName.ToLower().Contains(cleanString);
-                }
-                return true;
-            }
-            return false;
+            txtSearch.Text = "";
+            FilterString = "";
         }
         #endregion
 

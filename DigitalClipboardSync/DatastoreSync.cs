@@ -18,30 +18,30 @@ namespace DigitalClipboardSync
             var vEntries = DatastoreController.ConvertDCLogs();
 
             // Get Data from Access DB
-            var vDevices = DatastoreController.ConvertToDevice();
-            var vUsers = DatastoreController.ConvertToUser();
-            var vHRHs = DatastoreController.ConvertToHRH();
-            var vSoftware = DatastoreController.ConvertToSoftware();
-            var vLicenses = DatastoreController.ConvertToSoftwareLicense();
-            var vSoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
-            Console.WriteLine("Conversions Complete.");
+            //var vDevices = DatastoreController.ConvertToDevice();
+            //var vUsers = DatastoreController.ConvertToUser();
+            //var vHRHs = DatastoreController.ConvertToHRH();
+            //var vSoftware = DatastoreController.ConvertToSoftware();
+            //var vLicenses = DatastoreController.ConvertToSoftwareLicense();
+            //var vSoftwareMappings = DatastoreController.ConvertToSoftwareMapped();
+            //Console.WriteLine("Conversions Complete.");
 
             // Merge Data
-            (var vMappings, var vNonMapped) = DatastoreController.CreateMapping(vEntries, vDevices, vUsers);
-            Console.WriteLine("Merge Complete");
+            //(var vMappings, var vNonMapped) = DatastoreController.CreateMapping(vEntries, vDevices, vUsers);
+            //Console.WriteLine("Merge Complete");
 
             // Save Json Data
             var jsm = new JsonStorageModel()
             {
                 Entries = vEntries,
-                Devices = vDevices,
-                Mappings = vMappings,
-                NonMappings = vNonMapped,
-                Users = vUsers,
-                HRHs = vHRHs,
-                Software = vSoftware,
-                Licenses = vLicenses,
-                SoftwareMappings = vSoftwareMappings
+                //Devices = vDevices,
+                //Mappings = vMappings,
+                //NonMappings = vNonMapped,
+                //Users = vUsers,
+                //HRHs = vHRHs,
+                //Software = vSoftware,
+                //Licenses = vLicenses,
+                //SoftwareMappings = vSoftwareMappings
             };
             DatastoreController.SetJsonDB(jsm);
 

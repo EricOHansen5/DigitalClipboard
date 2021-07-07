@@ -35,8 +35,7 @@ namespace DigitalClipboardAdmin.Views
             Dictionary<string, HRHModel> hrhs, 
             Dictionary<string, SoftwareModel> software, 
             Dictionary<string, SoftwareLicenseModel> licenses, 
-            Dictionary<string, SoftwareMappedModel> softwareMappings,
-            Predicate<object> EntryFilter)
+            Dictionary<string, SoftwareMappedModel> softwareMappings)
         {
             Log.Add("InitList EntryViewModel");
             var l = new List<EntryViewModel>();
@@ -44,7 +43,6 @@ namespace DigitalClipboardAdmin.Views
             foreach (var item in entries)
             {
                 EntryViewModel e = new EntryViewModel(item);
-                e.EntryList.Filter = EntryFilter;
                 e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
                 l.Add(e);
             }
