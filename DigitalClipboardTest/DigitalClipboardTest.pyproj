@@ -2,21 +2,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>c23e7b99-7e20-4399-9f61-51af7e99b1c9</ProjectGuid>
+    <ProjectGuid>68a5aa6d-2ff8-4dc3-be63-f8c8a6e43882</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DigitalClipboard.py</StartupFile>
+    <StartupFile>LogEventTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>DigitalClipboard</Name>
-    <RootNamespace>DigitalClipboard</RootNamespace>
+    <Name>DigitalClipboardTest</Name>
+    <RootNamespace>DigitalClipboardTest</RootNamespace>
     <InterpreterId>Global|VisualStudio|Python39</InterpreterId>
-    <TestFramework>unittest</TestFramework>
-    <UnitTestPattern>test_*.py</UnitTestPattern>
-    <UnitTestRootDirectory>.</UnitTestRootDirectory>
-    <PublishUrl>\\riemfs01\X\AutomationTools\pypi\DigitalClipboard</PublishUrl>
-    <IsWindowsApplication>True</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,37 +22,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common.py">
+    <Compile Include="DatastoreTest.py" />
+    <Compile Include="LogEventTest.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Configs.py">
+    <Compile Include="Logger.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Datastore.py">
+    <Compile Include="LogType.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DeviceMaps.py">
+    <Compile Include="LogTypeString.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DigitalClipboard.py" />
-    <Compile Include="LogEvent.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Main.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Signature_Input.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="test_datastore.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="User_Input.py">
+    <Compile Include="DeviceMapsTest.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="Global|PythonCore|3.9" />
+    <ProjectReference Include="..\DigitalClipboard\DigitalClipboard.pyproj">
+      <Name>DigitalClipboard</Name>
+      <Project>{c23e7b99-7e20-4399-9f61-51af7e99b1c9}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <InterpreterReference Include="Global|VisualStudio|Python39" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

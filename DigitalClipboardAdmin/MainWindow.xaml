@@ -59,11 +59,10 @@
                             <Label x:Name="gbDeviceUserName" Content="{Binding SelectedItem.User.LastName, ElementName=dgEntries, FallbackValue=[user]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,155,0,0" VerticalAlignment="Top" Height="26"/>
                             <Label Content="HRH:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,186,0,0" Height="26"/>
                             <Label x:Name="gbDeviceHRH" Content="{Binding SelectedItem.HRH.LastName, ElementName=dgEntries, FallbackValue=[hrh]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,186,0,0" VerticalAlignment="Top" Height="26"/>
-                            <Label Content="Software:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,217,0,0" Height="26"/>
-                            <Button x:Name="btnDeviceSoftware" Content="{Binding SelectedItem.Software, ElementName=dgEntries, FallbackValue=Software}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,217,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Software_Click" Height="26"/>
-                            <Label Content="Reason:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,248,0,0" Height="26"/>
-                            <Label x:Name="gbReason" Content="{Binding SelectedItem.Reason, ElementName=dgEntries, FallbackValue=[reason]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,248,-0.2,0" VerticalAlignment="Top"/>
-
+                            <Label Content="Reason:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,217,0,0" Height="26"/>
+                            <Label x:Name="gbReason" Content="{Binding SelectedItem.Reason, ElementName=dgEntries, FallbackValue=[reason]}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,217,0,0" VerticalAlignment="Top"/>
+                            <Label Content="Software:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,248,0,0" Height="26" Visibility="Collapsed"/>
+                            <Button x:Name="btnDeviceSoftware" Content="{Binding SelectedItem.Software, ElementName=dgEntries, FallbackValue=Software}" DataContext="{Binding SelectedItem, ElementName=dgEntries}" Margin="80,248,0,0" VerticalAlignment="Top" BorderBrush="#FF393CFF" Background="White" Foreground="#FF393CFF" Click="Software_Click" Height="26" Visibility="Collapsed"/>
                         </Grid>
                     </GroupBox>
                 </Grid>
@@ -144,7 +143,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Software">
+            <TabItem Header="Software" Visibility="Collapsed">
                 <Grid Background="White">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="135*"/>

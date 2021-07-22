@@ -31,6 +31,9 @@ class Configs(object):
     jsonDir  = baseUri + dc_admin
     dcOnlyJsonPath = baseUri + dc_admin + "DC_Only_Database.json";
     dcSyncPath = baseUri + dc_admin + 'Executable\\DigitalClipboardSync.exe'
+    
+    local_data = os.path.join(desktoppath, "Data.json")
+    network_data = baseUri + dc_admin + "Data.json"
     ##----- END ------##
 
     def UpdateConfigs(self):

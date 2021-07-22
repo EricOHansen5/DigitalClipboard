@@ -1,11 +1,10 @@
-import cv2, os.path, sys, tkinter, keyboard, winsound
-from os import path
+import cv2, os, sys, tkinter, keyboard, winsound
 from tkinter import *
 from tkinter import messagebox
-from pyzbar import pyzbar
-from pyzbar.pyzbar import decode, ZBarSymbol
+from pyzbar import pyzbar, decode, ZBarSymbol
 import datetime as date
 from User_Input import User_Input
+from Common import Logger, LogTypeString as lts
 
 class Main(object):
     def read_barcodes(self, frame):
@@ -28,7 +27,7 @@ class Main(object):
 
     def wait_for_barcodes(self):
         try:
-            print("wait_for_barcodes called")
+            Logger.Add("wait_for_barcodes called", lts.GEN)
             # Initialize results to display
             result = "-1"
 
@@ -63,19 +62,22 @@ class Main(object):
 
 
     def Run(self):
-        print("\n\n---- Digital Clipboard ----")
+        Logger.Add("\n\n---- Digital Clipboard ----", lts.GEN)
 
         try:
+            if cv2.useOptimized() is False:
+                cv2.setUseOptimized(True)
+
             # Get video device
             self.camera = cv2.VideoCapture(0)
             # Wait for barcode to enter camera view
             barcode = self.wait_for_barcodes()
 
         except ValueError as ve:
-            print("Exception: ", ValueError)
+            Logger.Add("Exception: " + ValueError, lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(ve.args[0]))
         except Exception as e:
-            print("Unexpected Exception: ", sys.exc_info()[0])
+            Logger.Add("Unexpected Exception: " + sys.exc_info()[0], lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
             input("Enter to exit")
             raise

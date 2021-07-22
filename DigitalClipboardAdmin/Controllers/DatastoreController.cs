@@ -15,13 +15,13 @@ namespace DigitalClipboardAdmin.Controllers
 {
     public class DatastoreController : BaseClass
     {
-        private const string dcLogPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\";
-        private const string dcLocalPath = "C:\\Users\\eric.hansen\\Desktop\\DC_Logs\\";
+        //private const string dcLogPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Logs\\";
+        //private const string dcLocalPath = "C:\\Users\\eric.hansen\\Desktop\\DC_Logs\\";
 
-        private const string jsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\Database.json";
-        private const string dbPath = "\\\\riemfs01\\S\\Research Support\\S-6 Information Management\\Administrative Tools\\Software\\DATABASE\\IMB_Software_DB_BackEnd.accdb";
+        //private const string jsonPath = "\\\\riemfs01\\X\\AutomationTools\\Digital_Clipboard_Admin\\Database.json";
+        //private const string dbPath = "\\\\riemfs01\\S\\Research Support\\S-6 Information Management\\Administrative Tools\\Software\\DATABASE\\IMB_Software_DB_BackEnd.accdb";
 
-        private static string conString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='S:\Research Support\S-6 Information Management\Administrative Tools\Software\DATABASE\IMB_Software_DB_BackEnd.accdb'";
+        //private static string conString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source='S:\Research Support\S-6 Information Management\Administrative Tools\Software\DATABASE\IMB_Software_DB_BackEnd.accdb'";
         public enum filepath
         {
             DCLogs,
@@ -36,63 +36,52 @@ namespace DigitalClipboardAdmin.Controllers
         /// <para>jsonExist - does does json db exist</para>
         /// <para>dbExist - does access db exist</para>
         /// </returns>
-        public static (FileInfo[], FileInfo, FileInfo) CheckDependecies()
+        public static (FileInfo[], FileInfo) CheckDependencies()
         {
 
-            Log.Add("Init Data Sets");
+            Log.Add("Checking Dependencies");
             try
             {
                 FileInfo[] dcLogsInfo;
                 FileInfo jsonFileInfo;
-                FileInfo dbFileInfo;
 
                 // Log Files
-                if (!Directory.Exists(dcLogPath))
+                if (!Directory.Exists(Constants.dcLogPath))
                 {
                     Log.Add("DC Log Dir Created");
-                    Directory.CreateDirectory(dcLogPath);
+                    Directory.CreateDirectory(Constants.dcLogPath);
                 }
                 // get log files
-                DirectoryInfo di = new DirectoryInfo(dcLogPath);
+                DirectoryInfo di = new DirectoryInfo(Constants.dcLogPath);
                 dcLogsInfo = di.GetFiles().OrderByDescending(x => x.LastWriteTime).ToArray();
                 
 
                 // JSON DB File
-                if (!Directory.Exists(Path.GetDirectoryName(jsonPath)))
+                if (!Directory.Exists(Path.GetDirectoryName(Constants.jsonPath)))
                 {
                     Log.Add("Json Dir Created");
-                    Directory.CreateDirectory(Path.GetDirectoryName(jsonPath));
-                    if (!File.Exists(jsonPath))
+                    Directory.CreateDirectory(Path.GetDirectoryName(Constants.jsonPath));
+                    if (!File.Exists(Constants.jsonPath))
                     {
                         Log.Add("Json File Created");
-                        File.Create(jsonPath);
+                        File.Create(Constants.jsonPath);
                     }
                 }
                 else
                 {
-                    if (!File.Exists(jsonPath))
+                    if (!File.Exists(Constants.jsonPath))
                     {
                         Log.Add("Json File Created");
-                        File.Create(jsonPath);
+                        File.Create(Constants.jsonPath);
                     }
                 }
-                jsonFileInfo = new FileInfo(jsonPath);
+                jsonFileInfo = new FileInfo(Constants.jsonPath);
 
-                // Access DB File
-                if (!Directory.Exists(Path.GetDirectoryName(dbPath)))
-                {
-                    Log.Add("DB Path Doesn't Exist");
-                }else if (!File.Exists(dbPath))
-                {
-                    Log.Add("DB File Doesn't Exist");
-                }
-                dbFileInfo = new FileInfo(dbPath);
-
-                return (dcLogsInfo, jsonFileInfo, dbFileInfo);
+                return (dcLogsInfo, jsonFileInfo);
             }catch(Exception e)
             {
                 Log.Add("Error: " + e.Message, Log.Level.ERR);
-                return (null, null, null);
+                return (null, null);
             }
         }
 
@@ -101,12 +90,12 @@ namespace DigitalClipboardAdmin.Controllers
             switch (fp)
             {
                 case filepath.DCLogs:
-                    DirectoryInfo di = new DirectoryInfo(dcLogPath);
-                    return di.GetFiles(dcLogPath).OrderByDescending(x => x.LastWriteTime).ToArray();
+                    DirectoryInfo di = new DirectoryInfo(Constants.dcLogPath);
+                    return di.GetFiles(Constants.dcLogPath).OrderByDescending(x => x.LastWriteTime).ToArray();
                 case filepath.JSONFile:
-                    return new FileInfo(jsonPath);
+                    return new FileInfo(Constants.jsonPath);
                 case filepath.DBFile:
-                    return new FileInfo(dbPath);
+                    return new FileInfo(Constants.dbPath);
                 default:
                     return null;
             }
@@ -118,7 +107,7 @@ namespace DigitalClipboardAdmin.Controllers
             try
             {
                 string jsonStr = "";
-                using (StreamReader reader = new StreamReader(jsonPath))
+                using (StreamReader reader = new StreamReader(Constants.jsonPath))
                 {
                     jsonStr = reader.ReadToEnd();
                 }
@@ -134,6 +123,15 @@ namespace DigitalClipboardAdmin.Controllers
 
         public static bool SetJsonDB(JsonStorageModel jsm)
         {
+            /// TODO:
+            /// Start
+            ///    Write File Locally
+            ///    Get File Hash
+            ///    Copy File over Network
+            ///    Get Copied File Hash
+            ///    Compare Hashes
+            ///         If Hashes Good -> Continue
+            ///         If Hashes Bad -> Copy Local File Again
             Log.Add("SetJsonDB");
             string jsmStr = JsonConvert.SerializeObject(jsm);
             try
@@ -145,12 +143,12 @@ namespace DigitalClipboardAdmin.Controllers
                 }
                 long fs1 = new FileInfo("Database.json").Length;
 
-                using(StreamWriter writer = new StreamWriter(jsonPath))
+                using(StreamWriter writer = new StreamWriter(Constants.jsonPath))
                 {
                     writer.Write(jsmStr);
                     writer.Flush();
                 }
-                long fs2 = new FileInfo(jsonPath).Length;
+                long fs2 = new FileInfo(Constants.jsonPath).Length;
 
                 if(fs1 > fs2)
                 {
@@ -181,7 +179,7 @@ namespace DigitalClipboardAdmin.Controllers
             try
             {
                 Log.Add("ReadDCLogs");
-                DirectoryInfo dir = new DirectoryInfo(dcLogPath);
+                DirectoryInfo dir = new DirectoryInfo(Constants.dcLogPath);
                 FileInfo[] files = dir.GetFiles("*.log", SearchOption.TopDirectoryOnly);
 
                 List<string> final = new List<string>();
@@ -209,7 +207,7 @@ namespace DigitalClipboardAdmin.Controllers
             try
             {
                 Log.Add("SetDCLogs");
-                DirectoryInfo dir = new DirectoryInfo(dcLogPath);
+                DirectoryInfo dir = new DirectoryInfo(Constants.dcLogPath);
                 FileInfo[] files = dir.GetFiles("*.log", SearchOption.TopDirectoryOnly);
 
                 foreach (FileInfo item in files)
@@ -315,7 +313,7 @@ namespace DigitalClipboardAdmin.Controllers
             try
             {
                 Log.Add("GetDbConnection");
-                return new OleDbConnection(conString);
+                return new OleDbConnection(Constants.conString);
             }catch(Exception e)
             {
                 Log.Add("DB Connection Error: " + e.Message, Log.Level.ERR);

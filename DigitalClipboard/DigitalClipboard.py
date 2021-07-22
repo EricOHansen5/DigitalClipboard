@@ -4,8 +4,9 @@
 # Author: Eric Hansen
 
 from Main import Main
+from Common import Logger, LogTypeString as lts
 
-print("Hello, welcome to the USARIEM Digital Clipboard.")
+Logger.Add("Hello, welcome to the USARIEM Digital Clipboard.", lts.GEN)
 
 main = Main()
 

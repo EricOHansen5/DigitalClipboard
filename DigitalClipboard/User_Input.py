@@ -72,7 +72,7 @@ class User_Input(object):
         if missing_entry:
             return
 
-        if self.Check_Device_Status():
+        if self.Check_Device_Status() is True:
             answer = messagebox.askyesno("Question","This device has already been checked in, continue?")
             if not answer:
                 return
@@ -81,7 +81,7 @@ class User_Input(object):
         Datastore().Add(logevent.Get_Log())
         
         # Save ecn, name, and barcode
-        self.Save_JSON(txtecn, txt)
+        self.Save_JSON(txtecn, txt, True)
 
         self.root.destroy()
         return
@@ -135,7 +135,7 @@ class User_Input(object):
         if missing_entry:
             return
 
-        if not self.Check_Device_Status():
+        if self.Check_Device_Status() is False:
             answer = messagebox.askyesno("Question","This device has already been checked out, continue?")
             if not answer:
                 return
@@ -151,20 +151,18 @@ class User_Input(object):
         self.Get_Signature()
 
         # Save ecn, name, and barcode
-        self.Save_JSON(txtecn, txt)
+        self.Save_JSON(txtecn, txt, False)
 
 
     def Check_Device_Status(self):
         ecn = self.txtecn.get()
-        if self.jsonDB['Entries'][ecn]:
-            last_ix = len(self.jsonDB['Entries'][ecn]) - 1
-            status = self.jsonDB['Entries'][ecn][last_ix]['checkIn']
-            return status
+        if ecn in self.deviceMaps.keys():
+            return self.deviceMaps[ecn]["CheckedIn"]
             
 
-    def Save_JSON(self, ecn, name):
+    def Save_JSON(self, ecn, name, checkedin):
         barcode = self.barcode
-        DeviceMaps().Add_mapping(ecn, barcode, name)
+        self.deviceMapsClass.Add_mapping(ecn, barcode, name, checkedin)
 
 
     def Get_Signature(self):
@@ -236,25 +234,18 @@ class User_Input(object):
     def __init__(self, barcode, root):
         print("UI Start Called")
 
-        self.jsonDB = DeviceMaps().jsonMap
-        self.dcOnlyDB = DeviceMaps().dcJsonMaps
+        self.deviceMapsClass = DeviceMaps()
+        self.deviceMaps = self.deviceMapsClass.deviceMaps
 
         name = tk.StringVar()
         ecn = tk.StringVar()
 
-        for k in self.jsonDB['Mappings']:
-            if self.jsonDB['Mappings'][k]['Barcode'] == barcode:
-                self.foundMap = self.jsonDB['Mappings'][k]
-                name.set(self.foundMap['Name'])
-                ecn.set(self.foundMap['ECN'])
-
-        if len(ecn.get()) <= 1:
-            for key, v in self.dcOnlyDB.items():
-                if v["Barcode"] == barcode:
-                    self.foundMap = v
-                    ecn.set(self.foundMap['ECN'])
-                    if len(name.get()) <= 1:
-                        name.set(self.foundMap['Name'])
+        # Update Name and ECN
+        for v in self.deviceMaps.values():
+            if v['Barcode'] == barcode:
+                name.set(v['Name'])
+                ecn.set(v['ECN'])
+                break
 
         bg_color = 'white smoke'
         width_s = 30

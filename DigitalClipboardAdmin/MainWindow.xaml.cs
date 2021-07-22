@@ -132,7 +132,7 @@ namespace DigitalClipboardAdmin
         public MainWindow(bool isUpdateDB = false)
         {
             // Check / Create Dependencies
-            (dcFileinfo, jsonFileinfo, accessFileinfo) = DatastoreController.CheckDependecies();
+            (dcFileinfo, jsonFileinfo) = DatastoreController.CheckDependencies();
 
             if (jsonFileinfo != null && jsonFileinfo.Length > 0)
             {
@@ -221,7 +221,7 @@ namespace DigitalClipboardAdmin
 
             }
         }
-
+                                           
         private void Merge_Lists(List<EntryModel> procList, List<EntryModel> newList)
         {
             foreach (EntryModel nItem in newList)
@@ -233,33 +233,6 @@ namespace DigitalClipboardAdmin
                     int ix = procList.IndexOf(em);
                     procList[ix] = new EntryModel(nItem);
 
-                }
-            }
-        }
-
-        private async Task OnTimedEvent()
-        {
-            if (dcFileinfo == null || jsonFileinfo == null || accessFileinfo == null)
-            {
-                dcFileinfo = ((FileInfo[])DatastoreController.GetFileInfo(DatastoreController.filepath.DCLogs))
-                    .OrderBy(x => x.LastWriteTime).ToArray();
-                jsonFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.JSONFile);
-                accessFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.DBFile);
-            }
-            else
-            {
-                FileInfo[] curDCFileinfo = (FileInfo[])DatastoreController.GetFileInfo(DatastoreController.filepath.DCLogs);
-                FileInfo curAccessFileinfo = (FileInfo)DatastoreController.GetFileInfo(DatastoreController.filepath.DBFile);
-                curDCFileinfo = curDCFileinfo.OrderBy(x => x.LastWriteTime).ToArray();
-                if(curDCFileinfo.Last().LastWriteTime > dcFileinfo.Last().LastWriteTime)
-                {
-                    NewEntries = DatastoreController.ConvertDCLogs();
-
-                }
-
-                if(curAccessFileinfo.LastWriteTime > accessFileinfo.LastWriteTime)
-                {
-                    //NewDevices = DatastoreController.ConvertToDevice();
                 }
             }
         }

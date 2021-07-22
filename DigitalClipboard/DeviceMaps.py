@@ -1,117 +1,90 @@
-import os.path, datetime, json, subprocess, shutil
+import os, datetime, json, subprocess, shutil
 from Configs import Configs
-from os import path
+from Common import Common, Logger, LogTypeString as lts
+from shutil import copyfile
 from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWUSR
 
 class DeviceMaps(object):    
     successful_load = False
-
+    deviceMaps = {}
+    
     def __init__(self):
-        print("DeviceMaps Created")
-        
-        # flag to choose default json db or backup db
-        self.successful_load = True
-
-        # loop through until data is loaded from default json db or backup db
-        while True:
-            try:
-                if self.successful_load:
-                    filename = Configs.jsonPath
-                    print("Default json DB")
-                else:
-                    filename = Configs.BAKjsonPath
-                    print("Backup json DB")
-
-                # load data from file
-                with open(filename, 'r') as jfile:
-                    data = jfile.read()
-
-                # deserialize data
-                self.jsonMap = json.loads(data)
-                break
-            except:
-                if not self.successful_load:
-                    print("Unable to load either json db's")
-                    break
-                print("problem with loading json db")
-                self.successful_load = False
-
-        if not self.load_dc_only_maps():
-            self.write_dc_only_maps()
-
-        print("DeviceMaps Complete")
+        self.load_data()
 
 
-    def load_dc_only_maps(self):
+    def load_data(self):
+        Logger.Add("Load Data", lts.GEN)
         try:
-            # init data to be filled
-            data = ""
-            with open(Configs.dcOnlyJsonPath, 'r') as jdata:
-                data = jdata.read() # fill data with json data
+            localexists = os.path.isfile(Configs.local_data)
+            networkexists = os.path.isfile(Configs.network_data)
+            if localexists is False:
+                with open(Configs.local_data, 'w+') as localdata:
+                    Logger.Add("Local Data File Created", lts.GEN)
+                    localdata.write("")
+                    return True
 
-            self.dcJsonMaps = json.loads(data)
-            print("DC only loaded successfully")
+            if networkexists is False:
+                with open(Configs.network_data, 'w+') as networkdata:
+                    Logger.Add("Network Data File Created", lts.GEN)
+                    networkdata.write("")
+                    return True
+
+            localdatasize = os.path.getsize(Configs.local_data)
+            networkdatasize = os.path.getsize(Configs.network_data)
+            if localdatasize > networkdatasize:
+                Logger.Add("Local Data Larger Than Network Data", lts.ERR)
+                with open(Configs.local_data, 'r') as localdata:
+                    self.deviceMaps = json.loads(localdata.read())
+                    self.successful_load = True
+            elif networkdatasize > localdatasize:
+                Logger.Add("Network Data Larger Than Local Data", lts.ERR)
+                with open(Configs.network_data, 'r') as networkdata:
+                    self.deviceMaps = json.loads(networkdata.read())
+                    self.successful_load = True
             return True
-        except:
-            print("DC only unable to load")
+        except FileNotFoundError:
+            Logger.Add("File Not Found Error", lts.ERR)
+            return False
+        except Exception:
+            Logger.Add(sys.exc_info()[0], lts.ERR)
             return False
 
 
-    def write_dc_only_maps(self):
+    def write_data(self):
+        Logger.Add("Write Data", lts.GEN)
         try:
-            if not hasattr(self, "dcJsonMaps"):
-                self.dcJsonMaps = {}
+            with open(Configs.local_data, 'w') as localdata:
+                localdata.write(json.dumps(self.deviceMaps))
 
-            jobj = json.dumps(self.dcJsonMaps)
+            with open(Configs.network_data, 'w') as networkdata:
+                networkdata.write(json.dumps(self.deviceMaps))
 
+            if Common.CheckHash(Configs.local_data, Configs.network_data) is False:
+                Logger.Add("Copying Local File", lts.WAR)
+                copyfile(Configs.local_data, Configs.network_data)
 
-            # write local copy
-            with open("DC_Only_Database.json", 'w+') as ofile:
-                ofile.write(jobj)
-
-            # write network location
-            with open(Configs.dcOnlyJsonPath, 'w+') as ofile:
-                ofile.write(jobj)
-
-            filesize1 = os.path.getsize("DC_Only_Database.json")
-            filesize2 = os.path.getsize(Configs.dcOnlyJsonPath)
-            if filesize2 < filesize1:
-                print("--Network File Smaller--")
-                shutil.copy2("DC_Only_Database.json", Configs.dcOnlyJsonPath)
-                print("Copied local to network location.")
-            elif filesize2 == filesize1:
-                print("--Files are equal size--")
-            else:
-                print("--Network File Larger--")
+            return True
+        except FileNotFoundError:
+            Logger.Add("File Not Found Error", lts.ERR)
+            return False
+        except Exception:
+            Logger.Add(sys.exc_info()[0], lts.ERR)
+            return False
 
 
-            print("Created dc only maps json db successful")
-        except:
-            print("Unable to create dc only maps json db")
-
-
-    def Add_mapping(self, ecn, barcode, name):
-        exist = False
-
-        for k in self.jsonMap['Mappings']:
-            if self.jsonMap['Mappings'][k]['Barcode'] == barcode:
-                exist = True
-
-        if not exist:
-            print("{0} doesn't exists. Creating.")
-            if len(self.dcJsonMaps) >= 0:
-                self.Create_map(ecn, barcode, name)
-                self.dcJsonMaps[ecn] = self.objmap
-            self.write_dc_only_maps()
-            #subprocess.Popen(Configs.dcSyncPath)
-
+    def Add_mapping(self, ecn, barcode, name, checkedin):
+        if ecn in self.deviceMaps.keys():
+            Logger.Add("{0} doesn't exists. Creating.".format(ecn), lts.GEN)
         else:
-            print("{0} already exists. Updating.")
+            Logger.Add("{0} already exists. Updating.".format(ecn), lts.GEN)
+        self.deviceMaps[ecn] = self.Create_map(ecn, barcode, name, checkedin)
+        self.write_data()
 
 
-    def Create_map(self, ecn, barcode, name):
-        self.objmap = {}
-        self.objmap["Barcode"] = barcode
-        self.objmap["DeviceModelID"] = ''
-        self.objmap["ECN"] = ecn
-        self.objmap["Name"] = name
+    def Create_map(self, ecn, barcode, name, checkedin):
+        objmap = {}
+        objmap["Barcode"] = barcode
+        objmap["ECN"] = ecn
+        objmap["Name"] = name
+        objmap["CheckedIn"] = checkedin
+        return objmap

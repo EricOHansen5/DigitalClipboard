@@ -8,6 +8,7 @@ class LogEvent(object):
     ecn = -1
     barcode = -1
     status = "[[no_status]]"
+    sig_path = "[[sig_path]]"
 
     """This class holds the info needed to track assets going in/out of IMB"""
     def __init__(self, date_time, username, tech, comment, ecn, barcode):

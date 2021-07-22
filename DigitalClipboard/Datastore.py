@@ -1,6 +1,7 @@
-import os.path
+import os.path, hashlib
 from Configs import Configs
 from os import path
+from Common import Common
 from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWUSR
 import datetime
 
@@ -15,46 +16,44 @@ class Datastore(object):
 
     def __set_readonly(self):
         print("Set_Readonly")
-        if self.isuselocal:
-            os.chmod(Configs.localfilename, S_IREAD|S_IRGRP|S_IROTH)
-        else:
-            # Set readonly permissions
-            os.chmod(Configs.filename, S_IREAD|S_IRGRP|S_IROTH)
+        # Set readonly permissions
+        os.chmod(Configs.localfilename, S_IREAD|S_IRGRP|S_IROTH)
+        os.chmod(Configs.filename, S_IREAD|S_IRGRP|S_IROTH)
 
 
     def __set_writable(self):
         print("Set_Writable")
-        if self.isuselocal:
-            os.chmod(Configs.localfilename, S_IWUSR|S_IREAD)
-        else:
-            # Set readonly permissions
-            os.chmod(Configs.filename, S_IWUSR|S_IREAD)
+        # Set readonly permissions
+        os.chmod(Configs.localfilename, S_IWUSR|S_IREAD)
+        os.chmod(Configs.filename, S_IWUSR|S_IREAD)
 
 
     def __check_file(self):
         print("Check_File")
         # Check to see if a log file exists already
         log_exists = path.exists(Configs.filename)
+        log_dir_exists = path.exists(Configs.checkpath)
         local_exists = path.exists(Configs.localfilename)
         local_dir_exists = path.exists(Configs.localpath)
 
-        if path.exists(Configs.checkpath):
-            self.isuselocal = False
-            # If file doesn't exist create it
+        # check and create directories as needed
+        if log_dir_exists is False:
+            os.mkdir(Configs.checkpath)
+        log_dir_exists = path.exists(Configs.checkpath)
+
+        if local_dir_exists is False:
+            os.mkdir(Configs.localpath)
+        local_dir_exists = path.exists(Configs.localpath)
+
+        # check and create files as needed
+        if log_dir_exists and local_dir_exists:
+            if local_exists is False:
+                log_file = open(Configs.localfilename, "w+")
+                log_file.close()
             if log_exists is False:
                 log_file = open(Configs.filename, "w+")
                 log_file.close()
-
-                # Change permissions on file to read-only
-                self.__set_readonly()
-        else:
-            self.isuselocal = True
-            if local_exists is False:
-                if local_dir_exists is False:
-                    os.mkdir(Configs.localpath)
-                log_file = open(Configs.localfilename, "w+")
-                log_file.close()
-                self.__set_readonly()
+            self.__set_readonly()
 
 
     def __init__(self):
@@ -73,20 +72,27 @@ class Datastore(object):
         # Change permission to writable
         self.__set_writable()
 
-        if self.isuselocal:
-            log_file = open(Configs.localfilename, "a+")
-        else:
-            # Append to log file
-            log_file = open(Configs.filename, "a+")
-        
+        # Append to log file
+        log_file1 = open(Configs.localfilename, "a+")
+        log_file2 = open(Configs.filename, "a+")
+
         # Write line to file
-        log_file.write(log_entry)
+        log_file1.write(log_entry)
+        log_file2.write(log_entry)
 
         # Close log file
-        log_file.close()
+        log_file1.close()
+        log_file2.close()
 
         # Change permission to read-only
         self.__set_readonly()
+        
+        # Check hash for local and network copy
+        self.__get_hash()
+
+
+    def __get_hash(self):
+        return Common.CheckHash(Configs.localfilename, Configs.filename)
 
 
     def Add(self, log_entry):
