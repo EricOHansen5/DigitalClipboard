@@ -25,13 +25,14 @@ class Configs(object):
 
 
     ##----- DEVICEMAPS ------##
-    # Share Drive
+    # Share Drive [DEPRECATED]
     jsonPath = baseUri + dc_admin + "Database.json";
     BAKjsonPath = baseUri + dc_admin + "Database.jsonBAK";
     jsonDir  = baseUri + dc_admin
     dcOnlyJsonPath = baseUri + dc_admin + "DC_Only_Database.json";
     dcSyncPath = baseUri + dc_admin + 'Executable\\DigitalClipboardSync.exe'
     
+    # USED FOR ALL DEVICE TO BARCODE MAPPINGS
     local_data = os.path.join(desktoppath, "Data.json")
     network_data = baseUri + dc_admin + "Data.json"
     ##----- END ------##

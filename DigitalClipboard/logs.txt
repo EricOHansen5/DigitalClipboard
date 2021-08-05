@@ -20,3 +20,231 @@
 2021-07-22 01:55:02.286523	-- GENERAL  --	65f8cdf5e180e89b1b641ff527e394f7 : 65f8cdf5e180e89b1b641ff527e394f7 --- MD5 Verified.
 2021-07-22 01:55:04.694153	-- GENERAL  --	Load Data
 2021-07-22 08:49:44.222099	-- GENERAL  --	Load Data
+2021-07-22 09:23:11.359030	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-07-22 09:23:11.364018	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-07-22 09:23:44.095783	-- GENERAL  --	wait_for_barcodes called
+2021-07-22 09:23:47.257793	-- GENERAL  --	Load Data
+2021-08-05 09:54:39.102141	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 09:54:39.103138	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB24055650>
+2021-08-05 09:54:57.371354	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 09:54:57.896948	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 09:55:00.099442	-- GENERAL  --	Load DeviceMaps
+2021-08-05 09:55:00.446514	-- ERROR    --	Network DeviceMaps Larger Than Local Data
+2021-08-05 09:57:22.575783	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 09:57:22.576781	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB24425650>
+2021-08-05 09:57:41.090233	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 09:57:41.618819	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 09:57:43.585349	-- GENERAL  --	Load DeviceMaps
+2021-08-05 09:58:34.391570	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 09:58:34.392566	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB2AC75650>
+2021-08-05 09:58:54.925642	-- GENERAL  --	Got Camera Successfully
+2021-08-05 09:58:54.926642	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 09:58:55.371901	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 09:58:57.344542	-- GENERAL  --	Load DeviceMaps
+2021-08-05 09:59:48.765913	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 09:59:48.767907	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB2AC75650>
+2021-08-05 10:00:11.210955	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:00:11.211970	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:00:11.635528	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:00:13.602608	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:01:08.610249	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:01:08.612246	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB2AC75650>
+2021-08-05 10:01:30.092820	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:01:30.094788	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:01:30.556696	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:01:32.552400	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:02:14.710443	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:02:14.711412	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB2AC75650>
+2021-08-05 10:02:35.145724	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:02:35.146722	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:02:35.615134	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:02:37.578164	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:05:28.958981	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:05:28.959978	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:05:49.189838	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:05:49.190837	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:05:49.720417	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:05:51.755882	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:07:17.004537	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:07:17.005535	-- GENERAL  --	<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:07:17.007530	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:07:27.328043	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:07:27.332034	-- GENERAL  --	<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:07:27.335024	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:07:40.864992	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:07:40.866987	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:07:41.348701	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:07:43.424028	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:07:52.180735	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:07:52.182701	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:08:50.454048	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:08:50.456044	-- GENERAL  --	<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:08:50.458038	-- GENERAL  --	
+
+---- Digital Clipboard ----
+<built-in method now of type object at 0x00007FFB23B05650>
+2021-08-05 10:09:13.094773	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:09:13.095772	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:09:13.532945	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:09:15.507872	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:13:27.314150	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:13:27.315148	-- GENERAL  --	<built-in method now of type object at 0x00007FFB24055650>
+2021-08-05 10:13:27.317141	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:13:27.317141
+2021-08-05 10:13:48.875982	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:13:48.877978	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:13:49.402574	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:13:51.354441	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:14:28.302684	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:14:28.303682	-- GENERAL  --	2021-08-05 10:14:28.303682
+2021-08-05 10:14:28.305659	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:14:28.304653
+2021-08-05 10:14:50.775514	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:14:50.779504	-- GENERAL  --	2021-08-05 10:14:50.778508
+2021-08-05 10:14:50.781500	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:14:50.781500
+2021-08-05 10:14:53.130213	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:14:53.132209	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:14:53.657315	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:14:55.729850	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:15:21.116012	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:15:21.119004	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:15:21.130971	-- GENERAL  --	Finished Cleaning Up
+2021-08-05 10:16:20.693973	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:16:20.696964	-- GENERAL  --	2021-08-05 10:16:20.696964
+2021-08-05 10:16:20.699956	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:16:20.699956
+2021-08-05 10:16:51.762826	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:16:51.764822	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:16:52.225588	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:16:54.329176	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:17:47.249127	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:17:47.252120	-- GENERAL  --	2021-08-05 10:17:47.252120
+2021-08-05 10:17:47.256108	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:17:47.256108
+2021-08-05 10:18:21.692949	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:18:21.694944	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:18:22.224527	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:18:24.439728	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:18:50.322459	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:18:50.324454	-- GENERAL  --	2021-08-05 10:18:50.324454
+2021-08-05 10:18:50.326449	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:18:50.326449
+2021-08-05 10:19:24.194811	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:19:24.199798	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:19:24.662559	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:19:26.837725	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:20:59.643466	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:20:59.647456	-- GENERAL  --	2021-08-05 10:20:59.647456
+2021-08-05 10:20:59.650448	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:20:59.650448
+2021-08-05 10:21:33.145810	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:21:33.146805	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:21:33.618542	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:21:35.790933	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:21:36.067195	-- GENERAL  --	DeviceMap Files Equal Size
+2021-08-05 10:27:39.045746	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:27:39.049735	-- GENERAL  --	2021-08-05 10:27:39.049735
+2021-08-05 10:27:39.051729	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:27:39.051729
+2021-08-05 10:27:58.869674	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:27:58.871670	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:27:59.329567	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:28:01.513835	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:28:01.768160	-- GENERAL  --	DeviceMap Files Equal Size
+2021-08-05 10:29:29.454719	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:29:29.456714	-- GENERAL  --	2021-08-05 10:29:29.456714
+2021-08-05 10:29:29.457712	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:29:29.459707	-- GENERAL  --	2021-08-05 10:29:29.459707
+2021-08-05 10:29:54.432983	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:29:54.433983	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:29:54.907724	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:29:56.923748	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:29:57.175080	-- GENERAL  --	DeviceMap Files Equal Size
+2021-08-05 10:33:37.141016	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:33:37.142013	-- GENERAL  --	2021-08-05 10:33:37.142013
+2021-08-05 10:33:37.143011	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:33:37.144008	-- GENERAL  --	2021-08-05 10:33:37.144008
+2021-08-05 10:34:00.323242	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:34:00.324237	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:34:00.331221	-- GENERAL  --	Finished Cleaning Up
+2021-08-05 10:41:41.471895	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:41:41.474888	-- GENERAL  --	2021-08-05 10:41:41.474888
+2021-08-05 10:41:41.476884	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:41:41.478878	-- GENERAL  --	2021-08-05 10:41:41.478878
+2021-08-05 10:41:59.603700	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:41:59.605666	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:42:00.160867	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:42:02.266099	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:42:02.479621	-- GENERAL  --	DeviceMap Files Equal Size
+2021-08-05 10:42:02.481616	-- WARNING  --	<_io.TextIOWrapper name='C:\\Users\\eric.hansen\\Desktop\\Data.json' mode='r' encoding='cp1252'>
+2021-08-05 10:42:41.553766	-- GENERAL  --	5996 doesn't exists. Creating.
+2021-08-05 10:42:41.555762	-- GENERAL  --	Write Data
+2021-08-05 10:42:41.557755	-- GENERAL  --	Writing Local DeviceMaps
+2021-08-05 10:42:41.561743	-- GENERAL  --	Writing Network DeviceMaps
+2021-08-05 10:42:41.770244	-- GENERAL  --	Checking Hash Values
+2021-08-05 10:42:41.947771	-- GENERAL  --	35c92cad785dc90ef0224b103803626b : 35c92cad785dc90ef0224b103803626b --- MD5 Verified.
+2021-08-05 10:42:41.968714	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC
+2021-08-05 10:42:43.871215	-- GENERAL  --	Load DeviceMaps
+2021-08-05 10:42:43.958981	-- GENERAL  --	DeviceMap Files Equal Size
+2021-08-05 10:42:43.959979	-- WARNING  --	<_io.TextIOWrapper name='C:\\Users\\eric.hansen\\Desktop\\Data.json' mode='r' encoding='cp1252'>
+2021-08-05 10:46:26.587280	-- GENERAL  --	Hello, welcome to the USARIEM Digital Clipboard.
+2021-08-05 10:46:26.589275	-- GENERAL  --	2021-08-05 10:46:26.589275
+2021-08-05 10:46:26.591269	-- GENERAL  --	
+
+---- Digital Clipboard ----
+2021-08-05 10:46:26.592265	-- GENERAL  --	2021-08-05 10:46:26.592265
+2021-08-05 10:46:45.173766	-- GENERAL  --	Got Camera Successfully
+2021-08-05 10:46:45.174780	-- GENERAL  --	wait_for_barcodes called
+2021-08-05 10:46:45.608528	-- GENERAL  --	Found Barcode: 31416CE0E5B94B88B3FB7BB4BE77F7DC

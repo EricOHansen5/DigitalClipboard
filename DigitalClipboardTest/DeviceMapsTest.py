@@ -9,6 +9,20 @@ def test_load_data():
     else:
         Logger.Add("FAILED", lts.ERR)
 
+def test_load_data_local_larger():
+    #TODO -----------------------------------------
+    Logger.Add("FAILED", lts.ERR)
+
+
+def test_load_data_local_smaller():
+    #TODO -----------------------------------------
+    Logger.Add("FAILED", lts.ERR)
+
+
+def test_load_data_files_equal():
+    #TODO -----------------------------------------
+    Logger.Add("FAILED", lts.ERR)
+
 
 def test_write_data():
     if DeviceMaps().write_data():
@@ -42,7 +56,17 @@ def test_Add_mapping():
 
 
 # Run Tests
+# LOAD DATA #
 test_load_data()
+test_load_data_local_larger()
+test_load_data_local_smaller()
+test_load_data_files_equal()
+
+# WRITE DATA #
 test_write_data()
+
+# CREATE MAPS #
 test_Create_map()
+
+# ADD MAPPING #
 test_Add_mapping()

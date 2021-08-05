@@ -1,7 +1,8 @@
 import cv2, os, sys, tkinter, keyboard, winsound
 from tkinter import *
 from tkinter import messagebox
-from pyzbar import pyzbar, decode, ZBarSymbol
+from pyzbar import pyzbar
+from pyzbar.pyzbar import decode, ZBarSymbol
 import datetime as date
 from User_Input import User_Input
 from Common import Logger, LogTypeString as lts
@@ -13,10 +14,14 @@ class Main(object):
         result = "-1"
 
         for barcode in barcodes:
+            # Create rectangle to display on camera
             x, y, w, h = barcode.rect
 
+            # Decode the barcode
             barcode_info = barcode.data.decode('utf-8')
             barcode_type = barcode.type
+
+            # Draw rectangle
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         
             result = barcode_info
@@ -46,23 +51,28 @@ class Main(object):
 
                 # Wait for barcode/qr code to be parsed from frame
                 if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
+                    Logger.Add("Found Barcode: " + result, lts.GEN)
                     winsound.PlaySound(r'C:\Windows\Media\tada.wav', winsound.SND_FILENAME)
                     self.root = Tk()
                     ui = User_Input(result, self.root)
                     result = "-1"
     
             # Release the camera and close gui window for camera
-            camera.release()
+            self.camera.release()
             cv2.destroyAllWindows()
+            Logger.Add("Finished Cleaning Up", lts.GEN)
             return result
 
         except Exception as e:
+            Logger.Add("Exception - Wait for Barcode: " + sys.exc_info()[0], lts.ERR)
+            Logger.Add("\tcont. : " + e.args[0], lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
             return None
 
 
     def Run(self):
         Logger.Add("\n\n---- Digital Clipboard ----", lts.GEN)
+        Logger.Add(date.datetime.now(), lts.GEN)
 
         try:
             if cv2.useOptimized() is False:
@@ -70,14 +80,17 @@ class Main(object):
 
             # Get video device
             self.camera = cv2.VideoCapture(0)
+            Logger.Add("Got Camera Successfully", lts.GEN)
+
             # Wait for barcode to enter camera view
             barcode = self.wait_for_barcodes()
 
         except ValueError as ve:
             Logger.Add("Exception: " + ValueError, lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(ve.args[0]))
+            input("Enter to exit")
         except Exception as e:
-            Logger.Add("Unexpected Exception: " + sys.exc_info()[0], lts.ERR)
+            Logger.Add("Unknown Exception: " + sys.exc_info()[0], lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
             input("Enter to exit")
             raise
