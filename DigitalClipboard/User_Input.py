@@ -10,6 +10,8 @@ from Datastore import Datastore
 from LogEvent import LogEvent
 from Signature_Input import Signature_Input
 from DeviceMaps import DeviceMaps
+from Common import Logger
+from Common import LogTypeString as lts
 
 class User_Input(object):
     """This will be the python user interface to gather check in/out info"""
@@ -21,7 +23,8 @@ class User_Input(object):
     isintextbox = False
 
     def Checking_In(self):
-        print("Checking_In Called")
+        Logger.Add("Checking_In Called", lts.GEN)
+
         # Check for null barcode
         if(self.barcode == "-2"):
             return
@@ -88,7 +91,7 @@ class User_Input(object):
 
 
     def Checking_Out(self):
-        print("Checking_Out Called")
+        Logger.Add("Checking_Out Called", lts.GEN)
         if(self.barcode == "-2"):
             return
         # Create LogEvent obj        
@@ -174,13 +177,13 @@ class User_Input(object):
 
     # ON TEXTBOX FOCUS EVENT
     def on_focus_in(self, e):
-            print('on_focus_in')
+            Logger.Add('on_focus_in', lts.GEN)
             subprocess.Popen("osk", shell=True)
 
 
     def on_focus_out(self, e):
             if not self.isintextbox:
-                print('on_focus_out')
+                Logger.Add('on_focus_out', lts.GEN)
                 subprocess.call('wmic process where name="osk.exe" delete', shell=True)
 
     # HOVER EVENTS
@@ -207,12 +210,12 @@ class User_Input(object):
     # DROPDOWN CHANGES
     def Option_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        print("tech: {0}: ".format(self.optionvar.get()))
+        Logger.Add("tech: {0}: ".format(self.optionvar.get()), lts.GEN)
     #        
     #
     def Reason_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        print("reason: {0}: ".format(self.reasonoptionvar.get()))
+        Logger.Add("reason: {0}: ".format(self.reasonoptionvar.get()), lts.GEN)
         reasonName = self.reasonoptionvar.get()
         tempReason = "Reason for visit:"
         self.lblreason.config(text = tempReason)
@@ -232,7 +235,7 @@ class User_Input(object):
 
 
     def __init__(self, barcode, root):
-        print("UI Start Called")
+        Logger.Add("UI Start Called", lts.GEN)
 
         self.deviceMapsClass = DeviceMaps()
         self.deviceMaps = self.deviceMapsClass.deviceMaps
@@ -268,6 +271,8 @@ class User_Input(object):
 
         # Setup GUI
         self.root = root
+        self.root.title = "Digital Clipboard"
+
         #self.root.geometry('1200x700')
         self.root.configure(bg=bg_color)
         winWidth = 1080

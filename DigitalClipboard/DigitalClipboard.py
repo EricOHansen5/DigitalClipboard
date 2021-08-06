@@ -7,9 +7,6 @@ from Main import Main
 from Common import Logger, LogTypeString as lts
 import datetime
 
-Logger.Add("Hello, welcome to the USARIEM Digital Clipboard.", lts.GEN)
-Logger.Add(datetime.datetime.now(), lts.GEN)
 main = Main()
-
 main.Run()
 

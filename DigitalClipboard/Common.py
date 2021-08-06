@@ -1,4 +1,5 @@
 import hashlib, os, datetime, json
+from Configs import Configs
 from enum import Enum
 
 class LogTypeString(Enum):
@@ -42,8 +43,17 @@ class Common:
 class Logger:
     def Add(msg, type):
         dt = datetime.datetime.now()
-        entry = "\n{0}\t{1}\t{2}".format(dt, type.value, msg)
+        spacing = "\n"
+        if "----" in str(msg):
+            spacing = spacing * 3
+        entry = "{0}\t{1}\t{2}".format(dt, type.value, msg)
+        entry = spacing + entry
         print(entry)
-        with open("logs.txt", "a+") as logfile:
-            logfile.write(entry)
+        if os.path.isfile(Configs.logfile):
+            with open(Configs.logfile, "a") as logfile:
+                logfile.write(entry)
+        else:
+            print("Logger File Created")
+            with open(Configs.logfile, "w") as logfile:
+                logfile.write(entry)
 

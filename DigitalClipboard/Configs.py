@@ -6,6 +6,7 @@ class Configs(object):
     baseUri = '\\\\riemfs01\\X\\AutomationTools\\'
     dc_logs = 'Digital_Clipboard_Logs\\'
     dc_admin = 'Digital_Clipboard_Admin\\'
+    logfile = os.path.join(baseUri, "pypi/DigitalClipboard/logs.txt")
 
     ##----- DATASTORE -----##
     monday_date = datetime.datetime.today()  - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)

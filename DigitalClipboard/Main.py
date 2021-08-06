@@ -71,7 +71,7 @@ class Main(object):
 
 
     def Run(self):
-        Logger.Add("\n\n---- Digital Clipboard ----", lts.GEN)
+        Logger.Add("---- Digital Clipboard ----", lts.GEN)
         Logger.Add(date.datetime.now(), lts.GEN)
 
         try:
