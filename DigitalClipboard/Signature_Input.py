@@ -84,12 +84,16 @@ class Signature_Input:
         bg_color = 'white smoke'
         font_s = tkFont.Font(family="Courier", size=20)
         width_s = 50
-        self.canvwidth = 650
-        self.canvheight = 480
 
         self.tk = Tk()
         self.tk.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.tk.attributes("-topmost", True)
+        self.tk.state('zoomed')
+        self.tk.update_idletasks()      # keeps winfo_width/winfo_height accurate
+
+        # Make the canvas fit the window, but with room for the "Submit" button.
+        self.canvwidth = self.tk.winfo_width()
+        self.canvheight = self.tk.winfo_height() - self.tk.winfo_height() // 5
 
         self.lblHeader = Label(self.tk, text="Sign Below", font=font_s, width=width_s)
         self.lblHeader.grid(row=0, column=1, columnspan=3, pady=10, padx=50)
@@ -97,7 +101,7 @@ class Signature_Input:
         self.cvs = Canvas(self.tk, width=self.canvwidth, height=self.canvheight, bg='white')
         self.cvs.grid(row=1, column=1)
 
-        self.img = Image.new('RGB',(650,480),(255,255,255))
+        self.img = Image.new('RGB',(self.canvwidth, self.canvheight),(255,255,255))
         self.draw = ImageDraw.Draw(self.img)
 
         self.mousePressed = False
