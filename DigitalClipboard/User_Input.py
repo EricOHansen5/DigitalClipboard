@@ -21,6 +21,7 @@ class User_Input(object):
     otherselected = False
     othervisible = False
     isintextbox = False
+    isDestroyed = False
 
     def Checking_In(self):
         Logger.Add("Checking_In Called", lts.GEN)
@@ -175,7 +176,6 @@ class User_Input(object):
             self.sig_input.Run(self.root)
     
 
-    # ON TEXTBOX FOCUS EVENT
     def on_focus_in(self, e):
             Logger.Add('on_focus_in', lts.GEN)
             subprocess.Popen("osk", shell=True)
@@ -186,12 +186,12 @@ class User_Input(object):
                 Logger.Add('on_focus_out', lts.GEN)
                 subprocess.call('wmic process where name="osk.exe" delete', shell=True)
 
-    # HOVER EVENTS
+
     def on_enter(self, e):
         # Hover over button
         e.widget['style'] = "HOV.TButton"
-    #
-    #
+
+
     def on_leave(self, e):
         # Leave Hover over button
         if e.widget is self.exit:
@@ -199,20 +199,20 @@ class User_Input(object):
         else:
             e.widget['style'] = "BW.TButton"
 
+
     def t_on_enter(self, e):
         self.isintextbox = True
 
+
     def t_on_leave(self, e):
         self.isintextbox = False
-    # END HOVER EVENTS
 
 
-    # DROPDOWN CHANGES
     def Option_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
         Logger.Add("tech: {0}: ".format(self.optionvar.get()), lts.GEN)
-    #        
-    #
+
+
     def Reason_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
         Logger.Add("reason: {0}: ".format(self.reasonoptionvar.get()), lts.GEN)
@@ -223,7 +223,7 @@ class User_Input(object):
             self.otherselected = True
             if not self.othervisible:
                 self.lblother['text'] = "Other:"
-                self.txtother.grid(row=5, column=1, pady=(5,25), padx=(20,20))
+                self.txtother.grid(row=5, column=2, pady=(5,25), padx=(20,20))
                 self.othervisible = True
         else:
             self.otherselected = False
@@ -231,15 +231,16 @@ class User_Input(object):
                 self.lblother['text'] = ""
                 self.txtother.grid_remove()
                 self.othervisible = False
-    # END DROPDOWN CHANGES
 
 
     def __init__(self, barcode, root):
         Logger.Add("UI Start Called", lts.GEN)
 
+        # GET Mapping Data
         self.deviceMapsClass = DeviceMaps()
         self.deviceMaps = self.deviceMapsClass.deviceMaps
 
+        # Init Textbox Variables
         name = tk.StringVar()
         ecn = tk.StringVar()
 
@@ -282,41 +283,44 @@ class User_Input(object):
         #self.root.geometry("+{}+{}".format(posRight, posDown))
         self.root.state('zoomed')
         self.root.bind("<1>", self.on_focus_out)
-
+        self.root.columnconfigure(0, weight=1)
+        self.root.columnconfigure(1, weight=2)
+        self.root.columnconfigure(2, weight=3)
+        self.root.columnconfigure(3, weight=1)
         #self.root.eval('tk::PlaceWindow . center')
 
         # Header display for Barcode Data
         self.header = ttk.Label(root, text="Barcode:", style="BW.TLabel")
-        self.header.grid(row=0, column=0, pady=(25,25), padx=(20,20))
+        self.header.grid(row=0, column=1, pady=(25,25), padx=(20,20), sticky=E)
         
         self.valheader = ttk.Label(root, text="{0}".format(barcode), style="BW.TLabel", anchor="w", font=font_small)
-        self.valheader.grid(row=0, column=1, pady=(25,25), padx=(20,20))
+        self.valheader.grid(row=0, column=2, pady=(25,25), padx=(20,20), sticky=W)
 
         # Name Section
         self.lbluser = ttk.Label(root, text="Your Name:", style="BW.TLabel")
-        self.lbluser.grid(row=1, column=0, pady=(10,25), padx=(20,20))
+        self.lbluser.grid(row=1, column=1, pady=(10,25), padx=(20,20), sticky=E)
         
         self.txtname = tk.Entry(root, textvariable=name)
         self.txtname.configure(font=style_font, width=txt_width)
         self.txtname.bind("<1>", self.on_focus_in)
         self.txtname.bind("<Enter>", self.t_on_enter)
         self.txtname.bind("<Leave>", self.t_on_leave)
-        self.txtname.grid(row=1, column=1, pady=(10,25), padx=(20,20))
+        self.txtname.grid(row=1, column=2, pady=(10,25), padx=(20,20), sticky=W)
 
         # ECN Section
         self.lblecn = ttk.Label(root, text="ECN:", style="BW.TLabel")
-        self.lblecn.grid(row=2, column=0, pady=(10,25), padx=(20,20))
+        self.lblecn.grid(row=2, column=1, pady=(10,25), padx=(20,20), sticky=E)
         
         self.txtecn = tk.Entry(root, textvariable=ecn)
         self.txtecn.configure(font=style_font, width=txt_width)
         self.txtecn.bind("<1>", self.on_focus_in)
         self.txtecn.bind("<Enter>", self.t_on_enter)
         self.txtecn.bind("<Leave>", self.t_on_leave)
-        self.txtecn.grid(row=2, column=1, pady=(10,25), padx=(20,20))
+        self.txtecn.grid(row=2, column=2, pady=(10,25), padx=(20,20), sticky=W)
 
         # Technician Section
         self.lbltech = ttk.Label(root, text="Technician:", style="BW.TLabel")
-        self.lbltech.grid(row=3, column=0, pady=(10,25), padx=(20,20))
+        self.lbltech.grid(row=3, column=1, pady=(10,25), padx=(20,20), sticky=E)
        
         OPTIONS = ["No Technician", "Mike Delsanto", "Max Young", "Kim Tartarini", "Bill Finizia", "Dan Kemp", "Sal Rafique", "Eric Hansen", "Michael Weigel"]
         self.optionvar = StringVar(root)
@@ -324,23 +328,23 @@ class User_Input(object):
         
         self.txttech = tk.OptionMenu(root, self.optionvar, *OPTIONS, command=self.Option_change)
         self.txttech.configure(bg='white', font=font_s, width=btn_width)
-        self.txttech.grid(row=3, column=1, pady=(10,25), padx=(20,20))
+        self.txttech.grid(row=3, column=2, pady=(10,25), padx=(20,20), sticky=W)
         self.txttech['menu'].config(font=font_s)
 
         # Reason Section
         self.lblreason = ttk.Label(root, text="Reason for visit:", style="BW.TLabel")
-        self.lblreason.grid(row=4, column=0, pady=(10,25), padx=(20,20))
+        self.lblreason.grid(row=4, column=1, pady=(10,25), padx=(20,20), sticky=E)
         
         REASON_OPTIONS = ["New Device", "Replace Device", "Turn-In Device", "Hardware Issue/Install", "Software Issue/Install", "Checkout/Checkin Loaner", "Other"]
         self.reasonoptionvar = StringVar(root)
         self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS, command=self.Reason_change)
         self.txtreason.configure(bg='white', font=font_s, width=btn_width)
-        self.txtreason.grid(row=4, column=1, pady=(10,25), padx=(20,20))
+        self.txtreason.grid(row=4, column=2, pady=(10,25), padx=(20,20), sticky=W)
         self.txtreason['menu'].config(font=font_s)
         
         self.lblother = ttk.Label(root, style="BW.TLabel")
         self.lblother['text'] = ""
-        self.lblother.grid(row=5, column=0, pady=(5,25), padx=(20,20))
+        self.lblother.grid(row=5, column=1, pady=(5,25), padx=(20,20), sticky=E)
 
         self.txtother = tk.Entry(root,)
         self.txtother.configure(font=style_font, width=txt_width)
@@ -352,34 +356,34 @@ class User_Input(object):
         self.checkin = ttk.Button(root, text="Checking In", command=self.Checking_In, style="BW.TButton")
         self.checkin.bind("<Enter>", self.on_enter)
         self.checkin.bind("<Leave>", self.on_leave)
-        self.checkin.grid(row=6, column=1, pady=(10,25), padx=(20,20), columnspan=2)
+        self.checkin.grid(row=6, column=2, pady=(10,25), padx=(20,20), columnspan=1, sticky=W)
 
         # Checkout Section
         self.checkout = ttk.Button(root, text="Checking Out", command=self.Checking_Out, style="BW.TButton")
         self.checkout.bind("<Enter>", self.on_enter)
         self.checkout.bind("<Leave>", self.on_leave)
-        self.checkout.grid(row=7, column=1, pady=(10,25), padx=(20,20), columnspan=2)
+        self.checkout.grid(row=7, column=2, pady=(10,25), padx=(20,20), columnspan=1, sticky=W)
 
         # Exit Section
         self.exit = ttk.Button(root, text="Close", command=self.Exit_Click, style="BWR.TButton")
         self.exit.bind("<Enter>", self.on_enter)
         self.exit.bind("<Leave>", self.on_leave)
-        self.exit.grid(row=8, column=1, pady=(10,50), padx=(20,20), columnspan=2)
+        self.exit.grid(row=8, column=2, pady=(10,50), padx=(20,20), columnspan=1, sticky=W)
 
         self.root.mainloop()
 
 
     def Exit_Click(self):
-        sys.exit()
+        self.isDestroyed = True
+        Logger.Add("Closing", lts.GEN)
+        self.root.destroy()
+        return
 
 
-    # BRING WINDOW FORWARD
     def Raise_Window(self):
         self.sig_input.tk.lift()
         self.sig_input.tk.attributes("-topmost", True)
-    # END BRING WINDOW FORWARD
     
 
-    # CHANGE TTK STYLE
     def Change_Style(self, widget, theme):
         widget['style'] = theme
