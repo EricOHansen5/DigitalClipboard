@@ -223,7 +223,7 @@ class User_Input(object):
             self.otherselected = True
             if not self.othervisible:
                 self.lblother['text'] = "Other:"
-                self.txtother.grid(row=5, column=1, pady=(5,25), padx=(0,20))
+                self.txtother.grid(row=5, column=1, pady=(5,25), padx=(20,20))
                 self.othervisible = True
         else:
             self.otherselected = False
@@ -275,11 +275,12 @@ class User_Input(object):
 
         #self.root.geometry('1200x700')
         self.root.configure(bg=bg_color)
-        winWidth = 1080
-        scrnWidth = self.root.winfo_screenwidth()
-        posRight = int(scrnWidth/2 - winWidth/2)
-        posDown = 10
-        self.root.geometry("+{}+{}".format(posRight, posDown))
+        #winWidth = 1080
+        #scrnWidth = self.root.winfo_screenwidth()
+        #posRight = int(scrnWidth/2 - winWidth/2)
+        #posDown = 10
+        #self.root.geometry("+{}+{}".format(posRight, posDown))
+        self.root.state('zoomed')
         self.root.bind("<1>", self.on_focus_out)
 
         #self.root.eval('tk::PlaceWindow . center')
@@ -289,7 +290,7 @@ class User_Input(object):
         self.header.grid(row=0, column=0, pady=(25,25), padx=(20,20))
         
         self.valheader = ttk.Label(root, text="{0}".format(barcode), style="BW.TLabel", anchor="w", font=font_small)
-        self.valheader.grid(row=0, column=1, pady=(25,25), padx=(0,20))
+        self.valheader.grid(row=0, column=1, pady=(25,25), padx=(20,20))
 
         # Name Section
         self.lbluser = ttk.Label(root, text="Your Name:", style="BW.TLabel")
@@ -300,7 +301,7 @@ class User_Input(object):
         self.txtname.bind("<1>", self.on_focus_in)
         self.txtname.bind("<Enter>", self.t_on_enter)
         self.txtname.bind("<Leave>", self.t_on_leave)
-        self.txtname.grid(row=1, column=1, pady=(10,25), padx=(0,20))
+        self.txtname.grid(row=1, column=1, pady=(10,25), padx=(20,20))
 
         # ECN Section
         self.lblecn = ttk.Label(root, text="ECN:", style="BW.TLabel")
@@ -311,7 +312,7 @@ class User_Input(object):
         self.txtecn.bind("<1>", self.on_focus_in)
         self.txtecn.bind("<Enter>", self.t_on_enter)
         self.txtecn.bind("<Leave>", self.t_on_leave)
-        self.txtecn.grid(row=2, column=1, pady=(10,25), padx=(0,20))
+        self.txtecn.grid(row=2, column=1, pady=(10,25), padx=(20,20))
 
         # Technician Section
         self.lbltech = ttk.Label(root, text="Technician:", style="BW.TLabel")
@@ -323,7 +324,7 @@ class User_Input(object):
         
         self.txttech = tk.OptionMenu(root, self.optionvar, *OPTIONS, command=self.Option_change)
         self.txttech.configure(bg='white', font=font_s, width=btn_width)
-        self.txttech.grid(row=3, column=1, pady=(10,25), padx=(0,20))
+        self.txttech.grid(row=3, column=1, pady=(10,25), padx=(20,20))
         self.txttech['menu'].config(font=font_s)
 
         # Reason Section
@@ -334,7 +335,7 @@ class User_Input(object):
         self.reasonoptionvar = StringVar(root)
         self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS, command=self.Reason_change)
         self.txtreason.configure(bg='white', font=font_s, width=btn_width)
-        self.txtreason.grid(row=4, column=1, pady=(10,25), padx=(0,20))
+        self.txtreason.grid(row=4, column=1, pady=(10,25), padx=(20,20))
         self.txtreason['menu'].config(font=font_s)
         
         self.lblother = ttk.Label(root, style="BW.TLabel")
@@ -351,19 +352,19 @@ class User_Input(object):
         self.checkin = ttk.Button(root, text="Checking In", command=self.Checking_In, style="BW.TButton")
         self.checkin.bind("<Enter>", self.on_enter)
         self.checkin.bind("<Leave>", self.on_leave)
-        self.checkin.grid(row=6, column=0, pady=(10,25), padx=(20,20), columnspan=2)
+        self.checkin.grid(row=6, column=1, pady=(10,25), padx=(20,20), columnspan=2)
 
         # Checkout Section
         self.checkout = ttk.Button(root, text="Checking Out", command=self.Checking_Out, style="BW.TButton")
         self.checkout.bind("<Enter>", self.on_enter)
         self.checkout.bind("<Leave>", self.on_leave)
-        self.checkout.grid(row=7, column=0, pady=(10,25), padx=(20,20), columnspan=2)
+        self.checkout.grid(row=7, column=1, pady=(10,25), padx=(20,20), columnspan=2)
 
         # Exit Section
         self.exit = ttk.Button(root, text="Close", command=self.Exit_Click, style="BWR.TButton")
         self.exit.bind("<Enter>", self.on_enter)
         self.exit.bind("<Leave>", self.on_leave)
-        self.exit.grid(row=8, column=0, pady=(10,50), padx=(20,20), columnspan=2)
+        self.exit.grid(row=8, column=1, pady=(10,50), padx=(20,20), columnspan=2)
 
         self.root.mainloop()
 
