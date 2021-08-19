@@ -24,7 +24,7 @@ class User_Input(object):
     isDestroyed = False
 
     def Checking_In(self):
-        Logger.Add("Checking_In Called", lts.GEN)
+        #Logger.Add("Checking_In Called", lts.GEN)
 
         # Check for null barcode
         if(self.barcode == "-2"):
@@ -92,7 +92,7 @@ class User_Input(object):
 
 
     def Checking_Out(self):
-        Logger.Add("Checking_Out Called", lts.GEN)
+        #Logger.Add("Checking_Out Called", lts.GEN)
         if(self.barcode == "-2"):
             return
         # Create LogEvent obj        
@@ -177,13 +177,13 @@ class User_Input(object):
     
 
     def on_focus_in(self, e):
-            Logger.Add('on_focus_in', lts.GEN)
+            #Logger.Add('on_focus_in', lts.GEN)
             subprocess.Popen("osk", shell=True)
 
 
     def on_focus_out(self, e):
             if not self.isintextbox:
-                Logger.Add('on_focus_out', lts.GEN)
+                #Logger.Add('on_focus_out', lts.GEN)
                 subprocess.call('wmic process where name="osk.exe" delete', shell=True)
 
 
@@ -210,12 +210,14 @@ class User_Input(object):
 
     def Option_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        Logger.Add("tech: {0}: ".format(self.optionvar.get()), lts.GEN)
-
+        #Logger.Add("tech: {0}: ".format(self.optionvar.get()), lts.GEN)
+        print("tech: {0}: ".format(self.optionvar.get()))
 
     def Reason_change(self, *args):
         #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        Logger.Add("reason: {0}: ".format(self.reasonoptionvar.get()), lts.GEN)
+        #Logger.Add("reason: {0}: ".format(self.reasonoptionvar.get()), lts.GEN)
+        print("reason: {0}: ".format(self.reasonoptionvar.get()))
+
         reasonName = self.reasonoptionvar.get()
         tempReason = "Reason for visit:"
         self.lblreason.config(text = tempReason)

@@ -35,18 +35,18 @@ class DigitalClipboard(object):
 
     def wait_for_barcodes(self):
         try:
-            Logger.Add("wait_for_barcodes called", lts.GEN)
+            #Logger.Add("wait_for_barcodes called", lts.GEN)
             # Initialize results to display
             result = "-1"
 
             # Read frame from capture device
             ret, frame = self.camera.read()
-            Logger.Add("DEBUG After Read", lts.GEN)
+            #Logger.Add("DEBUG After Read", lts.GEN)
 
             frame = cv2.resize(frame, (854,480), cv2.INTER_LINEAR)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-            Logger.Add("DEBUG After Resize", lts.GEN)
+            #Logger.Add("DEBUG After Resize", lts.GEN)
 
             # Loop until barcode found
             while ret:
@@ -60,7 +60,7 @@ class DigitalClipboard(object):
 
                 # Wait for barcode/qr code to be parsed from frame
                 if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
-                    Logger.Add("Found Barcode: " + result, lts.GEN)
+                    #Logger.Add("Found Barcode: " + result, lts.GEN)
                     winsound.PlaySound(r'C:\Windows\Media\tada.wav', winsound.SND_FILENAME)
                     self.root = Tk()
                     ui = User_Input(result, self.root)
@@ -89,12 +89,12 @@ class DigitalClipboard(object):
             if cv2.useOptimized() is False:
                 cv2.setUseOptimized(True)
 
-            Logger.Add("DEBUG VideoCapture", lts.GEN)
+            #Logger.Add("DEBUG VideoCapture", lts.GEN)
 
             # Get video device
             self.camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
             
-            Logger.Add("Got Camera Successfully", lts.GEN)
+            #Logger.Add("Got Camera Successfully", lts.GEN)
 
             # Wait for barcode to enter camera view
             barcode = self.wait_for_barcodes()

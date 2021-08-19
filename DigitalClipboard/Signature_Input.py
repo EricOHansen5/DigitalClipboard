@@ -24,6 +24,8 @@ class Signature_Input:
 
     def press(self, evt):
         self.mousePressed = True
+
+
     def release(self, evt):
         self.mousePressed = False
 
@@ -44,23 +46,21 @@ class Signature_Input:
             print("finished")
 
 
-    # HOVER EVENTS
     def on_enter(self, e):
         # Hover over button
         e.widget.configure(bg='white')
-    #
-    #
+
+
     def on_leave(self, e):
         # Leave Hover over button
         e.widget.configure(bg='white smoke')
-    # END HOVER EVENTS
 
 
     def move(self, evt):
         x,y = evt.x,evt.y
         if self.mousePressed and isinstance(evt.widget, Canvas):
             if hasattr(self, 'canvwidth'):
-                if x >= self.canvwidth or y >= self.canvheight or x <= 0 or y <= 0:
+                if x >= self.cvs.winfo_width() or y >= self.cvs.winfo_height() or x <= 0 or y <= 0:
                     return
 
             if self.last is None:
@@ -91,15 +91,23 @@ class Signature_Input:
         self.tk.state('zoomed')
         self.tk.update_idletasks()      # keeps winfo_width/winfo_height accurate
 
+        self.tk.columnconfigure(0, weight=1)
+        self.tk.columnconfigure(1, weight=14)
+        self.tk.columnconfigure(2, weight=1)
+
+        self.tk.rowconfigure(0, weight=1)
+        self.tk.rowconfigure(1, weight=10)
+        self.tk.rowconfigure(2, weight=1)
+
         # Make the canvas fit the window, but with room for the "Submit" button.
         self.canvwidth = self.tk.winfo_width()
         self.canvheight = self.tk.winfo_height() - self.tk.winfo_height() // 5
 
-        self.lblHeader = Label(self.tk, text="Sign Below", font=font_s, width=width_s)
-        self.lblHeader.grid(row=0, column=1, columnspan=3, pady=10, padx=50)
+        self.lblHeader = Label(self.tk, text="Sign Below", font=font_s, width=width_s, height=1)
+        self.lblHeader.grid(row=0, column=1, columnspan=1, ipady=20, padx=50, sticky=S)
 
-        self.cvs = Canvas(self.tk, width=self.canvwidth, height=self.canvheight, bg='white')
-        self.cvs.grid(row=1, column=1)
+        self.cvs = Canvas(self.tk, bg='white')
+        self.cvs.grid(row=1, column=1, sticky=NSEW)
 
         self.img = Image.new('RGB',(self.canvwidth, self.canvheight),(255,255,255))
         self.draw = ImageDraw.Draw(self.img)
@@ -112,7 +120,7 @@ class Signature_Input:
         self.btnDone = Button(self.tk,text='Submit', command=self.finish, height=2, width=width_s, font=font_s, bg='white smoke', relief=GROOVE)
         self.btnDone.bind("<Enter>", self.on_enter)
         self.btnDone.bind("<Leave>", self.on_leave)
-        self.btnDone.grid(row=2, column=1, columnspan=3, pady=20, padx=50)
+        self.btnDone.grid(row=2, column=1, columnspan=1, pady=20, padx=50, sticky=N)
 
         self.tk.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.cvs.bind_all('<Motion>', self.move)

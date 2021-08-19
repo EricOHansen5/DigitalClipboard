@@ -40,9 +40,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DigitalClipboard.py" />
-    <Compile Include="FileVideoStream.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LogEvent.py">
       <SubType>Code</SubType>
     </Compile>
