@@ -158,6 +158,7 @@ class User_Input(object):
         self.Save_JSON(txtecn, txt, False)
 
 
+
     def Check_Device_Status(self):
         ecn = self.txtecn.get()
         if ecn in self.deviceMaps.keys():

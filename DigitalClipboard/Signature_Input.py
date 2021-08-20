@@ -46,6 +46,12 @@ class Signature_Input:
             print("finished")
 
 
+    def clear(self):
+        self.cvs.delete("all")
+        self.isSigned = False
+        self.last = None
+
+
     def on_enter(self, e):
         # Hover over button
         e.widget.configure(bg='white')
@@ -54,6 +60,10 @@ class Signature_Input:
     def on_leave(self, e):
         # Leave Hover over button
         e.widget.configure(bg='white smoke')
+
+    
+    def on_leave_clear(self, e):
+        e.widget.configure(bg='rosybrown1')
 
 
     def move(self, evt):
@@ -117,10 +127,16 @@ class Signature_Input:
 
         self.cvs.bind_all('<ButtonPress-1>', self.press)
         self.cvs.bind_all('<ButtonRelease-1>', self.release)
+
+        self.btnClear = Button(self.tk, text="Clear", command=self.clear, height=2, width=width_s, font=font_s, bg='rosybrown1', relief=GROOVE)
+        self.btnClear.bind("<Enter>", self.on_enter)
+        self.btnClear.bind("<Leave>", self.on_leave_clear)
+        self.btnClear.grid(row=2, column=1, pady=20, padx=10, sticky=W)
+
         self.btnDone = Button(self.tk,text='Submit', command=self.finish, height=2, width=width_s, font=font_s, bg='white smoke', relief=GROOVE)
         self.btnDone.bind("<Enter>", self.on_enter)
         self.btnDone.bind("<Leave>", self.on_leave)
-        self.btnDone.grid(row=2, column=1, columnspan=1, pady=20, padx=50, sticky=N)
+        self.btnDone.grid(row=2, column=1, pady=20, padx=10, sticky=E)
 
         self.tk.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.cvs.bind_all('<Motion>', self.move)

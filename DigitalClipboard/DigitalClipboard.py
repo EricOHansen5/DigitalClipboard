@@ -75,7 +75,7 @@ class DigitalClipboard(object):
             return result
 
         except Exception as e:
-            Logger.Add("Exception - Wait for Barcode: " + sys.exc_info()[0], lts.ERR)
+            Logger.Add("Exception - Wait for Barcode: " + str(sys.exc_info()[0]), lts.ERR)
             Logger.Add("\tcont. : " + e.args[0], lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
             return None
@@ -104,7 +104,7 @@ class DigitalClipboard(object):
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(ve.args[0]))
             input("Enter to exit")
         except Exception as e:
-            Logger.Add("Unknown Exception: " + sys.exc_info()[0], lts.ERR)
+            Logger.Add("Unknown Exception: " + str(sys.exc_info()[0]), lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
             input("Enter to exit")
             raise
