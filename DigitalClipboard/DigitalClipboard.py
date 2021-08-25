@@ -3,6 +3,7 @@
 
 # Author: Eric Hansen
 import sys, cv2, winsound, tkinter, numpy as np, datetime as date
+import time
 from tkinter import *
 from tkinter import messagebox
 from Common import Logger, LogTypeString as lts
@@ -35,28 +36,34 @@ class DigitalClipboard(object):
 
     def wait_for_barcodes(self):
         try:
-            #Logger.Add("wait_for_barcodes called", lts.GEN)
-            # Initialize results to display
-            result = "-1"
+            # Get video device
+            self.camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
             # Read frame from capture device
             ret, frame = self.camera.read()
-            #Logger.Add("DEBUG After Read", lts.GEN)
 
-            frame = cv2.resize(frame, (854,480), cv2.INTER_LINEAR)
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-            #Logger.Add("DEBUG After Resize", lts.GEN)
+            self.isDestroyed = False
+            self.oldFrame = frame
 
             # Loop until barcode found
-            while ret:
+            while not self.isDestroyed:
+                # Read frame from capture device
                 ret, frame = self.camera.read()
+                if frame is None:
+                    continue
+                else:
+                    frame = cv2.resize(frame, (1280, 720), cv2.INTER_LINEAR)
+                    self.oldFrame = frame
+
+                # Initialize results to display
+                result = "-1"
 
                 # Parse frame for barcode/qr
                 result = self.read_barcodes(frame)
         
                 # Show camera to screen
-                cv2.imshow('Barcode/QR code reader', frame)
+                cv2.imshow('Barcode Reader', frame)
+                cv2.moveWindow('Barcode Reader', 350, 180)
 
                 # Wait for barcode/qr code to be parsed from frame
                 if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
@@ -65,39 +72,35 @@ class DigitalClipboard(object):
                     self.root = Tk()
                     ui = User_Input(result, self.root)
                     if ui.isDestroyed:
+                        self.isDestroyed = True
                         break
-                    result = "-1"
-    
+                    ret, frame = self.camera.read()
+                    
             # Release the camera and close gui window for camera
             self.camera.release()
             cv2.destroyAllWindows()
             Logger.Add("Finished Cleaning Up", lts.GEN)
-            return result
 
         except Exception as e:
             Logger.Add("Exception - Wait for Barcode: " + str(sys.exc_info()[0]), lts.ERR)
             Logger.Add("\tcont. : " + e.args[0], lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(e.args[0]))
-            return None
 
 
     def Run(self):
-        Logger.Add("---- Digital Clipboard ----", lts.GEN)
-        Logger.Add(date.datetime.now(), lts.GEN)
+        logger = []
+        logger.append(("---- Digital Clipboard ----", lts.GEN))
+        logger.append((date.datetime.now(), lts.GEN))
+        #Logger.Add("---- Digital Clipboard ----", lts.GEN)
+        #Logger.Add(date.datetime.now(), lts.GEN)
 
         try:
+            Logger.AddList(logger)
             if cv2.useOptimized() is False:
                 cv2.setUseOptimized(True)
-
-            #Logger.Add("DEBUG VideoCapture", lts.GEN)
-
-            # Get video device
-            self.camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
             
-            #Logger.Add("Got Camera Successfully", lts.GEN)
-
             # Wait for barcode to enter camera view
-            barcode = self.wait_for_barcodes()
+            self.wait_for_barcodes()
 
         except ValueError as ve:
             Logger.Add("Exception: " + ValueError, lts.ERR)

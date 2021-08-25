@@ -13,7 +13,9 @@ class DeviceMaps(object):
 
 
     def load_data(self):
-        Logger.Add("Load DeviceMaps", lts.GEN)
+        logger = []
+        logger.append(("Load DeviceMaps", lts.GEN))
+        #Logger.Add("Load DeviceMaps", lts.GEN)
         try:
             # Check if local/network devicemaps exists
             localexists = os.path.isfile(Configs.local_data)
@@ -21,15 +23,19 @@ class DeviceMaps(object):
 
             # Create local devicemaps if not exist
             if localexists is False:
-                Logger.Add("Local DeviceMaps File Created", lts.GEN)
+                logger.append(("Local DeviceMaps File Created", lts.GEN))
+                #Logger.Add("Local DeviceMaps File Created", lts.GEN)
                 with open(Configs.local_data, 'w+') as localdata:
                     localdata.write("")
+                    Logger.AddList(logger)
                     return True
             # Create network devicemaps if not exist
             if networkexists is False:
-                Logger.Add("Network DeviceMaps File Created", lts.GEN)
+                logger.append(("Network DeviceMaps File Created", lts.GEN))
+                #Logger.Add("Network DeviceMaps File Created", lts.GEN)
                 with open(Configs.network_data, 'w+') as networkdata:
                     networkdata.write("")
+                    Logger.AddList(logger)
                     return True
 
             # Check local/network file sizes
@@ -39,9 +45,11 @@ class DeviceMaps(object):
             # Network devicemaps smaller than local then load from local
             if localdatasize > networkdatasize or localdatasize == networkdatasize:
                 if localdatasize == networkdatasize:
-                    Logger.Add("DeviceMap Files Equal Size", lts.GEN)
+                    #Logger.Add("DeviceMap Files Equal Size", lts.GEN)
+                    logger.append(("DeviceMap FIles Equal Size", lts.GEN))
                 else:
-                    Logger.Add("Local DeviceMaps Larger Than Network Data", lts.ERR)
+                    #Logger.Add("Local DeviceMaps Larger Than Network Data", lts.ERR)
+                    logger.append(("Local DeviceMaps Larger Than Network Data", lts.ERR))
 
                 with open(Configs.local_data, 'r') as localdata:
                     #Logger.Add(localdata, lts.WAR)
@@ -50,44 +58,61 @@ class DeviceMaps(object):
 
             # Local devicemaps smaller than network then load from network
             elif networkdatasize > localdatasize:
-                Logger.Add("Network DeviceMaps Larger Than Local Data", lts.ERR)
+                #Logger.Add("Network DeviceMaps Larger Than Local Data", lts.ERR)
+                logger.append(("Network DeviceMaps Larger Than Local Data", lts.ERR))
                 with open(Configs.network_data, 'r') as networkdata:
                     self.deviceMaps = json.loads(networkdata.read())
                     self.successful_load = True
-                Logger.Add("Network DeviceMaps Load Complete", lts.GEN)
+                #Logger.Add("Network DeviceMaps Load Complete", lts.GEN)
+                logger.append(("Network DeviceMaps Load Complete", lts.GEN))
+                Logger.AddList(logger)
 
             return True
         except FileNotFoundError:
-            Logger.Add("File Not Found Error - DeviceMaps", lts.ERR)
+            logger.append(("File Not Found Error - DeviceMaps", lts.ERR))
+            Logger.AddList(logger)
+            #Logger.Add("File Not Found Error - DeviceMaps", lts.ERR)
             return False
         except Exception:
-            Logger.Add("Unknown Exception - DeviceMaps: " + sys.exc_info()[0], lts.ERR)
+            #Logger.Add("Unknown Exception - DeviceMaps: " + sys.exc_info()[0], lts.ERR)
+            logger.append(("Unknown Exception - DeviceMaps: " + sys.exc_info()[0], lts.ERR))
+            Logger.AddList(logger)
             return False
 
 
     def write_data(self):
-        Logger.Add("Write Data", lts.GEN)
+        logger = []
+        logger.append(("Write Data", lts.GEN))
+        #Logger.Add("Write Data", lts.GEN)
         try:
-            Logger.Add("Writing Local DeviceMaps", lts.GEN)
+            logger.append(("Writing Local DeviceMaps", lts.GEN))
+            #Logger.Add("Writing Local DeviceMaps", lts.GEN)
             with open(Configs.local_data, 'w') as localdata:
                 localdata.write(json.dumps(self.deviceMaps))
-            
-            Logger.Add("Writing Network DeviceMaps", lts.GEN)
+            logger.append(("Writing Network DeviceMaps", lts.GEN))
+            #Logger.Add("Writing Network DeviceMaps", lts.GEN)
             with open(Configs.network_data, 'w') as networkdata:
                 networkdata.write(json.dumps(self.deviceMaps))
 
             Logger.Add("Checking Hash Values", lts.GEN)
             if Common.CheckHash(Configs.local_data, Configs.network_data) is False:
-                Logger.Add("Copying Local File", lts.WAR)
+                logger.append(("Copying Local File", lts.WAR))
+                #Logger.Add("Copying Local File", lts.WAR)
                 copyfile(Configs.local_data, Configs.network_data)
 
+            Logger.AddList(logger)
             return True
         except FileNotFoundError:
-            Logger.Add("File Not Found Error", lts.ERR)
+            logger.append(("File Not Found Error", lts.ERR))
+            Logger.AddList(logger)
+            #Logger.Add("File Not Found Error", lts.ERR)
             return False
         except Exception:
-            Logger.Add("Unknown Exception", lts.ERR)
-            Logger.Add(sys.exc_info()[0], lts.ERR)
+            #Logger.Add("Unknown Exception", lts.ERR)
+            #Logger.Add(sys.exc_info()[0], lts.ERR)
+            logger.append(("Unknown Exception", lts.ERR))
+            logger.append((sys.exc_info()[0], lts.ERR))
+            Logger.AddList(logger)
             return False
 
 

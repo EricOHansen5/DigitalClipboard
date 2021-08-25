@@ -41,14 +41,19 @@ class Common:
 
 
 class Logger:
-    def Add(msg, type):
+    def MakeEntry(entry, type):
         dt = datetime.datetime.now()
         spacing = "\n"
-        if "----" in str(msg):
+        if "----" in str(entry):
             spacing = spacing * 3
-        entry = "{0}\t{1}\t{2}".format(dt, type.value, msg)
+        entry = "{0}\t{1}\t{2}".format(dt, type.value, entry)
         entry = spacing + entry
         print(entry)
+        return entry
+    
+
+    def Add(msg, type):
+        entry = Logger.MakeEntry(msg, type)
         if os.path.isfile(Configs.logfile):
             with open(Configs.logfile, "a") as logfile:
                 logfile.write(entry)
@@ -57,3 +62,18 @@ class Logger:
             with open(Configs.logfile, "w") as logfile:
                 logfile.write(entry)
 
+
+    def AddList(lst):
+        entries = []
+        for item, type in lst:
+            entries.append(Logger.MakeEntry(item, type))
+
+        if os.path.isfile(Configs.logfile):
+            with open(Configs.logfile, "a") as logfile:
+                for item in entries:
+                    logfile.write(item)
+        else:
+            print("Logger File Created")
+            with open(Configs.logfile, "w") as logfile:
+                for item in entries:
+                    logfile.write(item)

@@ -62,14 +62,19 @@ class User_Input(object):
             self.txttech.configure(highlightbackground="red", highlightcolor="red")
             missing_entry = True
 
+        # Get Reason
         txtreason = self.reasonoptionvar.get()
         if txtreason == '':
             self.txtreason.configure(highlightbackground="red", highlightcolor="red")
-        if self.otherselected:
+        # Get Notes if empty flag else add it to reason
+        if txtreason == 'Other':
             txtreason = self.txtother.get()
             if txtreason == '':
                 self.txtother.config(highlightbackground="red", highlightcolor="red", highlightthickness=2)
                 missing_entry = True
+        else:
+            txtreason = "{0} : {1}".format(txtreason, self.txtother.get())
+
         logevent.Add_Comment(txtreason)
 
         # Missing entry highlight entry fields
@@ -209,33 +214,6 @@ class User_Input(object):
         self.isintextbox = False
 
 
-    def Option_change(self, *args):
-        #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        #Logger.Add("tech: {0}: ".format(self.optionvar.get()), lts.GEN)
-        print("tech: {0}: ".format(self.optionvar.get()))
-
-    def Reason_change(self, *args):
-        #subprocess.call('wmic process where name="osk.exe" delete', shell=True)
-        #Logger.Add("reason: {0}: ".format(self.reasonoptionvar.get()), lts.GEN)
-        print("reason: {0}: ".format(self.reasonoptionvar.get()))
-
-        reasonName = self.reasonoptionvar.get()
-        tempReason = "Reason for visit:"
-        self.lblreason.config(text = tempReason)
-        if reasonName == "Other":
-            self.otherselected = True
-            if not self.othervisible:
-                self.lblother['text'] = "Other:"
-                self.txtother.grid(row=5, column=2, pady=(5,25), padx=(20,20))
-                self.othervisible = True
-        else:
-            self.otherselected = False
-            if self.othervisible:
-                self.lblother['text'] = ""
-                self.txtother.grid_remove()
-                self.othervisible = False
-
-
     def __init__(self, barcode, root):
         Logger.Add("UI Start Called", lts.GEN)
 
@@ -297,7 +275,7 @@ class User_Input(object):
         self.header.grid(row=0, column=1, pady=(25,25), padx=(20,20), sticky=E)
         
         self.valheader = ttk.Label(root, text="{0}".format(barcode), style="BW.TLabel", anchor="w", font=font_small)
-        self.valheader.grid(row=0, column=2, pady=(25,25), padx=(20,20), sticky=W)
+        self.valheader.grid(row=0, column=2, pady=(25,25), padx=(25,20), sticky=W)
 
         # Name Section
         self.lbluser = ttk.Label(root, text="Your Name:", style="BW.TLabel")
@@ -329,7 +307,7 @@ class User_Input(object):
         self.optionvar = StringVar(root)
         self.optionvar.set(OPTIONS[0])
         
-        self.txttech = tk.OptionMenu(root, self.optionvar, *OPTIONS, command=self.Option_change)
+        self.txttech = tk.OptionMenu(root, self.optionvar, *OPTIONS)
         self.txttech.configure(bg='white', font=font_s, width=btn_width)
         self.txttech.grid(row=3, column=2, pady=(10,25), padx=(20,20), sticky=W)
         self.txttech['menu'].config(font=font_s)
@@ -340,13 +318,12 @@ class User_Input(object):
         
         REASON_OPTIONS = ["New Device", "Replace Device", "Turn-In Device", "Hardware Issue/Install", "Software Issue/Install", "Checkout/Checkin Loaner", "Other"]
         self.reasonoptionvar = StringVar(root)
-        self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS, command=self.Reason_change)
+        self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS)
         self.txtreason.configure(bg='white', font=font_s, width=btn_width)
         self.txtreason.grid(row=4, column=2, pady=(10,25), padx=(20,20), sticky=W)
         self.txtreason['menu'].config(font=font_s)
         
-        self.lblother = ttk.Label(root, style="BW.TLabel")
-        self.lblother['text'] = ""
+        self.lblother = ttk.Label(root, text="Notes:", style="BW.TLabel")
         self.lblother.grid(row=5, column=1, pady=(5,25), padx=(20,20), sticky=E)
 
         self.txtother = tk.Entry(root,)
@@ -354,6 +331,7 @@ class User_Input(object):
         self.txtother.bind("<1>", self.on_focus_in)
         self.txtother.bind("<Enter>", self.t_on_enter)
         self.txtother.bind("<Leave>", self.t_on_leave)
+        self.txtother.grid(row=5, column=2, pady=(10,25), padx=(20,20), sticky=W)
 
         # Checkin Section
         self.checkin = ttk.Button(root, text="Checking In", command=self.Checking_In, style="BW.TButton")
@@ -379,6 +357,7 @@ class User_Input(object):
     def Exit_Click(self):
         self.isDestroyed = True
         Logger.Add("Closing", lts.GEN)
+        subprocess.call('wmic process where name="osk.exe" delete', shell=True)
         self.root.destroy()
         return
 

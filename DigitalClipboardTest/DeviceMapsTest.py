@@ -5,30 +5,30 @@ from LogTypeString import LogTypeString as lts
 
 def test_load_data():
     if DeviceMaps().load_data():
-        Logger.Add("PASS", lts.GEN)
+        Logger.Add("Load_Data - PASS", lts.GEN)
     else:
-        Logger.Add("FAILED", lts.ERR)
+        Logger.Add("Load_Data - FAILED", lts.ERR)
 
 def test_load_data_local_larger():
     #TODO -----------------------------------------
-    Logger.Add("FAILED", lts.ERR)
+    Logger.Add("Load_Data (local larger) - FAILED", lts.ERR)
 
 
 def test_load_data_local_smaller():
     #TODO -----------------------------------------
-    Logger.Add("FAILED", lts.ERR)
+    Logger.Add("Load_Data (local smaller) - FAILED", lts.ERR)
 
 
 def test_load_data_files_equal():
     #TODO -----------------------------------------
-    Logger.Add("FAILED", lts.ERR)
+    Logger.Add("Load_Data (files equal) - FAILED", lts.ERR)
 
 
 def test_write_data():
     if DeviceMaps().write_data():
-        Logger.Add("PASS", lts.GEN)
+        Logger.Add("Write_Data - PASS", lts.GEN)
     else:
-        Logger.Add("FAILED", lts.ERR)
+        Logger.Add("Write_Data - FAILED", lts.ERR)
 
 def test_Create_map():
     ecn = "9999"
@@ -39,9 +39,9 @@ def test_Create_map():
     obj = dm.Create_map(ecn, barcode, name, checkedin)
 
     if obj["Barcode"] == "90909" and obj["ECN"] == "9999" and obj["Name"] == "test_map" and obj["CheckedIn"] == True:
-        Logger.Add("PASS", lts.GEN)
+        Logger.Add("Create_Map - PASS", lts.GEN)
     else:
-        Logger.Add("FAILED", lts.ERR)
+        Logger.Add("Create_Map - FAILED", lts.ERR)
 
 
 def test_Add_mapping():
@@ -50,9 +50,9 @@ def test_Add_mapping():
     dm.Add_mapping("8888", "barcode123", "test_add_mapping name", True)
     size2 = len(dm.deviceMaps.keys())
     if size1 < size2:
-        Logger.Add("PASS", lts.GEN)
+        Logger.Add("Add_Mapping - PASS", lts.GEN)
     else:
-        Logger.Add("FAILED", lts.ERR)
+        Logger.Add("Add_Mapping - FAILED", lts.ERR)
 
 
 # Run Tests
