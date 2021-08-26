@@ -232,6 +232,7 @@ class User_Input(object):
                 ecn.set(v['ECN'])
                 break
 
+        # Styles / Sizing / Colors
         bg_color = 'white smoke'
         width_s = 30
         btn_width = 30
@@ -255,20 +256,13 @@ class User_Input(object):
         self.root = root
         self.root.title = "Digital Clipboard"
 
-        #self.root.geometry('1200x700')
         self.root.configure(bg=bg_color)
-        #winWidth = 1080
-        #scrnWidth = self.root.winfo_screenwidth()
-        #posRight = int(scrnWidth/2 - winWidth/2)
-        #posDown = 10
-        #self.root.geometry("+{}+{}".format(posRight, posDown))
         self.root.state('zoomed')
         self.root.bind("<1>", self.on_focus_out)
         self.root.columnconfigure(0, weight=1)
         self.root.columnconfigure(1, weight=2)
         self.root.columnconfigure(2, weight=3)
         self.root.columnconfigure(3, weight=1)
-        #self.root.eval('tk::PlaceWindow . center')
 
         # Header display for Barcode Data
         self.header = ttk.Label(root, text="Barcode:", style="BW.TLabel")
@@ -302,7 +296,8 @@ class User_Input(object):
         # Technician Section
         self.lbltech = ttk.Label(root, text="Technician:", style="BW.TLabel")
         self.lbltech.grid(row=3, column=1, pady=(10,25), padx=(20,20), sticky=E)
-       
+
+        # This is where you would ADD/REMOVE for the Technician Name Dropdown
         OPTIONS = ["No Technician", "Mike Delsanto", "Max Young", "Kim Tartarini", "Bill Finizia", "Dan Kemp", "Sal Rafique", "Eric Hansen", "Michael Weigel"]
         self.optionvar = StringVar(root)
         self.optionvar.set(OPTIONS[0])
@@ -316,6 +311,7 @@ class User_Input(object):
         self.lblreason = ttk.Label(root, text="Reason for visit:", style="BW.TLabel")
         self.lblreason.grid(row=4, column=1, pady=(10,25), padx=(20,20), sticky=E)
         
+        # This is where you would ADD/REMOVE for the Reason Dropdown
         REASON_OPTIONS = ["New Device", "Replace Device", "Turn-In Device", "Hardware Issue/Install", "Software Issue/Install", "Checkout/Checkin Loaner", "Other"]
         self.reasonoptionvar = StringVar(root)
         self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS)
@@ -355,6 +351,7 @@ class User_Input(object):
 
 
     def Exit_Click(self):
+        # Set isDestroyed so that the main digital clipboard loop exits after close button pressed.
         self.isDestroyed = True
         Logger.Add("Closing", lts.GEN)
         subprocess.call('wmic process where name="osk.exe" delete', shell=True)
