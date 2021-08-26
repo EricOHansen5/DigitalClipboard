@@ -52,7 +52,7 @@ class DigitalClipboard(object):
                 if frame is None:
                     continue
                 else:
-                    frame = cv2.resize(frame, (1280, 720), cv2.INTER_LINEAR)
+                    frame = cv2.resize(frame, (1920, 1080), cv2.INTER_LINEAR)
                     self.oldFrame = frame
 
                 # Initialize results to display
@@ -62,8 +62,9 @@ class DigitalClipboard(object):
                 result = self.read_barcodes(frame)
         
                 # Show camera to screen
+                cv2.namedWindow('Barcode Reader', cv2.WINDOW_AUTOSIZE)
                 cv2.imshow('Barcode Reader', frame)
-                cv2.moveWindow('Barcode Reader', 350, 180)
+                cv2.moveWindow('Barcode Reader', 0, 0)
 
                 # Wait for barcode/qr code to be parsed from frame
                 if (cv2.waitKey(1) & 0xFF == 27) or (result != "-1"):
@@ -88,11 +89,10 @@ class DigitalClipboard(object):
 
 
     def Run(self):
+        # Create a string array so that the Logger isn't openning and closing the file for each line written.
         logger = []
         logger.append(("---- Digital Clipboard ----", lts.GEN))
         logger.append((date.datetime.now(), lts.GEN))
-        #Logger.Add("---- Digital Clipboard ----", lts.GEN)
-        #Logger.Add(date.datetime.now(), lts.GEN)
 
         try:
             Logger.AddList(logger)
