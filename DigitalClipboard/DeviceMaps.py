@@ -118,9 +118,9 @@ class DeviceMaps(object):
 
     def Add_mapping(self, ecn, barcode, name, checkedin):
         if ecn in self.deviceMaps.keys():
-            Logger.Add("{0} doesn't exists. Creating.".format(ecn), lts.GEN)
-        else:
             Logger.Add("{0} already exists. Updating.".format(ecn), lts.GEN)
+        else:
+            Logger.Add("{0} doesn't exists. Creating.".format(ecn), lts.GEN)
         self.deviceMaps[ecn] = self.Create_map(ecn, barcode, name, checkedin)
         self.write_data()
 
