@@ -6,7 +6,7 @@ from stat import S_IREAD, S_IRGRP, S_IROTH, S_IWUSR
 import datetime
 
 class Datastore(object):
-    """description of class"""
+    """Class for adding Digital Clipboard log entries"""
     isuselocal = False
 
     def __get_date(self):
@@ -95,6 +95,7 @@ class Datastore(object):
         return Common.CheckHash(Configs.localfilename, Configs.filename)
 
 
+    # Append the given log entry line to the current local/remote log files.
     def Add(self, log_entry):
         print("Datastore Add Called")
         # Check day of the week depending on how long program has been running

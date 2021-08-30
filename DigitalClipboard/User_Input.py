@@ -14,14 +14,14 @@ from Common import Logger
 from Common import LogTypeString as lts
 
 class User_Input(object):
-    """This will be the python user interface to gather check in/out info"""
+    """Window for collecting check-in/check-out info"""
 
-    barcode = "-2"
-    defaultbg = ""
-    otherselected = False
-    othervisible = False
-    isintextbox = False
-    isDestroyed = False
+    barcode = "-2"          # default/null value for the scanned barcode num
+    defaultbg = ""          # unused?
+    otherselected = False   # whether "Other" under "Reason" field is selected
+    othervisible = False    # whether "Other" under "Reason" field is visible
+    isintextbox = False     # whether cursor is hovering over a text input field
+    isDestroyed = False     # whether User_Input window is closed (via button)
 
     def Checking_In(self):
         #Logger.Add("Checking_In Called", lts.GEN)
@@ -37,7 +37,7 @@ class User_Input(object):
         logevent.Add_Status("--IN --")
         missing_entry = False
 
-        # Get Current date and time
+        # Get current date and time for logging.
         date_time = datetime.datetime.now()
         logevent.Add_DateTime(date_time)
 
@@ -98,6 +98,7 @@ class User_Input(object):
 
     def Checking_Out(self):
         #Logger.Add("Checking_Out Called", lts.GEN)
+
         if(self.barcode == "-2"):
             return
         # Create LogEvent obj        
@@ -109,7 +110,7 @@ class User_Input(object):
 
         missing_entry = False
         
-        # Get Current date and time
+        # Get current date and time for logging.
         date_time = datetime.datetime.now()
         logevent.Add_DateTime(date_time)
 
@@ -156,25 +157,27 @@ class User_Input(object):
         # Log the LogEvent to file
         Datastore().Add(logevent.Get_Log())
 
-        # Get Signature if all data is present
+        # Get signature from the user if all required data is present
         self.Get_Signature()
 
         # Save ecn, name, and barcode
         self.Save_JSON(txtecn, txt, False)
 
 
-
+    # See whether the given device (going by ECN) is already checked in.
     def Check_Device_Status(self):
         ecn = self.txtecn.get()
         if ecn in self.deviceMaps.keys():
             return self.deviceMaps[ecn]["CheckedIn"]
             
 
+    # Add the given device to the local/remote JSON DBs.
     def Save_JSON(self, ecn, name, checkedin):
         barcode = self.barcode
         self.deviceMapsClass.Add_mapping(ecn, barcode, name, checkedin)
 
 
+    # Open (or focus) the signature input window to complete checkout.
     def Get_Signature(self):
         if self.sig_input.isOpen:
             self.Raise_Window()
@@ -182,22 +185,28 @@ class User_Input(object):
             self.sig_input.Run(self.root)
     
 
+    # Open the touch keyboard when a text field is focused/clicked.
     def on_focus_in(self, e):
-            #Logger.Add('on_focus_in', lts.GEN)
-            subprocess.Popen("osk", shell=True)
+        #Logger.Add('on_focus_in', lts.GEN)
+        subprocess.Popen("osk", shell=True)
 
 
+    # Close the touch keyboard when a text input field is unfocused and the
+    # cursor is not hovering over any text input field.
     def on_focus_out(self, e):
-            if not self.isintextbox:
-                #Logger.Add('on_focus_out', lts.GEN)
-                subprocess.call('wmic process where name="osk.exe" delete', shell=True)
+        if not self.isintextbox:
+            #Logger.Add('on_focus_out', lts.GEN)
+            subprocess.call('wmic process where name="osk.exe" delete', shell=True)
 
 
+    # Change how buttons look when hovered over.
     def on_enter(self, e):
         # Hover over button
         e.widget['style'] = "HOV.TButton"
 
 
+    # Change button style back to normal when a button is not being hovered
+    # over.
     def on_leave(self, e):
         # Leave Hover over button
         if e.widget is self.exit:
@@ -206,14 +215,17 @@ class User_Input(object):
             e.widget['style'] = "BW.TButton"
 
 
+    # Record that the cursor is hovering over a text input field.
     def t_on_enter(self, e):
         self.isintextbox = True
 
 
+    # Record that the cursor is NOT hovering over a text input field.
     def t_on_leave(self, e):
         self.isintextbox = False
 
 
+    # Actual control flow when the User_Input window is created.
     def __init__(self, barcode, root):
         Logger.Add("UI Start Called", lts.GEN)
 
@@ -225,7 +237,7 @@ class User_Input(object):
         name = tk.StringVar()
         ecn = tk.StringVar()
 
-        # Update Name and ECN
+        # Pre-fill Name and ECN if the barcode already exists in the JSON DB.
         for v in self.deviceMaps.values():
             if v['Barcode'] == barcode:
                 name.set(v['Name'])
@@ -297,7 +309,9 @@ class User_Input(object):
         self.lbltech = ttk.Label(root, text="Technician:", style="BW.TLabel")
         self.lbltech.grid(row=3, column=1, pady=(10,25), padx=(20,20), sticky=E)
 
+        #
         # This is where you would ADD/REMOVE for the Technician Name Dropdown
+        #
         OPTIONS = ["No Technician", "Mike Delsanto", "Max Young", "Kim Tartarini", "Bill Finizia", "Dan Kemp", "Sal Rafique", "Eric Hansen", "Michael Weigel"]
         self.optionvar = StringVar(root)
         self.optionvar.set(OPTIONS[0])
@@ -311,7 +325,9 @@ class User_Input(object):
         self.lblreason = ttk.Label(root, text="Reason for visit:", style="BW.TLabel")
         self.lblreason.grid(row=4, column=1, pady=(10,25), padx=(20,20), sticky=E)
         
+        #
         # This is where you would ADD/REMOVE for the Reason Dropdown
+        #
         REASON_OPTIONS = ["New Device", "Replace Device", "Turn-In Device", "Hardware Issue/Install", "Software Issue/Install", "Checkout/Checkin Loaner", "Other"]
         self.reasonoptionvar = StringVar(root)
         self.txtreason = tk.OptionMenu(root, self.reasonoptionvar, *REASON_OPTIONS)
@@ -329,27 +345,29 @@ class User_Input(object):
         self.txtother.bind("<Leave>", self.t_on_leave)
         self.txtother.grid(row=5, column=2, pady=(10,25), padx=(20,20), sticky=W)
 
-        # Checkin Section
+        # Checkin button
         self.checkin = ttk.Button(root, text="Checking In", command=self.Checking_In, style="BW.TButton")
         self.checkin.bind("<Enter>", self.on_enter)
         self.checkin.bind("<Leave>", self.on_leave)
         self.checkin.grid(row=6, column=2, pady=(10,25), padx=(20,20), columnspan=1, sticky=W)
 
-        # Checkout Section
+        # Checkout button
         self.checkout = ttk.Button(root, text="Checking Out", command=self.Checking_Out, style="BW.TButton")
         self.checkout.bind("<Enter>", self.on_enter)
         self.checkout.bind("<Leave>", self.on_leave)
         self.checkout.grid(row=7, column=2, pady=(10,25), padx=(20,20), columnspan=1, sticky=W)
 
-        # Exit Section
+        # Close/Exit button
         self.exit = ttk.Button(root, text="Close", command=self.Exit_Click, style="BWR.TButton")
         self.exit.bind("<Enter>", self.on_enter)
         self.exit.bind("<Leave>", self.on_leave)
         self.exit.grid(row=8, column=2, pady=(10,50), padx=(20,20), columnspan=1, sticky=W)
 
+        # Loop/block indefinitely, awaiting user input (until closed).
         self.root.mainloop()
 
 
+    # Close the program entirely.
     def Exit_Click(self):
         # Set isDestroyed so that the main digital clipboard loop exits after close button pressed.
         self.isDestroyed = True
@@ -359,10 +377,12 @@ class User_Input(object):
         return
 
 
+    # Focus the signature input window (i.e. bring it to the top).
     def Raise_Window(self):
         self.sig_input.tk.lift()
         self.sig_input.tk.attributes("-topmost", True)
     
 
+    # unused?
     def Change_Style(self, widget, theme):
         widget['style'] = theme
