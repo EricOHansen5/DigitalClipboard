@@ -1,7 +1,7 @@
 import os.path, datetime
 
 class Configs(object):
-    """description of class"""
+    """Mostly paths used by the Digital Clipboard program"""
     dictConfigs = {}
     baseUri = '\\\\riemfs01\\X\\AutomationTools\\'
     dc_logs = 'Digital_Clipboard_Logs\\'

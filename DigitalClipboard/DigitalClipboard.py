@@ -1,5 +1,9 @@
 # Digital Clipboard is a digital alternative to a hand written clipboard
-# that logs in and out entries of computer/device assets
+# that logs in and out entries of computer/device assets.
+#
+# This is where execution starts: this displays the camera window, waits for
+# a barcode to appear, and reads the barcode. Then the user input window is
+# opened.
 
 # Author: Eric Hansen
 import sys, cv2, winsound, tkinter, numpy as np, datetime as date
@@ -12,20 +16,22 @@ from pyzbar.pyzbar import decode, ZBarSymbol
 from User_Input import User_Input
 
 class DigitalClipboard(object):
+    """Main program class"""
+
     def read_barcodes(self, frame):
         # Read barcodes QRCODES and CODE128
         barcodes = pyzbar.decode(frame, symbols=[ZBarSymbol.QRCODE, ZBarSymbol.CODE128])
         result = "-1"
 
         for barcode in barcodes:
-            # Create rectangle to display on camera
+            # Get dimensions around barcode on camera
             x, y, w, h = barcode.rect
 
             # Decode the barcode
             barcode_info = barcode.data.decode('utf-8')
             barcode_type = barcode.type
 
-            # Draw rectangle
+            # Draw green rectangle around barcode
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
         
             result = barcode_info
@@ -72,6 +78,10 @@ class DigitalClipboard(object):
                     winsound.PlaySound(r'C:\Windows\Media\tada.wav', winsound.SND_FILENAME)
                     self.root = Tk()
                     ui = User_Input(result, self.root)
+
+                    # Once the "Closed" button is clicked, the User_Input
+                    # window sets itself to destroyed, thus ending the main
+                    # program loop here.
                     if ui.isDestroyed:
                         self.isDestroyed = True
                         break
@@ -89,19 +99,20 @@ class DigitalClipboard(object):
 
 
     def Run(self):
-        # Create a string array so that the Logger isn't openning and closing the file for each line written.
+        # Create a string array so that the Logger isn't opening and closing the file for each line written.
         logger = []
         logger.append(("---- Digital Clipboard ----", lts.GEN))
         logger.append((date.datetime.now(), lts.GEN))
 
         try:
             Logger.AddList(logger)
+
+            # Make OpenCV use optimized code to (hopefully) improve execution time.
             if cv2.useOptimized() is False:
                 cv2.setUseOptimized(True)
             
             # Wait for barcode to enter camera view
             self.wait_for_barcodes()
-
         except ValueError as ve:
             Logger.Add("Exception: " + ValueError, lts.ERR)
             messagebox.showerror(title='ERROR', message='Error in Main.wait_for_barcodes:\n\n"{0}"'.format(ve.args[0]))
