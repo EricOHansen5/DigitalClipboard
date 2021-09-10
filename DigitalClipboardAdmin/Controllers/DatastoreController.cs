@@ -164,8 +164,6 @@ namespace DigitalClipboardAdmin.Controllers
 
                 Log.Add("Write Complete");
                 return true;
-                // Set DC Logs to Processed
-                // TODO:
 
             }catch(Exception e)
             {
@@ -190,7 +188,7 @@ namespace DigitalClipboardAdmin.Controllers
                     {
                         var lines = sr.ReadToEnd().Split('\n');
                         final.AddRange(lines);
-                    }    
+                    }
                 }
                 Log.Add("ReadDCLogs Complete, " + final.Count + " lines read.");
                 return final;
@@ -240,7 +238,7 @@ namespace DigitalClipboardAdmin.Controllers
             foreach (string line in lines)
             {
                 string[] props = line.Replace("[", "").Replace("]","").Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                if(props.Length == EntryModel.PropertyCount)
+                if(props.Length >= EntryModel.PropertyCount)
                 {
                     // Parse Date Time from entry
                     string[] dts = props[0].Split(new char[] {'_', '-', ':', '.' });
@@ -257,7 +255,7 @@ namespace DigitalClipboardAdmin.Controllers
                         first = names[0];
                         last = names[1];
                     }
-                    else
+                    else if (names.Length == 3)
                     {
                         if (names[0].Length == 3)
                         {
@@ -274,13 +272,21 @@ namespace DigitalClipboardAdmin.Controllers
                             last = names[2];
                         }
                     }
+                    else
+                    {
+                        first = names[0];
+                        last = "";
+                    }
 
                     // Parse reason / comment if the array is big enough
-                    string comment = "";
-                    if (props.Length < 7)
-                        comment = "";
+                    string reason = "";
+                    string note = "";
+                    if (props.Length <= 7)
+                        reason = "";
                     else
-                        comment = props[6];
+                        reason = props[6];
+
+                    string[] reasons = reason.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                     EntryModel em = new EntryModel()
                     {
@@ -291,7 +297,9 @@ namespace DigitalClipboardAdmin.Controllers
                         firstName = first,
                         lastName = last,
                         techName = props[5].Trim('\r'),
-                        reason = comment
+                        reason = reasons != null && reasons.Length >= 1 ? reasons[0] : "",
+                        note = reasons != null && reasons.Length >= 2 ? reasons[1] : "",
+                        signaturePath = props.Length == 8 ? props[7] : ""
                     };
 
                     if (convEntries.ContainsKey(em.ECN))

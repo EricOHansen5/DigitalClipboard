@@ -129,6 +129,69 @@ namespace DigitalClipboardAdmin
 
         #endregion
 
+        #region ScaleValue Depdency Property
+        // This Region is used to scale/zoom in the application as user changes the size up or down.
+
+        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue", typeof(double), typeof(MainWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback(OnScaleValueChanged), new CoerceValueCallback(OnCoerceScaleValue)));
+
+        private static object OnCoerceScaleValue(DependencyObject o, object value)
+        {
+            MainWindow SecondWindow = o as MainWindow;
+            if (SecondWindow != null)
+                return SecondWindow.OnCoerceScaleValue((double)value);
+            else
+                return value;
+        }
+
+        private static void OnScaleValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            MainWindow SecondWindow = o as MainWindow;
+            if (SecondWindow != null)
+                SecondWindow.OnScaleValueChanged((double)e.OldValue, (double)e.NewValue);
+        }
+
+        protected virtual double OnCoerceScaleValue(double value)
+        {
+            if (double.IsNaN(value))
+                return 1.0f;
+
+            value = Math.Max(0.1, value);
+            return value;
+        }
+
+        protected virtual void OnScaleValueChanged(double oldValue, double newValue)
+        {
+
+        }
+
+        public double ScaleValue
+        {
+            get
+            {
+                return (double)GetValue(ScaleValueProperty);
+            }
+            set
+            {
+                SetValue(ScaleValueProperty, value);
+            }
+        }
+
+        private void MainGrid_SizeChanged(object sender, EventArgs e)
+        {
+            CalculateScale();
+        }
+
+        // Change the yScale/xScale if you are having issues with objects not appearing within the window
+        private void CalculateScale()
+        {
+            double yScale = ActualHeight / 500; //change the denominator up will increase the windows size vertically
+            double xScale = ActualWidth / 1000; //change the denominator up will increase the windows size horizontally
+            double value = Math.Min(xScale, yScale);
+            //value = 1.55;
+            ScaleValue = (double)OnCoerceScaleValue(window, value);
+        }
+        #endregion
+
         public MainWindow(bool isUpdateDB = false)
         {
             // Check / Create Dependencies

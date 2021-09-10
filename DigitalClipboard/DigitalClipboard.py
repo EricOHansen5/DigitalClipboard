@@ -72,6 +72,7 @@ class DigitalClipboard(object):
                     winsound.PlaySound(r'C:\Windows\Media\tada.wav', winsound.SND_FILENAME)
                     self.root = Tk()
                     ui = User_Input(result, self.root)
+                    ui.Run()
                     if ui.isDestroyed:
                         self.isDestroyed = True
                         break

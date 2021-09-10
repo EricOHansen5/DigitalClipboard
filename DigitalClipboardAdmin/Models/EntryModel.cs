@@ -25,6 +25,7 @@ namespace DigitalClipboardAdmin.Models
             this.lastName = entry.lastName;
             this.techName = entry.techName;
             this.reason = entry.reason;
+            this.note = entry.note;
         }
 
         public static int PropertyCount = 6;
@@ -96,6 +97,20 @@ namespace DigitalClipboardAdmin.Models
         {
             get { return _reason; }
             set { if (value != _reason) _reason = value; OnPropertyChanged(); }
+        }
+
+        private string _note;
+        public string note
+        {
+            get { return _note; }
+            set { if (value != _note) _note = value; OnPropertyChanged(); }
+        }
+
+        private string _signaturePath;
+        public string signaturePath
+        {
+            get { return _signaturePath; }
+            set { if (value != _signaturePath) _signaturePath = value; OnPropertyChanged(); }
         }
 
         public string DisplayString

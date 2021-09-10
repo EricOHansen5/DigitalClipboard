@@ -43,7 +43,10 @@ namespace DigitalClipboardAdmin.Views
             foreach (var item in entries)
             {
                 EntryViewModel e = new EntryViewModel(item);
-                e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
+                if (devices != null)
+                {
+                    e.SetMappings(devices, users, hrhs, software, licenses, softwareMappings);
+                }
                 l.Add(e);
             }
             return CollectionViewSource.GetDefaultView(l);

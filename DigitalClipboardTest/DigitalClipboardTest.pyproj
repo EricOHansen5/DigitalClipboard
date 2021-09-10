@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>68a5aa6d-2ff8-4dc3-be63-f8c8a6e43882</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DeviceMapsTest.py</StartupFile>
+    <StartupFile>User_InputTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -39,6 +39,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MainTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="User_InputTest.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
